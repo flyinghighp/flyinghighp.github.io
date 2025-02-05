@@ -7,4 +7,3 @@ function notString(str) {
   }
     return "not "+str;
 }
-.
