@@ -6,3 +6,4 @@ function sleepIn(weekday, vacation) {
     return false;
   }
 }
+.
