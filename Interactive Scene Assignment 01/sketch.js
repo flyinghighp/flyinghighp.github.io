@@ -13,10 +13,10 @@ let buildingColor4;
 
 function setup() {
   createCanvas(800, 800);
-  buildingHeight = random(200, 600);
+  buildingHeight = random(200, 560);
   buildingHeight2 = buildingHeight / 2;
   buildingHeight3 = buildingHeight / 1.5;
-  buildingHeight4 = buildingHeight / 4;
+  buildingHeight4 = buildingHeight / 2.75;
 
   let buildingColors = ['red', 'lightgreen', 'lightgrey', 'yellow', 'pink', 'orange', 'white'];
   buildingColor = random(buildingColors);
@@ -32,6 +32,9 @@ function draw() {
   road();
   sidewalk();
   building();
+  tree();
+  lamp();
+  car();
 }
 
 function sky() {
@@ -40,23 +43,28 @@ function sky() {
 
 function road() {
   fill(0);
-  rect(0, height * 0.65, width, height * 0.18);
+  rect(0, height * 0.65, width, height * 0.35);
 
   fill(255);
   for (let i = 0; i < width; i += 40) {
-    rect(i, height * 0.74, 20, 10);
+    rect(i, height * 0.75, 25, 10);
   }
 }
 
 function sidewalk() {
-  fill(169, 169, 169);
-  rect(0, height * 0.83, width, 120);
+
+  fill ('yellow');
+  rect(0, height * 0.87, width, 10);
+
+  fill('grey');  
+  rect(0, height * 0.88, width, 150);
 }
 
 function building() {
   // First building
   fill(buildingColor);
   rect(0, height * 0.65 - buildingHeight, 80, buildingHeight);
+  
   fill(255, 255, 0); // Yellow windows
   if (buildingHeight > 50) {  
     rect(10, height * 0.65 - buildingHeight + 20, 15, 20);
@@ -68,6 +76,7 @@ function building() {
   // Second building
   fill(buildingColor2);
   rect(100, height * 0.65 - buildingHeight2, 100, buildingHeight2);
+  
   fill(255, 255, 0); 
   if (buildingHeight2 > 50) {  
     rect(110, height * 0.65 - buildingHeight2 + 20, 15, 20);
@@ -79,6 +88,7 @@ function building() {
   // Third building
   fill(buildingColor3);
   rect(260, height * 0.65 - buildingHeight3, 134, buildingHeight3);
+  
   fill(255, 255, 0);
   if (buildingHeight3 > 70) { 
     rect(270, height * 0.65 - buildingHeight3 + 20, 15, 20);
@@ -90,6 +100,7 @@ function building() {
   // Fourth building
   fill(buildingColor4);
   rect(420, height * 0.65 - buildingHeight4, 134, buildingHeight4);
+  
   fill(255, 255, 0);
   if (buildingHeight4 > 70) {  
     rect(430, height * 0.65 - buildingHeight4 + 20, 15, 20);
@@ -98,4 +109,63 @@ function building() {
     rect(460, height * 0.65 - buildingHeight4 + 50, 15, 20);
   }
 } 
+
+function tree(){
+  //trunk 1
+  fill('brown');
+  rect(600, height * 0.5756 , 20, 60);
+
+  //trunk 2
+  fill('brown');
+  rect(700, height * 0.5756 , 20, 60);
+  
+  //leaves 1
+  fill('green');
+  circle(610, height * 0.55, 70, 70);
+  circle(595, height * 0.55, 70, 70);
+  circle(630, height * 0.55, 70, 70);
+  circle(610, height * 0.51, 70, 70);
+
+  //leaves 2
+  fill('green');
+  circle(710, height * 0.55, 70, 70);
+  circle(695, height * 0.55, 70, 70);
+  circle(730, height * 0.55, 70, 70);
+  circle(710, height * 0.51, 70, 70);
+}
+
+
+function lamp() {
+  fill('black');
+  rect(80, height * 0.89, 10, 100);
+  rect(45, height * 0.89, 80, 10);
+  fill('white');
+  circle(45, height * 0.9, 20, 20);
+  circle(120, height * 0.9, 20, 20);
+
+  fill('black');
+  rect(530, height * 0.89, 10, 100);
+  rect(495, height * 0.89, 80, 10);
+
+  fill('white');
+  circle(495, height * 0.9, 20, 20);
+  circle(570, height * 0.9, 20, 20);
+}
+
+function car() {
+  fill('red');
+  rect(100, height * 0.75, 200, 40, 10);
+
+  fill('grey');
+  circle(130, height * 0.75 + 40, 25);
+  circle(270, height * 0.75 + 40, 25);
+
+  fill('white');
+  circle(130, height * 0.75 + 40, 15);
+  circle(270, height * 0.75 + 40, 15);
+
+  fill('yellow');
+  ellipse(290, height * 0.75 + 10, 15, 10);
+}
+
 
