@@ -10,6 +10,7 @@ let buildingColor;
 let buildingColor2;
 let buildingColor3;
 let buildingColor4;
+let x;
 
 function setup() {
   createCanvas(800, 800);
@@ -23,6 +24,8 @@ function setup() {
   buildingColor2 = random(buildingColors);
   buildingColor3 = random(buildingColors);
   buildingColor4 = random(buildingColors);
+
+  x = width / 2; // Initialize car's x-position
 }
 
 function draw() {
@@ -35,6 +38,20 @@ function draw() {
   tree();
   lamp();
   car();
+
+
+  if (keyIsDown(LEFT_ARROW)) {
+    x -= 5;
+    if (x < -200) { // Off left edge
+      x = width; // Create a wrap-around effect
+    }
+  }
+  if (keyIsDown(RIGHT_ARROW)) {
+    x += 5;
+    if (x > width) { // Off right edge
+      x = -200; // Create a wrap-around effect
+    }
+  }
 }
 
 function sky() {
@@ -52,11 +69,10 @@ function road() {
 }
 
 function sidewalk() {
-
-  fill ('yellow');
+  fill('yellow');
   rect(0, height * 0.87, width, 10);
 
-  fill('grey');  
+  fill('grey');
   rect(0, height * 0.88, width, 150);
 }
 
@@ -64,9 +80,9 @@ function building() {
   // First building
   fill(buildingColor);
   rect(0, height * 0.65 - buildingHeight, 80, buildingHeight);
-  
+
   fill(255, 255, 0); // Yellow windows
-  if (buildingHeight > 50) {  
+  if (buildingHeight > 50) {
     rect(10, height * 0.65 - buildingHeight + 20, 15, 20);
     rect(40, height * 0.65 - buildingHeight + 20, 15, 20);
     rect(10, height * 0.65 - buildingHeight + 50, 15, 20);
@@ -76,9 +92,9 @@ function building() {
   // Second building
   fill(buildingColor2);
   rect(100, height * 0.65 - buildingHeight2, 100, buildingHeight2);
-  
-  fill(255, 255, 0); 
-  if (buildingHeight2 > 50) {  
+
+  fill(255, 255, 0);
+  if (buildingHeight2 > 50) {
     rect(110, height * 0.65 - buildingHeight2 + 20, 15, 20);
     rect(140, height * 0.65 - buildingHeight2 + 20, 15, 20);
     rect(110, height * 0.65 - buildingHeight2 + 50, 15, 20);
@@ -88,9 +104,9 @@ function building() {
   // Third building
   fill(buildingColor3);
   rect(260, height * 0.65 - buildingHeight3, 134, buildingHeight3);
-  
+
   fill(255, 255, 0);
-  if (buildingHeight3 > 70) { 
+  if (buildingHeight3 > 70) {
     rect(270, height * 0.65 - buildingHeight3 + 20, 15, 20);
     rect(300, height * 0.65 - buildingHeight3 + 20, 15, 20);
     rect(270, height * 0.65 - buildingHeight3 + 50, 15, 20);
@@ -100,40 +116,39 @@ function building() {
   // Fourth building
   fill(buildingColor4);
   rect(420, height * 0.65 - buildingHeight4, 134, buildingHeight4);
-  
+
   fill(255, 255, 0);
-  if (buildingHeight4 > 70) {  
+  if (buildingHeight4 > 70) {
     rect(430, height * 0.65 - buildingHeight4 + 20, 15, 20);
     rect(460, height * 0.65 - buildingHeight4 + 20, 15, 20);
     rect(430, height * 0.65 - buildingHeight4 + 50, 15, 20);
     rect(460, height * 0.65 - buildingHeight4 + 50, 15, 20);
   }
-} 
+}
 
-function tree(){
-  //trunk 1
+function tree() {
+  // Trunk 1
   fill('brown');
-  rect(600, height * 0.5756 , 20, 60);
+  rect(600, height * 0.5756, 20, 60);
 
-  //trunk 2
+  // Trunk 2
   fill('brown');
-  rect(700, height * 0.5756 , 20, 60);
-  
-  //leaves 1
+  rect(700, height * 0.5756, 20, 60);
+
+  // Leaves 1
   fill('green');
   circle(610, height * 0.55, 70, 70);
   circle(595, height * 0.55, 70, 70);
   circle(630, height * 0.55, 70, 70);
   circle(610, height * 0.51, 70, 70);
 
-  //leaves 2
+  // Leaves 2
   fill('green');
   circle(710, height * 0.55, 70, 70);
   circle(695, height * 0.55, 70, 70);
   circle(730, height * 0.55, 70, 70);
   circle(710, height * 0.51, 70, 70);
 }
-
 
 function lamp() {
   fill('black');
@@ -154,18 +169,18 @@ function lamp() {
 
 function car() {
   fill('red');
-  rect(100, height * 0.75, 200, 40, 10);
+  rect(x, height * 0.75, 200, 40, 10);
+  noStroke();
+  rect(x + 30, height * 0.75 - 20, 140, 40, 10);
 
   fill('grey');
-  circle(130, height * 0.75 + 40, 25);
-  circle(270, height * 0.75 + 40, 25);
+  circle(x + 30, height * 0.75 + 40, 25);
+  circle(x + 170, height * 0.75 + 40, 25);
 
   fill('white');
-  circle(130, height * 0.75 + 40, 15);
-  circle(270, height * 0.75 + 40, 15);
+  circle(x + 30, height * 0.75 + 40, 15);
+  circle(x + 170, height * 0.75 + 40, 15);
 
   fill('yellow');
-  ellipse(290, height * 0.75 + 10, 15, 10);
+  ellipse(x + 190, height * 0.75 + 10, 15, 10);
 }
-
-
