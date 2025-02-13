@@ -2,6 +2,7 @@
 // Priyansh Jhanji
 // February 11, 2025
 //
+let skyColor = '#87ceeb';
 let buildingHeight;
 let buildingHeight2;
 let buildingHeight3;
@@ -25,13 +26,12 @@ function setup() {
   buildingColor3 = random(buildingColors);
   buildingColor4 = random(buildingColors);
 
-  x = width / 2; // Initialize car's x-position
+  x = width / 2; 
 }
-
 function draw() {
-  background(220);
+  background(skyColor);
 
-  sky();
+
   road();
   sidewalk();
   building();
@@ -52,10 +52,15 @@ function draw() {
       x = -200; // Create a wrap-around effect
     }
   }
+  
 }
 
-function sky() {
-  background(135, 206, 235);
+function mouseWheel(event) {
+  if (event.delta > 0) {
+    skyColor = 'purple'; 
+  } else {
+    skyColor = '#87ceeb'; 
+  }
 }
 
 function road() {
@@ -186,3 +191,4 @@ function car() {
   fill('yellow');
   ellipse(x + 190, height * 0.75 + 10, 15, 10);
 }
+
