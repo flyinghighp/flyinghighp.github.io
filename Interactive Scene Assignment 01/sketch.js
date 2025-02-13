@@ -151,6 +151,7 @@ function tree() {
 }
 
 function lamp() {
+  
   fill('black');
   rect(80, height * 0.89, 10, 100);
   rect(45, height * 0.89, 80, 10);
@@ -172,7 +173,8 @@ function car() {
   rect(x, height * 0.75, 200, 40, 10);
   noStroke();
   rect(x + 30, height * 0.75 - 20, 140, 40, 10);
-
+  
+  stroke(1);
   fill('grey');
   circle(x + 30, height * 0.75 + 40, 25);
   circle(x + 170, height * 0.75 + 40, 25);
