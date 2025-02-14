@@ -58,9 +58,11 @@ function draw() {
 function mouseWheel(event) {
   if (event.delta > 0) {
     skyColor = 'purple'; 
-  } else {
+  } 
+  else {
     skyColor = '#87ceeb'; 
   }
+
 }
 
 function road() {
