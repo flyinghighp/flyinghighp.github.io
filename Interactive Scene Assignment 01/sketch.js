@@ -2,7 +2,9 @@
 // Priyansh Jhanji
 // February 11, 2025
 //
-let skyColor = '#87ceeb';
+let skyColors = ['#87ceeb', '#a1979f', 'orange', '#9c9193'];  
+let skyIndex = 0;  
+let skyColor = skyColors[skyIndex];
 let buildingHeight;
 let buildingHeight2;
 let buildingHeight3;
@@ -55,14 +57,13 @@ function draw() {
   
 }
 
-function mouseWheel(event) {
-  if (event.delta > 0) {
-    skyColor = 'purple'; 
-  } 
-  else {
-    skyColor = '#87ceeb'; 
-  }
-
+function mouseWheel(event) {  
+  if (event.deltaY > 100) {  
+    skyIndex = (skyIndex + 1) % skyColors.length;  
+  } else {  
+    skyIndex = (skyIndex - 1 + skyColors.length) % skyColors.length;  
+  }  
+  skyColor = skyColors[skyIndex]; // Change skyColor  
 }
 
 function road() {
