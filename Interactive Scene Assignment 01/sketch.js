@@ -40,10 +40,16 @@ function draw() {
   building();   
   tree();       
   lamp();       
-  car();        
+  car();  
+  
+  //Name of the creator 
+  textSize(20);
+  textFont('Georgia');
+  textStyle(BOLD);
+  text('Priyansh Jhanji', 630, 790);     
 
   // Car movement based on arrow keys
-  if (keyIsDown(LEFT_ARROW)) {
+  if (keyIsDown(LEFT_ARROW)) {   
     x -= 5;
     if (x < -200) { 
       x = width; // Wrap-around effect
