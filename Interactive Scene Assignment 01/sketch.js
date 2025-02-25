@@ -34,15 +34,17 @@ function setup() {
 
 function draw() {
   background(skyColor);  
-
-  road();       
-  sidewalk();   
-  building();   
-  tree();       
-  lamp();       
-  car();  
+  makeMountain(29.29, 550);
+  makeMountain(560.29, 550);  
+  drawRoad();       
+  makeSidewalk();   
+  makeBuilding();   
+  drawTree();       
+  makeLamp();       
+  makeCar();  
   
-  //Name of the creator 
+  
+  // Name of the creator 
   textSize(20);
   textFont('Georgia');
   textStyle(BOLD);
@@ -74,7 +76,7 @@ function mouseWheel(event) {
 }
 
 // Function to draw the road
-function road() {
+function drawRoad() {
   fill(0);
   rect(0, height * 0.65, width, height * 0.35);  // Road base
 
@@ -85,7 +87,7 @@ function road() {
 }
 
 // Function to draw the sidewalk
-function sidewalk() {
+function makeSidewalk() {
   fill('yellow');
   rect(0, height * 0.87, width, 10);  // Sidewalk border
 
@@ -94,7 +96,7 @@ function sidewalk() {
 }
 
 // Function to draw buildings with randomly generated heights and colors
-function building() {
+function makeBuilding() {
   // First building
   fill(buildingColor);
   rect(0, height * 0.65 - buildingHeight, 80, buildingHeight);
@@ -146,7 +148,7 @@ function building() {
 }
 
 // Function to draw trees
-function tree() {
+function drawTree() {
   // Trunks
   fill('brown');
   rect(600, height * 0.5756, 20, 60);
@@ -166,7 +168,7 @@ function tree() {
 }
 
 // Function to draw street lamps
-function lamp() {
+function makeLamp() {
   // First lamp
   fill('black');
   rect(80, height * 0.89, 10, 100);
@@ -185,13 +187,13 @@ function lamp() {
 }
 
 // Function to draw a car that moves left and right
-function car() {
+function makeCar() {
   fill('red');
   rect(x, height * 0.75, 200, 40, 10);  // Car body
   noStroke();
   rect(x + 30, height * 0.75 - 20, 140, 40, 10); // Car roof
   
-  //Wheels
+  // Wheels
   stroke(1);
   fill('grey');
   circle(x + 30, height * 0.75 + 40, 25);  
@@ -203,4 +205,9 @@ function car() {
 
   fill('yellow');
   ellipse(x + 190, height * 0.75 + 10, 15, 10);  // Headlight
+}
+
+function makeMountain(x, y) {
+  fill('#8C5E5E');
+  triangle(x, y, x + 200, y - 400, x + 400, y);
 }
