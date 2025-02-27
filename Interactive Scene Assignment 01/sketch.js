@@ -3,26 +3,23 @@
 // February 11, 2025
 // This is a dynamic city scene with a moving car, changing sky, and randomly generated buildings.
 
+// Global Variables
 let skyColors = ['#87ceeb', '#ee5d6c', '#fb9062', '#101c4f'];  
 let skyIndex = 0;  
-let skyColor = skyColors[skyIndex];
-let buildingHeight;
-let buildingHeight2;
-let buildingHeight3;
-let buildingHeight4;
-let buildingColor;
-let buildingColor2;
-let buildingColor3;
-let buildingColor4;
+let currentBack = skyColors[skyIndex];
+
+let buildingHeight, buildingHeight2, buildingHeight3, buildingHeight4;
+let buildingColor, buildingColor2, buildingColor3, buildingColor4;
 let x;
 
 function setup() {
   createCanvas(800, 800);
+// Random Height
   buildingHeight = random(200, 560);
   buildingHeight2 = buildingHeight / 2;
   buildingHeight3 = buildingHeight / 1.5;
   buildingHeight4 = buildingHeight / 2.75;
-
+// Random Colors for the Buildings
   let buildingColors = ['red', 'lightgreen', 'lightgrey', 'yellow', 'pink', 'orange', 'white'];
   buildingColor = random(buildingColors);
   buildingColor2 = random(buildingColors);
@@ -33,7 +30,7 @@ function setup() {
 }
 
 function draw() {
-  background(skyColor);  
+  background(currentBack);  
   makeMountain(29.29, 550);
   makeMountain(560.29, 550);  
   drawRoad();       
@@ -43,8 +40,7 @@ function draw() {
   makeLamp();       
   makeCar();  
   
-  
-  // Name of the creator 
+  // Name on the bottom corner
   textSize(20);
   textFont('Georgia');
   textStyle(BOLD);
@@ -65,14 +61,12 @@ function draw() {
   }
 }
 
-// Function to change sky color using the mouse scroll wheel
-function mouseWheel(event) {  
-  if (event.deltaY > 100) {  
+// Function to change sky color on middle mouse click
+function mousePressed() {  
+  if (mouseButton === CENTER) {  
     skyIndex = (skyIndex + 1) % skyColors.length;  
-  } else {  
-    skyIndex = (skyIndex - 1 + skyColors.length) % skyColors.length;  
-  }  
-  skyColor = skyColors[skyIndex];  
+    currentBack = skyColors[skyIndex];  
+  }
 }
 
 // Function to draw the road
@@ -96,12 +90,11 @@ function makeSidewalk() {
 }
 
 // Function to draw buildings with randomly generated heights and colors
+// First building
 function makeBuilding() {
-  // First building
   fill(buildingColor);
   rect(0, height * 0.65 - buildingHeight, 80, buildingHeight);
-
-  // Windows
+// Windows
   fill(255, 255, 0); 
   if (buildingHeight > 50) {
     rect(10, height * 0.65 - buildingHeight + 20, 15, 20);
@@ -109,11 +102,9 @@ function makeBuilding() {
     rect(10, height * 0.65 - buildingHeight + 50, 15, 20);
     rect(40, height * 0.65 - buildingHeight + 50, 15, 20);
   }
-
-  // Second building
+// Second Building
   fill(buildingColor2);
   rect(100, height * 0.65 - buildingHeight2, 100, buildingHeight2);
-
   fill(255, 255, 0);
   if (buildingHeight2 > 50) {
     rect(110, height * 0.65 - buildingHeight2 + 20, 15, 20);
@@ -121,11 +112,9 @@ function makeBuilding() {
     rect(110, height * 0.65 - buildingHeight2 + 50, 15, 20);
     rect(140, height * 0.65 - buildingHeight2 + 50, 15, 20);
   }
-
-  // Third building
+// Third Building
   fill(buildingColor3);
   rect(260, height * 0.65 - buildingHeight3, 134, buildingHeight3);
-
   fill(255, 255, 0);
   if (buildingHeight3 > 70) {
     rect(270, height * 0.65 - buildingHeight3 + 20, 15, 20);
@@ -133,11 +122,9 @@ function makeBuilding() {
     rect(270, height * 0.65 - buildingHeight3 + 50, 15, 20);
     rect(300, height * 0.65 - buildingHeight3 + 50, 15, 20);
   }
-
-  // Fourth building
+// Fourth Building
   fill(buildingColor4);
   rect(420, height * 0.65 - buildingHeight4, 134, buildingHeight4);
-
   fill(255, 255, 0);
   if (buildingHeight4 > 70) {
     rect(430, height * 0.65 - buildingHeight4 + 20, 15, 20);
@@ -153,14 +140,12 @@ function drawTree() {
   fill('brown');
   rect(600, height * 0.5756, 20, 60);
   rect(700, height * 0.5756, 20, 60);
-
   // Leaves clusters
   fill('green');
   circle(610, height * 0.55, 70);
   circle(595, height * 0.55, 70);
   circle(630, height * 0.55, 70);
   circle(610, height * 0.51, 70);
-
   circle(710, height * 0.55, 70);
   circle(695, height * 0.55, 70);
   circle(730, height * 0.55, 70);
@@ -169,7 +154,6 @@ function drawTree() {
 
 // Function to draw street lamps
 function makeLamp() {
-  // First lamp
   fill('black');
   rect(80, height * 0.89, 10, 100);
   rect(45, height * 0.89, 80, 10);
@@ -177,7 +161,6 @@ function makeLamp() {
   circle(45, height * 0.9, 20);
   circle(120, height * 0.9, 20);
 
-  // Second lamp
   fill('black');
   rect(530, height * 0.89, 10, 100);
   rect(495, height * 0.89, 80, 10);
@@ -189,24 +172,24 @@ function makeLamp() {
 // Function to draw a car that moves left and right
 function makeCar() {
   fill('red');
-  rect(x, height * 0.75, 200, 40, 10);  // Car body
+  rect(x, height * 0.75, 200, 40, 10);// Car body
   noStroke();
-  rect(x + 30, height * 0.75 - 20, 140, 40, 10); // Car roof
+  rect(x + 30, height * 0.75 - 20, 140, 40, 10);// Car roof
   
   // Wheels
   stroke(1);
   fill('grey');
-  circle(x + 30, height * 0.75 + 40, 25);  
-  circle(x + 170, height * 0.75 + 40, 25); 
+  circle(x + 30, height * 0.75 + 40, 25);
+  circle(x + 170, height * 0.75 + 40, 25);
 
   fill('white');
   circle(x + 30, height * 0.75 + 40, 15);
   circle(x + 170, height * 0.75 + 40, 15);
 
-  fill('yellow');
-  ellipse(x + 190, height * 0.75 + 10, 15, 10);  // Headlight
+  fill('yellow'); // Headlight
+  ellipse(x + 190, height * 0.75 + 10, 15, 10);
 }
-
+//Function to Draw Mountains
 function makeMountain(x, y) {
   fill('#8C5E5E');
   triangle(x, y, x + 200, y - 400, x + 400, y);
