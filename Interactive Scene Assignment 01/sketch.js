@@ -1,7 +1,7 @@
 // Interactive Scene Assignment 01
 // Priyansh Jhanji
 // February 11, 2025
-// This is a dynamic city scene with a moving car, changing sky, and randomly generated buildings.
+// This is a dynamic city scene with a moving car, changing sky and car color, and randomly generated buildings.
 
 // Global Variables
 let skyColors = ['#87ceeb', '#ee5d6c', '#fb9062', '#101c4f'];  
@@ -11,15 +11,16 @@ let currentBack = skyColors[skyIndex];
 let buildingHeight, buildingHeight2, buildingHeight3, buildingHeight4;
 let buildingColor, buildingColor2, buildingColor3, buildingColor4;
 let x;
+let carColor = 'red';  // Initial car color set to red
 
 function setup() {
   createCanvas(800, 800);
-// Random Height
+  // Random Height
   buildingHeight = random(200, 560);
   buildingHeight2 = buildingHeight / 2;
   buildingHeight3 = buildingHeight / 1.5;
   buildingHeight4 = buildingHeight / 2.75;
-// Random Colors for the Buildings
+  // Random Colors for the Buildings
   let buildingColors = ['red', 'lightgreen', 'lightgrey', 'yellow', 'pink', 'orange', 'white'];
   buildingColor = random(buildingColors);
   buildingColor2 = random(buildingColors);
@@ -61,11 +62,25 @@ function draw() {
   }
 }
 
-// Function to change sky color on middle mouse click
+// Function to change sky and car color on middle mouse click
 function mousePressed() {  
   if (mouseButton === CENTER) {  
     skyIndex = (skyIndex + 1) % skyColors.length;  
     currentBack = skyColors[skyIndex];  
+
+    // Change car color based on sky color
+    if (skyIndex === 0) {  // Sky is Blue
+      carColor = 'red';
+    } 
+    else if (skyIndex === 1) {  // Sky is Orange
+      carColor = 'orange';
+    } 
+    else if (skyIndex === 2) {  // Sky is Pink
+      carColor = 'purple';
+    } 
+    else if (skyIndex === 3) {  // Sky is Night 
+      carColor = 'darkgrey';
+    }
   }
 }
 
@@ -90,11 +105,12 @@ function makeSidewalk() {
 }
 
 // Function to draw buildings with randomly generated heights and colors
-// First building
+
 function makeBuilding() {
+  // First building
   fill(buildingColor);
   rect(0, height * 0.65 - buildingHeight, 80, buildingHeight);
-// Windows
+  // Windows
   fill(255, 255, 0); 
   if (buildingHeight > 50) {
     rect(10, height * 0.65 - buildingHeight + 20, 15, 20);
@@ -102,7 +118,7 @@ function makeBuilding() {
     rect(10, height * 0.65 - buildingHeight + 50, 15, 20);
     rect(40, height * 0.65 - buildingHeight + 50, 15, 20);
   }
-// Second Building
+  // Second Building
   fill(buildingColor2);
   rect(100, height * 0.65 - buildingHeight2, 100, buildingHeight2);
   fill(255, 255, 0);
@@ -112,7 +128,7 @@ function makeBuilding() {
     rect(110, height * 0.65 - buildingHeight2 + 50, 15, 20);
     rect(140, height * 0.65 - buildingHeight2 + 50, 15, 20);
   }
-// Third Building
+  // Third Building
   fill(buildingColor3);
   rect(260, height * 0.65 - buildingHeight3, 134, buildingHeight3);
   fill(255, 255, 0);
@@ -122,7 +138,7 @@ function makeBuilding() {
     rect(270, height * 0.65 - buildingHeight3 + 50, 15, 20);
     rect(300, height * 0.65 - buildingHeight3 + 50, 15, 20);
   }
-// Fourth Building
+  // Fourth Building
   fill(buildingColor4);
   rect(420, height * 0.65 - buildingHeight4, 134, buildingHeight4);
   fill(255, 255, 0);
@@ -171,10 +187,10 @@ function makeLamp() {
 
 // Function to draw a car that moves left and right
 function makeCar() {
-  fill('red');
-  rect(x, height * 0.75, 200, 40, 10);// Car body
+  fill(carColor);  // Use the dynamic carColor
+  rect(x, height * 0.75, 200, 40, 10); // Car body
   noStroke();
-  rect(x + 30, height * 0.75 - 20, 140, 40, 10);// Car roof
+  rect(x + 30, height * 0.75 - 20, 140, 40, 10); // Car roof
   
   // Wheels
   stroke(1);
@@ -189,6 +205,7 @@ function makeCar() {
   fill('yellow'); // Headlight
   ellipse(x + 190, height * 0.75 + 10, 15, 10);
 }
+
 //Function to Draw Mountains
 function makeMountain(x, y) {
   fill('#8C5E5E');
