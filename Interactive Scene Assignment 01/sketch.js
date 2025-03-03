@@ -45,7 +45,7 @@ function draw() {
   textSize(20);
   textFont('Georgia');
   textStyle(BOLD);
-  text('Priyansh Jhanji', 630, 790);     
+  text('Priyansh Jhanji', 535, 790);     
 
   // Car movement based on arrow keys
   if (keyIsDown(LEFT_ARROW)) {   
