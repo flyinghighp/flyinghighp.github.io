@@ -6,31 +6,55 @@ let yLimit;
 let yHeight;
 let rectWidth;
 
+let mySeed;
+let noiseStart = 5;
+let noiseTime;
+let noiseSpeed = 0.1;
+let totalHeight = 0;
+let numRectangles = 0;
+let averageHeight = 0;
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  yLimit = random(100, 300);
+  yLimit = windowHeight - 20;
   yHeight = random(0, yLimit);
   rectWidth = width / 20;
-  generateTerrain();
+  mySeed = random(100);
+  randomSeed(mySeed); 
 }
 
 function draw() {
-  
+  noiseTime = noiseStart;
+  randomSeed(mySeed); 
+  generateTerrain();
+  noiseStart += noiseSpeed; 
+  findAverage();
 }
 
 function generateTerrain() {
-  let numRects = 20;
+  totalHeight = 0; 
+  numRectangles = 0;
+  
   let x = 0;
+  let randomNum;
 
   background("white");
 
   while (x < width) {
-    let rectHeight = random(50, height);
+    randomNum = noise(noiseTime) * 100; 
+    let rectHeight = map(randomNum, 0, 100, 50, yHeight); 
+
     fill("black");
-    stroke("white");
+    
     rect(x, height - rectHeight, rectWidth, rectHeight);
+
     x += rectWidth;
+    noiseTime += noiseSpeed; 
+
+    totalHeight += rectHeight;
+    numRectangles++;
   }
+  averageHeight = totalHeight/numRectangles;
 }
 
 function keyPressed() {
@@ -41,3 +65,9 @@ function keyPressed() {
   }
   generateTerrain();
 }
+
+function findAverage(){
+  fill('red');
+  rect(0,windowHeight-averageHeight,windowWidth,10);
+}
+
