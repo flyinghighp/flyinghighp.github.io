@@ -2,38 +2,34 @@
 // Priyansh Jhanji
 // 3rd March 2025
 
+//Global Varaibles
 let yLimit;
 let yHeight;
 let rectWidth;
-
-let mySeed;
 let noiseStart = 5;
 let noiseTime;
 let noiseSpeed = 0.01;
 let totalHeight = 0;
-let numRectangles = 0;
-let averageHeight = 0;
+let averageHeight;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   yLimit = windowHeight - 10;
   yHeight = random(0, yLimit);
   rectWidth = width / 20;
-  mySeed = random(9999);
-  randomSeed(mySeed); 
+  
 }
 
 function draw() {
   noiseTime = noiseStart;
-  randomSeed(mySeed); 
   generateTerrain();
   noiseStart += noiseSpeed; 
   findAverage();
 }
 
 function generateTerrain() {
-  totalHeight = 0; 
-  numRectangles = 0;
+  let totalHeight = 0; 
+  let numRectangles = 0;
   
   let x = 0;
   let randomNum;
@@ -43,7 +39,7 @@ function generateTerrain() {
   background("white");
 
   while (x < width) {
-    randomNum = noise(noiseTime) * 100;  
+    randomNum = noise(noiseTime) * 150;  
     let rectHeight = map(randomNum, 0, 100, 50, yHeight);  
     let rectY = height - rectHeight;
 
@@ -57,7 +53,6 @@ function generateTerrain() {
 
     totalHeight += rectHeight;
     numRectangles++;
-
     x += rectWidth;
     noiseTime += noiseSpeed; 
   }
@@ -65,10 +60,12 @@ function generateTerrain() {
   drawFlag(highestX, highestY);
 }
 
+
 function keyPressed() {
   if (keyCode === LEFT_ARROW) {
     rectWidth = max(10, rectWidth - 20);
-  } else if (keyCode === RIGHT_ARROW) {
+  } 
+  else if (keyCode === RIGHT_ARROW) {
     rectWidth = min(40, rectWidth + 20);
   }
   generateTerrain();
