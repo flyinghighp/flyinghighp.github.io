@@ -13,22 +13,22 @@ let totalHeight = 0;
 let averageHeight;
 
 function setup() {
+  // Initializes the canvas and sets initial values for terrain parameters
   createCanvas(windowWidth, windowHeight);
   yLimit = windowHeight - 10;
   yHeight = random(0, yLimit);
   rectWidth = width / 20;
-  
 }
 
 function draw() {
   noiseTime = noiseStart;
-  generateTerrain();
-  noiseStart += noiseSpeed; 
-  findAverage();
+  generateTerrain(); // Generates terrain using Perlin noise
+  noiseStart += noiseSpeed;
+  findAverage(); // Find and display the average height of terrain
 }
 
 function generateTerrain() {
-  let totalHeight = 0; 
+  let totalHeight = 0;
   let numRectangles = 0;
   
   let x = 0;
@@ -38,9 +38,9 @@ function generateTerrain() {
 
   background("white");
 
-  while (x < width) {
-    randomNum = noise(noiseTime) * 150;  
-    let rectHeight = map(randomNum, 0, 100, 50, yHeight);  
+  while (x < width) { 
+    randomNum = noise(noiseTime) * 150;
+    let rectHeight = map(randomNum, 0, 100, 50, yHeight);
     let rectY = height - rectHeight;
 
     fill("black");
@@ -54,33 +54,33 @@ function generateTerrain() {
     totalHeight += rectHeight;
     numRectangles++;
     x += rectWidth;
-    noiseTime += noiseSpeed; 
+    noiseTime += noiseSpeed;
   }
   averageHeight = totalHeight / numRectangles;
-  drawFlag(highestX, highestY);
+  drawFlag(highestX, highestY); // Draw a flag at the highest point
 }
 
-
 function keyPressed() {
+  // Adjust the width of rectangles based on left or right arrow key
   if (keyCode === LEFT_ARROW) {
     rectWidth = max(10, rectWidth - 20);
   } 
   else if (keyCode === RIGHT_ARROW) {
     rectWidth = min(40, rectWidth + 20);
   }
-  generateTerrain();
+  generateTerrain(); // Re-generate terrain with updated rectangle width
 }
 
 function findAverage(){
+  // Display a red line representing the average height of terrain
   fill('red');
   rect(0, windowHeight - averageHeight, windowWidth, 10);
 }
 
 function drawFlag(x, y) {
+  // Draw a flag at the highest point of the terrain
   fill('black');
-  rect(x + rectWidth / 2 - 2, y - 30, 4, 30);
+  rect(x + rectWidth / 2 - 2, y - 30, 4, 30); // Flag pole
   fill('red');
-  rect(x + rectWidth / 2, y - 30, 20, 15);
+  rect(x + rectWidth / 2, y - 30, 20, 15); // Flag
 }
-
-
