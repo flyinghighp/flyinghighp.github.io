@@ -13,7 +13,7 @@ let totalHeight = 0;
 let averageHeight;
 
 function setup() {
-  // Initializes the canvas and sets initial values for terrain parameters
+  // Setup the canvas and initialize variables
   createCanvas(windowWidth, windowHeight);
   yLimit = windowHeight - 10;
   yHeight = random(0, yLimit);
@@ -22,11 +22,12 @@ function setup() {
 
 function draw() {
   noiseTime = noiseStart;
-  generateTerrain(); // Generates terrain using Perlin noise
+  generateTerrain();
   noiseStart += noiseSpeed;
   findAverage(); // Find and display the average height of terrain
 }
 
+// Generates terrain using noise
 function generateTerrain() {
   let totalHeight = 0;
   let numRectangles = 0;
