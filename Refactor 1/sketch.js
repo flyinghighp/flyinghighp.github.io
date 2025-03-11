@@ -1,4 +1,4 @@
-// Refactor 1
+// Refactor 1 Practice
 // Priyansh Jhanji
 // 11th March 2025
 // Bouncing rectangle
