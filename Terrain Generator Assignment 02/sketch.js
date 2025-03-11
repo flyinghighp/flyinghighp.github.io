@@ -2,6 +2,11 @@
 // Priyansh Jhanji
 // 3rd March 2025
 
+// This program generates a terrain using Perlin noise, 
+// with adjustable rectangle width using arrow keys. It shows the 
+// average height and places a flag at the highest point.
+
+
 //Global Varaibles
 let yLimit;
 let yHeight;
