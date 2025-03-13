@@ -14,10 +14,21 @@ let myBook;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  //Make 20 books in a row
+  let x = 50;
+  let covers = ["softcoover", "hardcover", "leatherbound"];
+
+
+  for (let i = 0; i < 20; i++) {
+    let choice = int(random(3));
+    bookshelf.push(new Book("A", "Mr.Booth",
+      11111111111, covers[choice], 200, x));
+      x +=20;
+  }
   myBook = new Book("CS30 Text", "Mr Scott",
     1234567891011, "leatherbound",
-    515, height/2, width * 0.3, 150);
-  
+    515, height / 2, width * 0.3, 150);
+
   myBook.printOut();
 }
 
@@ -55,16 +66,17 @@ class Book {
         fill(150, 100, 15); break;
     }
 
-    rect(this.x, this.y, this.pages/10,150, this.bookheight);
+    rect(this.x, this.y, this.pages / 10, 150, this.bookheight);
     fill(255);
-    text(this.title[0], this.x, this.y-50);
+    text(this.title[0], this.x, this.y - 50);
   }
-    printOut() {
-      //print out the data in a nice format
-      print(this.title + ",by" + this.author);
-      print("Length" + this.pages);
-      print("ISBN:" + this.isbn);
-    
-    }
-  
+  printOut() {
+    //print out the data in a nice format
+    print(this.title + ",by" + this.author);
+    print("Length" + this.pages);
+    print("ISBN:" + this.isbn);
+
+  }
+
+
 }
