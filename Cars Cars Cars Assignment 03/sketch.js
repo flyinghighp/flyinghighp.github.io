@@ -2,24 +2,27 @@
 // Priyansh Jhanji
 // 21st March 2025
 // Creating a Traffic Simulation where each vehicle on the road will be an object created from a Vehicle class defined.
-
-let eastbound;
-let westbound;
+//HOW TO AUTOMATE THE FIX OF OVERLAP??
+//CARS NOT SHOWING ON CANVAS
+let eastbound=[];
+let westbound=[];
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  drawRoad();
-  
-
-  eastbound = new Vehicle(random(width), random(height / 3, height/3.5), 1, random(2, 5));
-  westbound = new Vehicle(random(width), random(height * 0.6, height*0.7), -1, random(2, 5));
+  for (let i = 0; i <20; i++){
+    eastbound.push(new Vehicle(random(width), random(height / 3, height/3.5), 1, random(2, 5)));
+    westbound.push(new Vehicle(random(width), random(height * 0.6, height*0.7), -1, random(2, 5)));
+  }
 }
-
 function draw() {
   background(220);
   drawRoad();
-  eastbound.action();
-  westbound.action();
+  for(let car of eastbound){
+    car.action();
+  }
+  for (let car of westbound){
+    car.action();
+  }
 }
 
 // Function to draw the road
@@ -45,7 +48,10 @@ class Vehicle {
   }
   
   move() {
-    this.x += this.xSpeed * this.direction;
+    if (this.xSpeed < 0) {
+      this.xSpeed = 1;  // Reset speed 
+    }
+    this.x += this.xSpeed * this.direction;  
     
     //Wrap Around
     if (this.direction === 1 && this.x > width) {
@@ -106,4 +112,4 @@ class Vehicle {
     }
     this.display();
   }
-}
+} 
