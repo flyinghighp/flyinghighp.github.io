@@ -4,6 +4,7 @@
 // Creating a Traffic Simulation where each vehicle on the road will be an object created from a Vehicle class defined.
 //HOW TO AUTOMATE THE FIX OF OVERLAP??
 //CARS NOT SHOWING ON CANVAS
+
 let eastbound=[];
 let westbound=[];
 
@@ -64,7 +65,7 @@ class Vehicle {
 
   speedUp() {
     //Speed Increase
-    if (this.xSpeed < 16) {
+    if (this.xSpeed < 15) {
       this.xSpeed += 1;
     }
   }
@@ -84,7 +85,7 @@ class Vehicle {
     fill(this.color);
     stroke(0);
     if (this.type === 0) {
-      //car
+      // Car
       rect(this.x, this.y, 50, 25, 5); 
       rect(this.x + 10, this.y - 10, 30, 15, 5); 
       fill(50);
@@ -92,13 +93,21 @@ class Vehicle {
       circle(this.x + 40, this.y + 25, 10);
     } 
     else {
-      //Truck
-      rect(this.x, this.y, 55, 25, 5); 
+      // Truck 
+      push();
+      translate(this.x, this.y);
+      if (this.direction === 1) {
+        scale(-1, 1);  // Flip horizontally
+        translate(-55, 0); // Adjust position after flipping
+      }
+  
+      rect(0, 0, 55, 25, 5);  // Truck body
       fill(this.color);
-      rect(this.x + 40, this.y, 15, 25); 
+      rect(40, 0, 15, 25);  // Truck cabin
+      fill('')
+      pop();
     }
   }
-
   action() {
     this.move();
     if (random(100) < 1) {
