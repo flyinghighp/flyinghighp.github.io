@@ -84,30 +84,52 @@ class Vehicle {
   display() {
     fill(this.color);
     stroke(0);
+    
     if (this.type === 0) {
       // Car
       rect(this.x, this.y, 50, 25, 5); 
       rect(this.x + 10, this.y - 10, 30, 15, 5); 
+      
+      // Car windows
+      fill('skyblue');
+      rect(this.x + 15, this.y - 8, 10, 8, 2);  // Left window
+      rect(this.x + 30, this.y - 8, 10, 8, 2);  // Right window
+  
+      // Wheels
       fill(50);
       circle(this.x + 10, this.y + 25, 10); 
       circle(this.x + 40, this.y + 25, 10);
     } 
     else {
-      // Truck 
+      
       push();
       translate(this.x, this.y);
       if (this.direction === 1) {
         scale(-1, 1);  // Flip horizontally
-        translate(-55, 0); // Adjust position after flipping
+        translate(-75, 0); // Adjust position after flipping
       }
   
-      rect(0, 0, 55, 25, 5);  // Truck body
+      // Truck Cargo
       fill(this.color);
-      rect(40, 0, 15, 25);  // Truck cabin
-      fill('')
+      rect(15, 0, 60, 30, 5);  
+  
+      // Truck Cab
+      fill(150);
+      rect(0, 5, 20, 25, 5);  
+  
+      // Windshield
+      fill('skyblue');
+      rect(2, 7, 10, 10); 
+  
+      // Wheels
+      fill(50);
+      circle(20, 30, 12);  
+      circle(60, 30, 12);
+  
       pop();
     }
   }
+  
   action() {
     this.move();
     if (random(100) < 1) {
