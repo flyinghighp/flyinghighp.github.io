@@ -2,8 +2,7 @@
 // Priyansh Jhanji
 // 21st March 2025
 // Creating a Traffic Simulation where each vehicle on the road will be an object created from a Vehicle class defined.
-//HOW TO AUTOMATE THE FIX OF OVERLAP??
-//CARS NOT SHOWING ON CANVAS
+
 
 let eastbound=[];
 let westbound=[];
