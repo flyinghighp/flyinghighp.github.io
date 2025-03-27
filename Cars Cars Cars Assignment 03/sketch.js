@@ -14,6 +14,7 @@ function setup() {
     westbound.push(new Vehicle(random(width), random(height * 0.6, height*0.7), -1, random(2, 5)));
   }
 }
+
 function draw() {
   background(220);
   drawRoad();
@@ -25,6 +26,18 @@ function draw() {
   }
 }
 
+function mousePressed() {
+  if (keyIsDown(SHIFT)){
+    // Add an westboundbound car on Shift+left click
+    westbound.push(new Vehicle(random(width), random(height * 0.6, height*0.7), -1, random(2, 5)));
+  }
+  else{
+  // Add an eastbound car on left click
+  eastbound.push(new Vehicle(0, random(height / 3, height / 3.5), 1, random(2, 5)));
+  }
+}
+
+
 // Function to draw the road
 function drawRoad() {
   let roadHeight = windowHeight / 2;
@@ -34,6 +47,15 @@ function drawRoad() {
   fill('yellow');
   for (let i = 0; i < width; i += 40) {
     rect(i, height / 2, 25, 3);  // Road markings
+  }
+}
+
+class TrafficLight {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.lightcolor = 'green';
+    this.timer = 0;
   }
 }
 
@@ -64,14 +86,14 @@ class Vehicle {
 
   speedUp() {
     //Speed Increase
-    if (this.xSpeed < 15) {
+    if (this.xSpeed <= 15) {
       this.xSpeed += 1;
     }
   }
 
   speedDown() {
     //Speed Reduce
-    if (this.xSpeed > 0) {
+    if (this.xSpeed >= 0) {
       this.xSpeed -= 1;
     }
   }
@@ -86,18 +108,26 @@ class Vehicle {
     
     if (this.type === 0) {
       // Car
-      rect(this.x, this.y, 50, 25, 5); 
-      rect(this.x + 10, this.y - 10, 30, 15, 5); 
+
+      push();
+      translate(this.x, this.y);
+      if (this.direction === -1) {
+        scale(-1, 1);  // Flip horizontally 
+      }
+
+      rect(0, 0, 50, 25, 5); 
+      rect(0 + 10, 0 - 10, 30, 15, 5); 
       
       // Car windows
       fill('skyblue');
-      rect(this.x + 15, this.y - 8, 10, 8, 2);  // Left window
-      rect(this.x + 30, this.y - 8, 10, 8, 2);  // Right window
+      rect(0 + 15,0- 8, 10, 8, 2);  // Left window
+      rect(0 + 30, 0 - 8, 10, 8, 2);  // Right window
   
       // Wheels
       fill(50);
-      circle(this.x + 10, this.y + 25, 10); 
-      circle(this.x + 40, this.y + 25, 10);
+      circle(0 + 10, 0 + 25, 10); 
+      circle(0 + 40, 0 + 25, 10);
+      pop();
     } 
     else {
       
