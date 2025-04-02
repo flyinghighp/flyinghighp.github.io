@@ -7,7 +7,7 @@
 let eastbound = []; 
 let westbound = []; 
 let trafficLight; 
-let redStartFrame = 0; 
+let redStartFrame = 0; //fraem counter for signal
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
