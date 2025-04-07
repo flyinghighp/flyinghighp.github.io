@@ -21,7 +21,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   rectWidth = width/NUM_COLS;
   rectHeight = height/NUM_ROWS;
-  randomGrid();
+  randomGrid(); //Generate a random grid at the start of the game
 }
 
 function draw() {
