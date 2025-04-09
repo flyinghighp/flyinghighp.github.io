@@ -48,7 +48,7 @@ function mousePressed(){
     // Square pattern
     for (let x = -1; x <= 1; x++) {
       for (let y = -1; y <= 1; y++) {
-        flip(currentCol + dx, currentRow + dy);
+        flip(currentCol + x, currentRow + y);
       }
     }
   } else {
@@ -110,8 +110,8 @@ function drawOverlay() {
   } else {
     if (sqFlip) {
       // Square pattern overlay
-      for (let x = -1; x <= 1; x++) {
-        for (let y = -1; y <= 1; y++) {
+      for (let x = 0 ; x <= 1 ; x++) {
+        for (let y = 0; y <= 1; y++) {
           let col = currentCol + x;
           let row = currentRow + y;
           if (col >= 0 && col < NUM_COLS && row >= 0 && row < NUM_ROWS) {
