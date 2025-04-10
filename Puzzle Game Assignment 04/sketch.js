@@ -135,8 +135,6 @@ function drawOverlay() {
     for (let i = 0; i < 5; i++) {
       let col = currentCol; 
       let row = currentRow;  
-
-      
       if (i === 1) col -= 1;  // Left
       if (i === 2) col += 1;  // Right
       if (i === 3) row -= 1;  // Up
