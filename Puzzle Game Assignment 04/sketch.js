@@ -8,7 +8,7 @@ let NUM_COLS = 5;  // Number of columns in the grid
 let rectWidth, rectHeight;  // Dimensions for each grid square
 let currentRow, currentCol;  // Current active row and column 
 
-// Initial grid values (0 or 255)
+// Initial grid values 
 let gridVal = [ [0,0,0,0,0],  
                 [255,0,255,0,0],  
                 [0,0,0,0,0],  
@@ -77,9 +77,12 @@ function keyPressed() {
 
 // Flip a square at the specified column and row
 function flip(col, row) {
-  if (col >= 0 && col < NUM_COLS && row >= 0 && row < NUM_ROWS) {
-    gridVal[row][col] = gridVal[row][col] === 0 ? 255 : 0;
-  }
+  if (gridVal[row][col] === 0) {
+    gridVal[row][col] = 255;
+  } 
+  else {
+    gridVal[row][col] = 0;
+  }  
 }
 
 // Determine the current square based on mouse position
@@ -106,16 +109,16 @@ function checkWin() {
       if(cell !== val) return false;  
     }
   }
-  return true;  // All cells match, return true (win)
+  return true;  // If all cells are of same colour, return true (win)
 }
 
 // Draw the overlay 
 function drawOverlay() {
   noStroke();  
-  fill(0, 255, 0, 100);  // Set green fill
+  fill(0, 255, 0, 100);  
 
   if (keyIsDown(SHIFT)) {
-    // Draw single square if SHIFT is pressed
+    // Draw a single square if SHIFT is pressed
     rect(currentCol * rectWidth, currentRow * rectHeight, rectWidth, rectHeight);
   } 
   else if (sqFlip) {
@@ -147,7 +150,7 @@ function drawOverlay() {
   }
 }
 
-// Initialize the grid with random filled squares
+// Start the game with random filled squares
 function randomGrid(){
   for(let r = 0; r < NUM_ROWS; r++){  
     for(let c = 0; c < NUM_COLS; c++){  
