@@ -15,7 +15,7 @@ let gridVal = [ [0,0,0,0,0],
                 [0,255,0,0,0],  
                 [255,0,0,0,0]];  
 
-
+  
 let sqFlip = false; 
 
 // Set up canvas and grid dimensions
@@ -121,7 +121,7 @@ function drawOverlay() {
   else if (sqFlip) {
     // Draw a 2x2 square if square flip is active
     for (let x = 0; x <= 1; x++) {
-      for (let y = 0; y <= 1; y++) {
+      for (let y = 0; y <= 1 ; y++) {
         let col = currentCol + x;  
         let row = currentRow + y;  
         if (col >= 0 && col < NUM_COLS && row >= 0 && row < NUM_ROWS) {
@@ -135,8 +135,6 @@ function drawOverlay() {
     for (let i = 0; i < 5; i++) {
       let col = currentCol; 
       let row = currentRow;  
-
-      
       if (i === 1) col -= 1;  // Left
       if (i === 2) col += 1;  // Right
       if (i === 3) row -= 1;  // Up
