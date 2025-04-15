@@ -1,4 +1,4 @@
-// 21b CSS Centering and 3D Shapes
+// c
 // Priyansh Jhanji
 // 15 April 2025
 //
@@ -13,6 +13,7 @@ function setup() {
 
 function draw() {
   background(220); // WEBGL has 0,0 at the centre
+  lights();
   rotateX(-20);
   rotateY(frameCount);
   fill("red");
