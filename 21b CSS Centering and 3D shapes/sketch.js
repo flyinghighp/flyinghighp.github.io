@@ -1,9 +1,5 @@
-// c
 // Priyansh Jhanji
 // 15 April 2025
-//
-// Extra for Experts:
-// - describe what you did to take this project "above and beyond"
 
 let angle = 5;
 function setup() {
