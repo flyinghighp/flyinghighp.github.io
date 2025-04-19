@@ -4,7 +4,7 @@
 // Circular fractal that spins, zooms on drag, and has dynamic color
 
 let scaleFactor = 1;
-
+let rotationSpeed = 200;
 function setup() {
   createCanvas(600, 600);
   angleMode(DEGREES);
@@ -17,14 +17,16 @@ function draw() {
   translate(width / 2, height / 2);
   scale(scaleFactor);
 
+ 
   let branches = 15;
   for (let i = 0; i < branches; i++) {
     push();
-    rotate(i * (360 / branches) + frameCount);
+    rotate(i * (360 / branches) + frameCount * rotationSpeed);
     drawFractal(0, 90, 120, 6);
     pop();
   }
 }
+
 
 function drawFractal(x, y, l, depth) {
   if (depth <= 0 || l < 5) return;
@@ -36,10 +38,21 @@ function drawFractal(x, y, l, depth) {
 
   let nx = x;
   let ny = y - l;
+  if (scaleFactor > 0.45){
+    circle(nx, ny, l / 1.5);
+    circle(nx + l / 4, ny, l / 3);
+    circle(nx - l / 4, ny, l /3);
+  
+  }
+  else{
+    circle(nx, ny, l / 1.5);
+    circle(nx + l / 4, ny, l - 3);
+    circle(nx - l / 4, ny, l + 3);
+    circle(nx / l / 4, ny, l * 3);
+    circle(nx * l / 4, ny, l / 3);
 
-  circle(nx, ny, l / 1.5);
-  circle(nx + l / 4, ny, l / 3);
-  circle(nx - l / 4, ny, l / 3);
+
+  }
 
   drawFractal(nx, ny, l * 0.65, depth - 1);
 }
@@ -47,8 +60,10 @@ function drawFractal(x, y, l, depth) {
 function mouseDragged() {
   if (mouseY < height / 2) {
     scaleFactor += 0.05;
-  } else {
+  } 
+  else {
     scaleFactor -= 0.05;
   }
   scaleFactor = constrain(scaleFactor, 0.2, 3);
 }
+
