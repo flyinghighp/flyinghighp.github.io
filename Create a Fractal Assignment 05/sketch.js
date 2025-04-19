@@ -1,43 +1,54 @@
-// Create a Fractal Assignment 05
+// Fractal Assignment 05
 // Priyansh Jhanji
 // 16 April 2025
-// This code creates a fractal pattern using recursion and 3D transformations. 
+// Circular fractal that spins, zooms on drag, and has dynamic color
+
+let scaleFactor = 1;
+
 function setup() {
-  createCanvas(500, 500, WEBGL);
+  createCanvas(600, 600);
   angleMode(DEGREES);
-  noStroke();
+  colorMode(HSB, 360, 50, 100);
+  noFill();
 }
 
 function draw() {
-  background(255);
-  lights();
-  
-  drawPeacockFeather(0, 0, 100, 5);
+  background(25);
+  translate(width / 2, height / 2);
+  scale(scaleFactor);
+
+  let branches = 15;
+  for (let i = 0; i < branches; i++) {
+    push();
+    rotate(i * (360 / branches) + frameCount);
+    drawFractal(0, 90, 120, 6);
+    pop();
+  }
 }
 
-function drawPeacockFeather(x, y, size, depth) {
-  drawEye(x, y, size, depth);
+function drawFractal(x, y, l, depth) {
+  if (depth <= 0 || l < 5) return;
+
+  let hueVal = (frameCount + depth * 40) % 360;
+  stroke(hueVal, 40, 100);
+  strokeWeight(map(depth, 1, 0, 0.2, 1.5));
+  line(x, y, x, y - l);
+
+  let nx = x;
+  let ny = y - l;
+
+  circle(nx, ny, l / 1.5);
+  circle(nx + l / 4, ny, l / 3);
+  circle(nx - l / 4, ny, l / 3);
+
+  drawFractal(nx, ny, l * 0.65, depth - 1);
 }
 
-function drawEye(x, y, w, depth) {
-  if (depth <= 0) return;
-
-  let colors = [
-    '#1a1aff', // Blue
-    '#007f5f', // Teal Green
-    '#ffc300', // Gold
-    '#0096c7', // Light Blue
-    '#210070'  // Dark Center
-  ];
-
-  fill(colors[depth % colors.length]);  
-  push();
-  translate(x, y);
-  scale(1, -1); 
-  ellipse(0, 0, w, w * 1.2);  
-  pop();
-
-  let newW = w * 0.75;
-  let newY = y - 4;
-  drawEye(x, newY, newW, depth - 1);
+function mouseDragged() {
+  if (mouseY < height / 2) {
+    scaleFactor += 0.05;
+  } else {
+    scaleFactor -= 0.05;
+  }
+  scaleFactor = constrain(scaleFactor, 0.2, 3);
 }
