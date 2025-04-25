@@ -77,12 +77,15 @@ function keyPressed() {
 
 // Flip a square at the specified column and row
 function flip(col, row) {
+  if (col < 0 || col >= NUM_COLS || row < 0 || row >= NUM_ROWS) {
+    return;  // Ignore if out of bounds
+  }
   if (gridVal[row][col] === 0) {
     gridVal[row][col] = 255;
   } 
   else {
     gridVal[row][col] = 0;
-  }  
+  }
 }
 
 // Determine the current square based on mouse position
