@@ -86,7 +86,7 @@ function draw() {
   ambientLight(255);
   directionalLight(255, 255, 255, 0, 1, -1);
 
-  orbitControl(2,2,2);
+  //orbitControl(2,2,2);
 
   chessBoard.makeSide();
   chessBoard.drawBoard(0, 0);
