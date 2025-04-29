@@ -29,22 +29,27 @@ let pawnBlackpiece;
 let pawnWhitepiece;
 let knightBlackpiece;
 let knightWhitepiece;
+let brownPiece;
+let whitePiece;
 
 
 function preload() {
-  blackBishopModel = loadModel('assets/Bishop Black v2.obj', true);
-  whiteBishopModel = loadModel('assets/Bishop White.obj', true);
-  blackKingModel = loadModel('assets/King Black.obj', true);
-  whiteKingModel = loadModel('assets/King White.obj', true);
-  whiteKnightModel = loadModel('assets/Knight White.obj', true);
-  blackKnightModel = loadModel('assets/Knight Black.obj', true);
-  whiteQueenModel = loadModel('assets/Queen White.obj', true);
-  blackQueenModel = loadModel('assets/Queen Black.obj', true);
-  whitePawnModel = loadModel('assets/Pawn White.obj', true);
-  blackPawnModel = loadModel('assets/Pawn Black.obj', true);
-  whiteRookModel = loadModel('assets/Rook White.obj', true);
-  blackRookModel = loadModel('assets/Rook Black.obj', true);
-  woodTexture = loadImage('assets/woodtexture.jpg', true); 
+  blackBishopModel = loadModel('assets2/Bishop - Copy.stl', true);
+  whiteBishopModel = loadModel('assets2/Bishop.stl', true);
+  blackKingModel = loadModel('assets2/King - Copy.stl', true);
+  whiteKingModel = loadModel('assets2/King.stl', true);
+  whiteKnightModel = loadModel('assets2/Knight.stl', true);
+  blackKnightModel = loadModel('assets2/Knight - Copy.stl', true);
+  whiteQueenModel = loadModel('assets2/Queen.stl', true);
+  blackQueenModel = loadModel('assets2/Queen - Copy.stl', true);
+  whitePawnModel = loadModel('assets2/Pawn.stl', true);
+  blackPawnModel = loadModel('assets2/Pawn - Copy.stl', true);
+  whiteRookModel = loadModel('assets2/Rook.stl', true);
+  blackRookModel = loadModel('assets2/Rook - Copy.stl', true);
+  woodTexture = loadImage('assets/woodtexture.jpg',true); 
+  brownPiece = loadImage('assets2/images.jpeg',true);
+  whitePiece = loadImage('assets2/whitepiece.jpg',true);
+  
 }
 
 function setup() {
@@ -82,7 +87,7 @@ function draw() {
   ambientLight(255);
   directionalLight(255, 255, 255, 0, 1, -1);
 
-  //orbitControl(2,2,2);
+  orbitControl(2,2,2);
 
   chessBoard.makeSide();
   chessBoard.drawBoard(0, 0);
@@ -146,12 +151,7 @@ class whiteBishop {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    stroke(255, 255, 255, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#401f0b');  
+    texture(whitePiece);
     model(whiteBishopModel);
     pop();
   }
@@ -164,12 +164,7 @@ class whiteBishop {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    stroke(255, 255, 255, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#401f0b');  
+    texture(whitePiece);
     model(whiteBishopModel);
     pop();
   }
@@ -186,12 +181,8 @@ class blackBishop {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    stroke(0, 0, 0, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#e0d0c5');  
+    noStroke();
+    texture(brownPiece);
     model(blackBishopModel);
     pop();
   }
@@ -204,12 +195,7 @@ class blackBishop {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    stroke(0, 0, 0, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#e0d0c5');  
+    texture(brownPiece); 
     model(blackBishopModel);
     pop();
   }
@@ -228,11 +214,7 @@ class whiteKing {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(255, 255, 255, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#401f0b');
+    texture(whitePiece);
     model(whiteKingModel);
     pop();
   }
@@ -251,11 +233,7 @@ class blackKing {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(0, 0, 0, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#e0d0c5');
+    texture(brownPiece);
     model(blackKingModel);
     pop();
   }
@@ -274,11 +252,7 @@ class whiteQueen {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(255, 255, 255, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#401f0b');
+    texture(whitePiece);
     model(whiteQueenModel);
     pop();
   }
@@ -297,11 +271,7 @@ class blackQueen {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(0, 0, 0, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#e0d0c5');
+    texture(brownPiece);
     model(blackQueenModel);
     pop();
   }
@@ -320,11 +290,7 @@ class whiteRook {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(255, 255, 255, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#401f0b');
+    texture(whitePiece);
     model(whiteRookModel);
     pop();
   }
@@ -339,11 +305,7 @@ class whiteRook {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(255, 255, 255, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#401f0b');
+    texture(whitePiece);
     model(whiteRookModel);
     pop();
   }
@@ -360,12 +322,7 @@ class blackRook {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    stroke(0, 0, 0, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#e0d0c5');
+    texture(brownPiece);
     model(blackRookModel);
     pop();
   }
@@ -378,12 +335,7 @@ class blackRook {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    stroke(0, 0, 0, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#e0d0c5');
+    texture(brownPiece);
     model(blackRookModel);
     pop();
   }
@@ -400,12 +352,7 @@ class blackKnight {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    stroke(0, 0, 0, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#e0d0c5');
+    texture(brownPiece);
     model(blackKnightModel);
     pop();
   }
@@ -418,12 +365,7 @@ class blackKnight {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    stroke(0, 0, 0, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#e0d0c5');
+    texture(brownPiece);
     model(blackKnightModel);
     pop();
   }
@@ -442,11 +384,7 @@ class whiteKnight {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(255, 255, 255, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#401f0b');
+    texture(whitePiece);
     model(whiteKnightModel);
     pop();
   }
@@ -461,11 +399,7 @@ class whiteKnight {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(255, 255, 255, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#401f0b');
+    texture(whitePiece);
     model(whiteKnightModel);
     pop();
   }
@@ -488,12 +422,7 @@ class blackPawn {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    stroke(0, 0, 0, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#e0d0c5');
+    texture(brownPiece);
     model(blackPawnModel);
     pop();
   }
@@ -506,12 +435,7 @@ class blackPawn {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    stroke(0, 0, 0, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#e0d0c5');
+    texture(brownPiece);
     model(blackPawnModel);
     pop();
   }
@@ -525,11 +449,7 @@ class blackPawn {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(0, 0, 0, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#e0d0c5');
+    texture(brownPiece);
     model(blackPawnModel);
     pop();
   }
@@ -543,11 +463,7 @@ class blackPawn {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(0, 0, 0, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#e0d0c5');
+    texture(brownPiece);
     model(blackPawnModel);
     pop();
   }
@@ -561,11 +477,7 @@ class blackPawn {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(0, 0, 0, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#e0d0c5');
+    texture(brownPiece);
     model(blackPawnModel);
     pop();
   }
@@ -579,11 +491,7 @@ class blackPawn {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(0, 0, 0, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#e0d0c5');
+    texture(brownPiece);
     model(blackPawnModel);
     pop();
   }
@@ -597,11 +505,7 @@ class blackPawn {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(0, 0, 0, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#e0d0c5');
+    texture(brownPiece);
     model(blackPawnModel);
     pop();
   }
@@ -615,11 +519,7 @@ class blackPawn {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(0, 0, 0, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#e0d0c5');
+    texture(brownPiece);
     model(blackPawnModel);
     pop();
   }
@@ -645,11 +545,7 @@ class whitePawn {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(255, 255, 255, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#401f0b');
+    texture(whitePiece);
     model(whitePawnModel);
     pop();
   }
@@ -663,11 +559,7 @@ class whitePawn {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(255, 255, 255, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#401f0b');
+    texture(whitePiece);
     model(whitePawnModel);
     pop();
   }
@@ -682,11 +574,7 @@ class whitePawn {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(255, 255, 255, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#401f0b');
+    texture(whitePiece);
     model(whitePawnModel);
     pop();
   }
@@ -700,11 +588,7 @@ class whitePawn {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(255, 255, 255, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#401f0b');
+    texture(whitePiece);
     model(whitePawnModel);
     pop();
   }
@@ -718,11 +602,7 @@ class whitePawn {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(255, 255, 255, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#401f0b');
+    texture(whitePiece);
     model(whitePawnModel);
     pop();
   }
@@ -736,11 +616,7 @@ class whitePawn {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(255, 255, 255, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#401f0b');
+    texture(whitePiece);
     model(whitePawnModel);
     pop();
   }
@@ -754,11 +630,7 @@ class whitePawn {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(255, 255, 255, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#401f0b');
+    texture(whitePiece);
     model(whitePawnModel);
     pop();
   }
@@ -772,11 +644,7 @@ class whitePawn {
     rotateZ(90);
     rotateY(-90);
 
-    stroke(255, 255, 255, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#401f0b');
+    texture(whitePiece);
     model(whitePawnModel);
     pop();
   }

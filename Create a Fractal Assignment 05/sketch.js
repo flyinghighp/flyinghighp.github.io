@@ -3,15 +3,15 @@
 // 16 April 2025
 // 
 // Description:
-// A circular fractal that spins, zooms, and changes colors dynamically. 
-// Users can zoom in and out by dragging the mouse, and pause the animation with the spacebar.
+// A circular fractal that spins, zooms, and changes colors . 
+// You can zoom in and out by dragging the mouse, and pause the fractal by pressing the spacebar.
 //
 // Production Rules:
 // 1. Start with a vertical line.
 // 2. Draw circles at the tip of the line depending on zoom level.
 // 3. Recursively draw smaller lines at the tip of each previous line.
-// 4. Reduce line length by 65% at each recursion step.
-// 5. Stop when line length is small enough or depth reaches 0.
+// 4. Reduce line length by 65% at each  step.
+// 5. Stop when line length is small enough .
 
 let scaleFactor = 1;         
 let paused = false;          
