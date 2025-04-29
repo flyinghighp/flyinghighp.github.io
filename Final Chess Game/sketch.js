@@ -2,10 +2,6 @@
 // Priyansh Jhanji
 // 25 April 2025
 
-//Questions to ask- How to fix the lag, how to start on making an ai that plays itself so it can be a game of 1 v computer,
-//ask Mr Scott to publish the final so that can have a btter look at what should my game have..
-//ask Mr Scott how can I make a bette use of camera , make a better vsibility to see the chess pecies for the player..
-
 let thickness = 30;
 let size;
 let cam;
@@ -136,7 +132,9 @@ function draw() {
   
 
 }
-
+//-------------------//
+//     PIECES       //
+//-------------------//
 class whiteBishop {
   constructor() {}
 
@@ -474,12 +472,18 @@ class whiteKnight {
 }
 
 class blackPawn {
-  constructor() {}
+  constructor() {
+    let x = 0;
+    this.x = x;
+
+    let y = 0;
+    this.y = y;
+  }
 
   makePawnbzero() {
     push();
     
-    translate(-size * 4 + 0 * size + size / 2, size * 2 + 0 * size + size / 2, 50);
+    translate(-size * 4 + this.x * size + size / 2, size * 2 + this.y * size + size / 2, 50);
     scale(0.5);  
     rotateX(-90);
     rotateZ(90);
@@ -497,7 +501,7 @@ class blackPawn {
   makePawnbone() {
     push();
     
-    translate(-size * 4 + 1 * size + size / 2, size * 2 + 0 * size + size / 2, 50);
+    translate(-size * 4 + (this.x +1) * size + size / 2, size * 2 + this.y * size + size / 2, 50);
     scale(0.5);  
     rotateX(-90);
     rotateZ(90);
@@ -515,7 +519,7 @@ class blackPawn {
   makePawnbtwo() {
     push();
     
-    translate(-size * 4 + 6 * size + size / 2, size * 2 + 0 * size + size / 2, 50);
+    translate(-size * 4 + (this.x +2) * size + size / 2, size * 2 + this.y * size + size / 2, 50);
     scale(0.5);   
     rotateX(-90);
     rotateZ(90);
@@ -533,7 +537,7 @@ class blackPawn {
   makePawnbthree() {
     push();
     
-    translate(-size * 4 + 2 * size + size / 2, size * 2 + 0 * size + size / 2, 50);
+    translate(-size * 4 + (this.x +3) * size + size / 2, size * 2 + this.y * size + size / 2, 50);
     scale(0.5);  
     rotateX(-90);
     rotateZ(90);
@@ -551,7 +555,7 @@ class blackPawn {
   makePawnbfour() {
     push();
     
-    translate(-size * 4 + 3 * size + size / 2, size * 2 + 0 * size + size / 2, 50);
+    translate(-size * 4 + (this.x +4) * size + size / 2, size * 2 + this.y * size + size / 2, 50);
     scale(0.5);  
     rotateX(-90);
     rotateZ(90);
@@ -569,7 +573,7 @@ class blackPawn {
   makePawnbfive() {
     push();
     
-    translate(-size * 4 + 4 * size + size / 2, size * 2 + 0 * size + size / 2, 50);
+    translate(-size * 4 + (this.x +5) * size + size / 2, size * 2 + this.y * size + size / 2, 50);
     scale(0.5);  
     rotateX(-90);
     rotateZ(90);
@@ -587,7 +591,7 @@ class blackPawn {
   makePawnbsix() {
     push();
     
-    translate(-size * 4 + 5 * size + size / 2, size * 2 + 0 * size + size / 2, 50);
+    translate(-size * 4 + (this.x +6) * size + size / 2, size * 2 + this.y * size + size / 2, 50);
     scale(0.5);  
     rotateX(-90);
     rotateZ(90);
@@ -605,7 +609,7 @@ class blackPawn {
   makePawnbseven() {
     push();
     
-    translate(-size * 4 + 7 * size + size / 2, size * 2 + 0 * size + size / 2, 50);
+    translate(-size * 4 + (this.x +7) * size + size / 2, size * 2 + this.y * size + size / 2, 50);
     scale(0.5);  
     rotateX(-90);
     rotateZ(90);
@@ -624,12 +628,18 @@ class blackPawn {
 }
 
 class whitePawn {
-  constructor() {}
+  constructor() {
+    let x = 0;
+    this.x = x;
+    
+    let y = 0;
+    this.y = y;
+  }
 
   makePawnzero() {
     push();
     
-    translate(-size * 4 + 0 * size + size / 2, -size * 3 + 0 * size + size / 2, 50); 
+    translate(-size * 4 + this.x * size + size / 2, -size * 3 + this.y * size + size / 2, 50); 
     scale(0.5);  
     rotateX(-90);
     rotateZ(90);
@@ -647,7 +657,7 @@ class whitePawn {
   makePawnone() {
     push();
     
-    translate(-size * 4 + 1 * size + size / 2, -size * 3 + 0 * size + size / 2, 50); 
+    translate(-size * 4 + (this.x+1) * size + size / 2, -size * 3 + this.y * size + size / 2, 50); 
     scale(0.5);  
     rotateX(-90);
     rotateZ(90);
@@ -662,28 +672,11 @@ class whitePawn {
     pop();
   }
 
-  makePawnone() {
-    push();
-    
-    translate(-size * 4 + 1 * size + size / 2, -size * 3 + 0 * size + size / 2, 50); 
-    scale(0.5);  
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-
-    stroke(255, 255, 255, 100);  
-    strokeWeight(1);  
-
-    noFill();  
-    ambientMaterial('#401f0b');
-    model(whitePawnModel);
-    pop();
-  }
 
   makePawntwo() {
     push();
     
-    translate(-size * 4 + 6 * size + size / 2, -size * 3 + 0 * size + size / 2, 50); 
+    translate(-size * 4 + (this.x+2) * size + size / 2, -size * 3 + this.y * size + size / 2, 50); 
     scale(0.5);  
     rotateX(-90);
     rotateZ(90);
@@ -701,7 +694,7 @@ class whitePawn {
   makePawnthree() {
     push();
     
-    translate(-size * 4 + 2 * size + size / 2, -size * 3 + 0 * size + size / 2, 50); 
+    translate(-size * 4 + (this.x+3) * size + size / 2, -size * 3 + this.y * size + size / 2, 50); 
     scale(0.5);  
     rotateX(-90);
     rotateZ(90);
@@ -719,7 +712,7 @@ class whitePawn {
   makePawnfour() {
     push();
     
-    translate(-size * 4 + 3 * size + size / 2, -size * 3 + 0 * size + size / 2, 50); 
+    translate(-size * 4 + (this.x+4) * size + size / 2, -size * 3 + this.y * size + size / 2, 50); 
     scale(0.5);  
     rotateX(-90);
     rotateZ(90);
@@ -737,7 +730,7 @@ class whitePawn {
   makePawnfive() {
     push();
     
-    translate(-size * 4 + 4 * size + size / 2, -size * 3 + 0 * size + size / 2, 50); 
+    translate(-size * 4 + (this.x+5) * size + size / 2, -size * 3 + this.y * size + size / 2, 50); 
     scale(0.5);  
     rotateX(-90);
     rotateZ(90);
@@ -755,7 +748,7 @@ class whitePawn {
   makePawnsix() {
     push();
     
-    translate(-size * 4 + 5 * size + size / 2, -size * 3 + 0 * size + size / 2, 50); 
+    translate(-size * 4 + (this.x+6) * size + size / 2, -size * 3 + this.y * size + size / 2, 50); 
     scale(0.5);  
     rotateX(-90);
     rotateZ(90);
@@ -773,7 +766,7 @@ class whitePawn {
   makePawnseven() {
     push();
     
-    translate(-size * 4 + 7 * size + size / 2, -size * 3 + 0 * size + size / 2, 50); 
+    translate(-size * 4 + (this.x+7) * size + size / 2, -size * 3 + this.y * size + size / 2, 50); 
     scale(0.5);  
     rotateX(-90);
     rotateZ(90);
@@ -792,7 +785,9 @@ class whitePawn {
 
 }
 
-
+//-------------------//
+//     BOARD      //
+//-------------------//
 class ChessBoard {
   constructor() {
     this.board = [];
