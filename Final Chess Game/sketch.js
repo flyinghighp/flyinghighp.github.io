@@ -29,9 +29,6 @@ let pawnBlackpiece;
 let pawnWhitepiece;
 let knightBlackpiece;
 let knightWhitepiece;
-let brownPiece;
-let whitePiece;
-
 
 function preload() {
   blackBishopModel = loadModel('assets/Bishop - Copy.obj', true);
@@ -115,8 +112,19 @@ function draw() {
 
   pawnBlackpiece.makeAll();
   pawnWhitepiece.makeAll();
+
+  
   
 }
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  size = min(width, height) / 10;
+  chessBoard = new ChessBoard();
+  chessBoard.createBoard(0, 0);
+}
+
+
 //-------------------//
 //     PIECES       //
 //-------------------//
@@ -556,9 +564,4 @@ class ChessBoard {
   }
 }
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  size = min(width, height) / 10;
-  chessBoard = new ChessBoard();
-  chessBoard.createBoard(0, 0);
-}
+
