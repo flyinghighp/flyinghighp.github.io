@@ -81,48 +81,50 @@ function draw() {
   ambientLight(255);
   directionalLight(255, 255, 255, 0, 1, -1);
 
-  orbitControl(2,2,2);
+  orbitControl(2, 2, 2);
 
+  // Convert mouse position to world space (adjusted for center of the board)
+  let worldX = mouseX - width / 2;
+  let worldY = mouseY - height / 2;
+
+  // Variables to store the hovered square
+  let hoveredX = 1;
+  let hoveredY = 1;
+
+  // Calculate grid position for X and Y
+ 
+  if (worldX >= -size * 4 && worldX <= size * 4 &&
+      worldY >= -size * 4 && worldY <= size * 4) {
+    
+    hoveredX = Math.floor((worldY + size * 4) / size);
+    hoveredY = Math.floor((worldX + size * 4) / size);
+  }
+
+ 
   chessBoard.makeSide();
-  chessBoard.drawBoard(0, 0);
+  chessBoard.drawBoard(0, 0, hoveredX, hoveredY);  // Highlight the correct square
+
 
   bishopBlackpiece.makeBbone();
   bishopBlackpiece.makeBbtwo();
-
   bishopWhitepiece.makeBwbone();
   bishopWhitepiece.makeBwbtwo();
-
   kingWhitepiece.makeKingone();
   kingBlackpiece.makeKingtwo();
-
   queenWhitepiece.makeQueenone();
   queenBlackpiece.makeQueentwo();
-
   rookBlackpiece.makeRookbone();
   rookBlackpiece.makeRookbtwo();
-
   rookWhitepiece.makeRookone();
   rookWhitepiece.makeRooktwo();
-
   knightBlackpiece.makeKnightbone();
   knightBlackpiece.makeKnightbtwo();
-
   knightWhitepiece.makeKnightone();
   knightWhitepiece.makeKnighttwo();
-
   pawnBlackpiece.makeAll();
   pawnWhitepiece.makeAll();
-
-  
-  
 }
 
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  size = min(width, height) / 10;
-  chessBoard = new ChessBoard();
-  chessBoard.createBoard(0, 0);
-}
 
 
 //-------------------//
@@ -543,25 +545,270 @@ class ChessBoard {
     pop();
   }
 
-  drawBoard(i, j) {
+
+  drawBoard(i, j, hoveredX, hoveredY) {
     if (i >= 8) {
       return;
     }
 
     push();
     translate(-size * 4 + j * size + size / 2, -size * 4 + i * size + size / 2, 0);
-    fill(this.board[i][j]);
+
+    // Check if this square is the one being hovered
+    if (i === hoveredX && j === hoveredY) {
+      fill(0, 255, 0); // Green highlight
+    }
+    else {
+      fill(this.board[i][j]);
+    }
+
     noStroke();
     box(size, size, thickness);
     pop();
 
     if (j < 7) {
-      this.drawBoard(i, j + 1);
-    } 
+      this.drawBoard(i, j + 1, hoveredX, hoveredY); // Pass hoveredX and hoveredY
+    }
     else {
-      this.drawBoard(i + 1, 0);
+      this.drawBoard(i + 1, 0, hoveredX, hoveredY); // Pass hoveredX and hoveredY
     }
   }
+
 }
+
+//-------------------//
+//     PIECE LOGIC   // 
+//-------------------//
+class Pawn {
+  constructor(color, row, col) {
+    this.color = color; 
+    this.row = row;
+    this.col = col;
+    this.type = 'pawn';
+  }
+
+  validMoves(board) {
+    let moves = [];
+    let direction = this.color === 'white' ? -1 : 1; // White moves up, Black moves down
+    let startRow = this.color === 'white' ? 6 : 1;
+
+    // Regular move (one step forward)
+    if (board[this.row + direction] && board[this.row + direction][this.col] === null) {
+      moves.push({ row: this.row + direction, col: this.col });
+    }
+
+    // First move (two steps forward)
+    if (this.row === startRow && board[this.row + direction * 2] && board[this.row + direction * 2][this.col] === null) {
+      moves.push({ row: this.row + direction * 2, col: this.col });
+    }
+
+    // Capture diagonally
+    if (this.row + direction >= 0 && this.row + direction < 8) {
+      if (this.col - 1 >= 0 && board[this.row + direction][this.col - 1] && board[this.row + direction][this.col - 1].color !== this.color) {
+        moves.push({ row: this.row + direction, col: this.col - 1 });
+      }
+      if (this.col + 1 < 8 && board[this.row + direction][this.col + 1] && board[this.row + direction][this.col + 1].color !== this.color) {
+        moves.push({ row: this.row + direction, col: this.col + 1 });
+      }
+    }
+
+    return moves;
+  }
+}
+
+class Rook {
+  constructor(color, row, col) {
+    this.color = color; 
+    this.row = row;
+    this.col = col;
+    this.type = 'rook';
+  }
+
+  validMoves(board) {
+    let moves = [];
+    let directions = [
+      { row: 1, col: 0 },  // Down
+      { row: -1, col: 0 }, // Up
+      { row: 0, col: 1 },  // Right
+      { row: 0, col: -1 }, // Left
+    ];
+
+    for (let dir of directions) {
+      let r = this.row + dir.row;
+      let c = this.col + dir.col;
+
+      while (r >= 0 && r < 8 && c >= 0 && c < 8) {
+        if (board[r][c] === null) {
+          moves.push({ row: r, col: c });
+        }
+        else if (board[r][c].color !== this.color) {
+          moves.push({ row: r, col: c }); // Capture opponent's piece
+          break;
+        }
+        else {
+          break; // Blocked by same-colored piece
+        }
+        r += dir.row;
+        c += dir.col;
+      }
+    }
+
+    return moves;
+  }
+}
+
+class Knight {
+  constructor(color, row, col) {
+    this.color = color; 
+    this.row = row;
+    this.col = col;
+    this.type = 'knight';
+  }
+
+  validMoves(board) {
+    let moves = [];
+    let directions = [
+      { row: 2, col: 1 }, { row: 2, col: -1 },
+      { row: -2, col: 1 }, { row: -2, col: -1 },
+      { row: 1, col: 2 }, { row: 1, col: -2 },
+      { row: -1, col: 2 }, { row: -1, col: -2 }
+    ];
+
+    for (let dir of directions) {
+      let r = this.row + dir.row;
+      let c = this.col + dir.col;
+      if (r >= 0 && r < 8 && c >= 0 && c < 8) {
+        if (board[r][c] === null || board[r][c].color !== this.color) {
+          moves.push({ row: r, col: c });
+        }
+      }
+    }
+
+    return moves;
+  }
+}
+
+class Bishop {
+  constructor(color, row, col) {
+    this.color = color; 
+    this.row = row;
+    this.col = col;
+    this.type = 'bishop';
+  }
+
+  validMoves(board) {
+    let moves = [];
+    let directions = [
+      { row: 1, col: 1 },   // Down-Right
+      { row: 1, col: -1 },  // Down-Left
+      { row: -1, col: 1 },  // Up-Right
+      { row: -1, col: -1 }, // Up-Left
+    ];
+
+    for (let dir of directions) {
+      let r = this.row + dir.row;
+      let c = this.col + dir.col;
+
+      while (r >= 0 && r < 8 && c >= 0 && c < 8) {
+        if (board[r][c] === null) {
+          moves.push({ row: r, col: c });
+        }
+        else if (board[r][c].color !== this.color) {
+          moves.push({ row: r, col: c }); // Capture opponent's piece
+          break;
+        }
+        else {
+          break; // Blocked by same-colored piece
+        }
+        r += dir.row;
+        c += dir.col;
+      }
+    }
+
+    return moves;
+  }
+}
+
+class Queen {
+  constructor(color, row, col) {
+    this.color = color; 
+    this.row = row;
+    this.col = col;
+    this.type = 'queen';
+  }
+
+  validMoves(board) {
+    let moves = [];
+    let directions = [
+      { row: 1, col: 0 },  // Down
+      { row: -1, col: 0 }, // Up
+      { row: 0, col: 1 },  // Right
+      { row: 0, col: -1 }, // Left
+      { row: 1, col: 1 },   // Down-Right
+      { row: 1, col: -1 },  // Down-Left
+      { row: -1, col: 1 },  // Up-Right
+      { row: -1, col: -1 }, // Up-Left
+    ];
+
+    for (let dir of directions) {
+      let r = this.row + dir.row;
+      let c = this.col + dir.col;
+
+      while (r >= 0 && r < 8 && c >= 0 && c < 8) {
+        if (board[r][c] === null) {
+          moves.push({ row: r, col: c });
+        }
+        else if (board[r][c].color !== this.color) {
+          moves.push({ row: r, col: c }); // Capture opponent's piece
+          break;
+        }
+        else {
+          break; // Blocked by same-colored piece
+        }
+        r += dir.row;
+        c += dir.col;
+      }
+    }
+
+    return moves;
+  }
+}
+
+class King {
+  constructor(color, row, col) {
+    this.color = color; 
+    this.row = row;
+    this.col = col;
+    this.type = 'king';
+  }
+
+  validMoves(board) {
+    let moves = [];
+    let directions = [
+      { row: 1, col: 0 },  // Down
+      { row: -1, col: 0 }, // Up
+      { row: 0, col: 1 },  // Right
+      { row: 0, col: -1 }, // Left
+      { row: 1, col: 1 },   // Down-Right
+      { row: 1, col: -1 },  // Down-Left
+      { row: -1, col: 1 },  // Up-Right
+      { row: -1, col: -1 }, // Up-Left
+    ];
+
+    for (let dir of directions) {
+      let r = this.row + dir.row;
+      let c = this.col + dir.col;
+      if (r >= 0 && r < 8 && c >= 0 && c < 8) {
+        if (board[r][c] === null || board[r][c].color !== this.color) {
+          moves.push({ row: r, col: c });
+        }
+      }
+    }
+
+    return moves;
+  }
+}
+
+
 
 
