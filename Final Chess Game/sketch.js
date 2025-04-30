@@ -34,22 +34,19 @@ let whitePiece;
 
 
 function preload() {
-  blackBishopModel = loadModel('assets2/Bishop - Copy.stl', true);
-  whiteBishopModel = loadModel('assets2/Bishop.stl', true);
-  blackKingModel = loadModel('assets2/King - Copy.stl', true);
-  whiteKingModel = loadModel('assets2/King.stl', true);
-  whiteKnightModel = loadModel('assets2/Knight.stl', true);
-  blackKnightModel = loadModel('assets2/Knight - Copy.stl', true);
-  whiteQueenModel = loadModel('assets2/Queen.stl', true);
-  blackQueenModel = loadModel('assets2/Queen - Copy.stl', true);
-  whitePawnModel = loadModel('assets2/Pawn.stl', true);
-  blackPawnModel = loadModel('assets2/Pawn - Copy.stl', true);
-  whiteRookModel = loadModel('assets2/Rook.stl', true);
-  blackRookModel = loadModel('assets2/Rook - Copy.stl', true);
+  blackBishopModel = loadModel('assets/Bishop - Copy.obj', true);
+  whiteBishopModel = loadModel('assets/Bishop.obj', true);
+  blackKingModel = loadModel('assets/King - Copy.obj', true);
+  whiteKingModel = loadModel('assets/King.obj', true);
+  whiteKnightModel = loadModel('assets/Knight.obj', true);
+  blackKnightModel = loadModel('assets/Knight - Copy.obj', true);
+  whiteQueenModel = loadModel('assets/Queen.obj', true);
+  blackQueenModel = loadModel('assets/Queen - Copy.obj', true);
+  whitePawnModel = loadModel('assets/Pawn.obj', true);
+  blackPawnModel = loadModel('assets/Pawn - Copy.obj', true);
+  whiteRookModel = loadModel('assets/Rook.obj', true);
+  blackRookModel = loadModel('assets/Rook - Copy.obj', true);
   woodTexture = loadImage('assets/woodtexture.jpg',true); 
-  brownPiece = loadImage('assets2/images.jpeg',true);
-  whitePiece = loadImage('assets2/whitepiece.jpg',true);
-  
 }
 
 function setup() {
@@ -116,26 +113,9 @@ function draw() {
   knightWhitepiece.makeKnightone();
   knightWhitepiece.makeKnighttwo();
 
-  pawnBlackpiece.makePawnbzero();
-  pawnBlackpiece.makePawnbone();
-  pawnBlackpiece.makePawnbtwo();  
-  pawnBlackpiece.makePawnbthree();
-  pawnBlackpiece.makePawnbfour();
-  pawnBlackpiece.makePawnbfive();
-  pawnBlackpiece.makePawnbsix();
-  pawnBlackpiece.makePawnbseven();
+  pawnBlackpiece.makeAll();
+  pawnWhitepiece.makeAll();
   
-
-  pawnWhitepiece.makePawnzero();
-  pawnWhitepiece.makePawnone();
-  pawnWhitepiece.makePawntwo();
-  pawnWhitepiece.makePawnthree();
-  pawnWhitepiece.makePawnfour();
-  pawnWhitepiece.makePawnfive();
-  pawnWhitepiece.makePawnsix();
-  pawnWhitepiece.makePawnseven();
-  
-
 }
 //-------------------//
 //     PIECES       //
@@ -146,14 +126,19 @@ class whiteBishop {
   makeBwbone() {
     push();
     translate(-size * 4 + 2 * size + size / 2, -size * 4 + 0 * size + size / 2, 76);
-    scale(0.7);  
+    
+    scale(0.7); 
     rotate(130); 
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-    texture(whitePiece);
+    stroke(110);
+    strokeWeight(0.8);
+    fill(215, 210, 225);        
+    specularMaterial(215, 210, 225);
     model(whiteBishopModel);
     pop();
+
   }
 
   makeBwbtwo() {
@@ -164,7 +149,10 @@ class whiteBishop {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-    texture(whitePiece);
+    stroke(110);
+    strokeWeight(0.8);
+    fill(215, 210, 225);        
+    specularMaterial(215, 210, 225);
     model(whiteBishopModel);
     pop();
   }
@@ -181,8 +169,10 @@ class blackBishop {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-    noStroke();
-    texture(brownPiece);
+    stroke(110);
+    strokeWeight(0.8);
+    fill(139, 69, 19);         
+    specularMaterial(139, 69, 19);
     model(blackBishopModel);
     pop();
   }
@@ -195,7 +185,10 @@ class blackBishop {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-    texture(brownPiece); 
+    stroke(110);
+    strokeWeight(0.8);
+    fill(139, 69, 19);         
+    specularMaterial(139, 69, 19);
     model(blackBishopModel);
     pop();
   }
@@ -213,8 +206,10 @@ class whiteKing {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    texture(whitePiece);
+    stroke(110);
+    strokeWeight(0.8);
+    fill(215, 210, 225);        
+    specularMaterial(215, 210, 225);
     model(whiteKingModel);
     pop();
   }
@@ -232,8 +227,10 @@ class blackKing {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    texture(brownPiece);
+    stroke(110);
+    strokeWeight(0.8);
+    fill(139, 69, 19);         
+    specularMaterial(139, 69, 19);
     model(blackKingModel);
     pop();
   }
@@ -251,8 +248,10 @@ class whiteQueen {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    texture(whitePiece);
+    stroke(110);
+    strokeWeight(0.8);
+    fill(215, 210, 225);        
+    specularMaterial(215, 210, 225);
     model(whiteQueenModel);
     pop();
   }
@@ -270,8 +269,10 @@ class blackQueen {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    texture(brownPiece);
+    stroke(110);
+    strokeWeight(0.8);
+    fill(139, 69, 19);         
+    specularMaterial(139, 69, 19);
     model(blackQueenModel);
     pop();
   }
@@ -285,12 +286,14 @@ class whiteRook {
     
     translate(-size * 4 + 0 * size + size / 2, -size * 4 + 0 * size + size / 2, 50); 
     scale(0.5);  
-    //rotate(0); 
+     
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    texture(whitePiece);
+    stroke(110);
+    strokeWeight(0.8);
+    fill(215, 210, 225);        
+    specularMaterial(215, 210, 225);
     model(whiteRookModel);
     pop();
   }
@@ -300,12 +303,14 @@ class whiteRook {
     
     translate(-size * 4 + 7 * size + size / 2, -size * 4 + 0 * size + size / 2, 50); 
     scale(0.5);  
-    //rotate(23); 
+    
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    texture(whitePiece);
+    stroke(110);
+    strokeWeight(0.8);
+    fill(215, 210, 225);        
+    specularMaterial(215, 210, 225);
     model(whiteRookModel);
     pop();
   }
@@ -322,7 +327,10 @@ class blackRook {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-    texture(brownPiece);
+    stroke(110);
+    strokeWeight(0.8);
+    fill(139, 69, 19);         
+    specularMaterial(139, 69, 19);
     model(blackRookModel);
     pop();
   }
@@ -335,7 +343,10 @@ class blackRook {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-    texture(brownPiece);
+    stroke(110);
+    strokeWeight(0.8);
+    fill(139, 69, 19);         
+    specularMaterial(139, 69, 19);
     model(blackRookModel);
     pop();
   }
@@ -352,7 +363,11 @@ class blackKnight {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-    texture(brownPiece);
+    rotate(180);
+    stroke(110);
+    strokeWeight(0.8);
+    fill(139, 69, 19);         
+    specularMaterial(139, 69, 19);
     model(blackKnightModel);
     pop();
   }
@@ -365,7 +380,11 @@ class blackKnight {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-    texture(brownPiece);
+    rotate(180);
+    stroke(110);
+    strokeWeight(0.8);
+    fill(139, 69, 19);         
+    specularMaterial(139, 69, 19);
     model(blackKnightModel);
     pop();
   }
@@ -383,8 +402,11 @@ class whiteKnight {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    texture(whitePiece);
+    rotate(180);
+    stroke(110);
+    strokeWeight(0.8);
+    fill(215, 210, 225);        
+    specularMaterial(215, 210, 225);
     model(whiteKnightModel);
     pop();
   }
@@ -398,260 +420,64 @@ class whiteKnight {
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
-
-    texture(whitePiece);
+    rotate(180);
+    stroke(110);
+    strokeWeight(0.8);
+    fill(215, 210, 225);        
+    specularMaterial(215, 210, 225);
     model(whiteKnightModel);
     pop();
   }
 }
 
-class blackPawn {
-  constructor() {
-    let x = 0;
-    this.x = x;
 
-    let y = 0;
-    this.y = y;
-  }
-
-  makePawnbzero() {
-    push();
-    
-    translate(-size * 4 + this.x * size + size / 2, size * 2 + this.y * size + size / 2, 50);
-    scale(0.5);  
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-    texture(brownPiece);
-    model(blackPawnModel);
-    pop();
-  }
-
-  makePawnbone() {
-    push();
-    
-    translate(-size * 4 + (this.x +1) * size + size / 2, size * 2 + this.y * size + size / 2, 50);
-    scale(0.5);  
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-    texture(brownPiece);
-    model(blackPawnModel);
-    pop();
-  }
-
-  makePawnbtwo() {
-    push();
-    
-    translate(-size * 4 + (this.x +2) * size + size / 2, size * 2 + this.y * size + size / 2, 50);
-    scale(0.5);   
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-
-    texture(brownPiece);
-    model(blackPawnModel);
-    pop();
-  }
-
-  makePawnbthree() {
-    push();
-    
-    translate(-size * 4 + (this.x +3) * size + size / 2, size * 2 + this.y * size + size / 2, 50);
-    scale(0.5);  
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-
-    texture(brownPiece);
-    model(blackPawnModel);
-    pop();
-  }
-
-  makePawnbfour() {
-    push();
-    
-    translate(-size * 4 + (this.x +4) * size + size / 2, size * 2 + this.y * size + size / 2, 50);
-    scale(0.5);  
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-
-    texture(brownPiece);
-    model(blackPawnModel);
-    pop();
-  }
-
-  makePawnbfive() {
-    push();
-    
-    translate(-size * 4 + (this.x +5) * size + size / 2, size * 2 + this.y * size + size / 2, 50);
-    scale(0.5);  
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-
-    texture(brownPiece);
-    model(blackPawnModel);
-    pop();
-  }
-
-  makePawnbsix() {
-    push();
-    
-    translate(-size * 4 + (this.x +6) * size + size / 2, size * 2 + this.y * size + size / 2, 50);
-    scale(0.5);  
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-
-    texture(brownPiece);
-    model(blackPawnModel);
-    pop();
-  }
-
-  makePawnbseven() {
-    push();
-    
-    translate(-size * 4 + (this.x +7) * size + size / 2, size * 2 + this.y * size + size / 2, 50);
-    scale(0.5);  
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-
-    texture(brownPiece);
-    model(blackPawnModel);
-    pop();
-  }
-
- 
-}
 
 class whitePawn {
-  constructor() {
-    let x = 0;
-    this.x = x;
-    
-    let y = 0;
-    this.y = y;
-  }
-
-  makePawnzero() {
-    push();
-    
-    translate(-size * 4 + this.x * size + size / 2, -size * 3 + this.y * size + size / 2, 50); 
-    scale(0.5);  
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-
-    texture(whitePiece);
-    model(whitePawnModel);
-    pop();
-  }
-
-  makePawnone() {
-    push();
-    
-    translate(-size * 4 + (this.x+1) * size + size / 2, -size * 3 + this.y * size + size / 2, 50); 
-    scale(0.5);  
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-
-    texture(whitePiece);
-    model(whitePawnModel);
-    pop();
-  }
-
-
-  makePawntwo() {
-    push();
-    
-    translate(-size * 4 + (this.x+2) * size + size / 2, -size * 3 + this.y * size + size / 2, 50); 
-    scale(0.5);  
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-
-    texture(whitePiece);
-    model(whitePawnModel);
-    pop();
-  }
-
-  makePawnthree() {
-    push();
-    
-    translate(-size * 4 + (this.x+3) * size + size / 2, -size * 3 + this.y * size + size / 2, 50); 
-    scale(0.5);  
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-
-    texture(whitePiece);
-    model(whitePawnModel);
-    pop();
-  }
-
-  makePawnfour() {
-    push();
-    
-    translate(-size * 4 + (this.x+4) * size + size / 2, -size * 3 + this.y * size + size / 2, 50); 
-    scale(0.5);  
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-
-    texture(whitePiece);
-    model(whitePawnModel);
-    pop();
-  }
-
-  makePawnfive() {
-    push();
-    
-    translate(-size * 4 + (this.x+5) * size + size / 2, -size * 3 + this.y * size + size / 2, 50); 
-    scale(0.5);  
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-
-    texture(whitePiece);
-    model(whitePawnModel);
-    pop();
-  }
-
-  makePawnsix() {
-    push();
-    
-    translate(-size * 4 + (this.x+6) * size + size / 2, -size * 3 + this.y * size + size / 2, 50); 
-    scale(0.5);  
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-
-    texture(whitePiece);
-    model(whitePawnModel);
-    pop();
-  }
-
-  makePawnseven() {
-    push();
-    
-    translate(-size * 4 + (this.x+7) * size + size / 2, -size * 3 + this.y * size + size / 2, 50); 
-    scale(0.5);  
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-
-    texture(whitePiece);
-    model(whitePawnModel);
-    pop();
-  }
-
+  constructor() {}
   
-
+  makeAll() {
+    for (let i = 0; i < 8; i++) {
+      push();
+      
+      translate(-size * 4 + i * size + size / 2, -size * 3 + size / 2, 50);
+      scale(0.5);
+      rotateX(-90);
+      rotateZ(90);
+      rotateY(-90);
+      
+      stroke(110);
+      strokeWeight(0.8);
+      fill(215, 210, 225);        
+      specularMaterial(215, 210, 225);
+      model(whitePawnModel);
+      pop();
+    }
+  }
 }
+  
+class blackPawn {
+  constructor() {}
+  
+  makeAll() {
+    for (let i = 0; i < 8; i++) {
+      push();
+      
+      translate(-size * 4 + i * size + size / 2, size * 2 + size / 2, 50);
+      scale(0.5);
+      rotateX(-90);
+      rotateZ(90);
+      rotateY(-90);
+      
+      stroke(110);
+      strokeWeight(0.8);
+      fill(139, 69, 19);         
+      specularMaterial(139, 69, 19);
+      model(blackPawnModel);
+      pop();
+    }
+  }
+}
+  
 
 //-------------------//
 //     BOARD      //
