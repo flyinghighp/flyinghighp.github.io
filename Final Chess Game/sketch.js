@@ -29,8 +29,11 @@ let pawnBlackpiece;
 let pawnWhitepiece;
 let knightBlackpiece;
 let knightWhitepiece;
-let selectedX = null; // Deselect the piece after moving
+let selectedX = null;
 let selectedY = null;
+
+
+
 function preload() {
   blackBishopModel = loadModel('assets/Bishop - Copy.obj', true);
   whiteBishopModel = loadModel('assets/Bishop.obj', true);
@@ -122,10 +125,36 @@ function draw() {
   pawnBlackpiece.makeAll();
   pawnWhitepiece.makeAll();
 
-  chessBoard.drawBoard(0, 0, hoveredX, hoveredY);
-  chessBoard.drawBoard(selectedX, selectedY);
+  chessBoard.drawBoard(0,0,hoveredX, hoveredY);
+  //chessBoard.drawBoard(selectedX, selectedY);
 }
 
+
+let selectedPiece = null;
+let selectedPiecePos = { row: -1, col: -1 };
+
+function mousePressed() {
+  let worldX = mouseX - width / 2;
+  let worldY = mouseY - height / 2;
+
+  let col = Math.floor((worldY + size * 4) / size);
+  let row = Math.floor((worldX + size * 4) / size);
+
+
+  if (selectedPiece === null) {
+    selectedPiece = chessBoard.board[row][col]; 
+    selectedPiecePos = { row, col };
+  }
+  else {
+    let validMoves = selectedPiece.validMoves(chessBoard.board);
+    if (validMoves.some(move => move.row === row && move.col === col)) {
+      chessBoard.board[row][col] = selectedPiece;
+      chessBoard.board[selectedPiecePos.row][selectedPiecePos.col] = null;
+      selectedPiece = null;
+      selectedPiecePos = { row: -1, col: -1 };
+    }
+  }
+}
 
 
 //-------------------//
@@ -488,7 +517,8 @@ class blackPawn {
     }
   }
 }
-  
+
+
 
 //-------------------//
 //     BOARD      //
@@ -496,6 +526,7 @@ class blackPawn {
 class ChessBoard {
   constructor() {
     this.board = [];
+    
   }
 
   createBoard(row, col) {
@@ -553,7 +584,9 @@ class ChessBoard {
       fill(0, 255, 0); // Green square when hovered
     }
     else {
+      //console.log('');
       fill(this.board[row][col]);
+      
     }
 
     noStroke();
@@ -566,6 +599,7 @@ class ChessBoard {
     else {
       this.drawBoard(row + 1, 0, hoveredX, hoveredY);
     }
+    
   }
 }
 //-------------------//
@@ -802,35 +836,6 @@ class King {
 }
 
 
-function mousePressed(){
-  function handlePieceMovement() {
-    let worldX = mouseX - width / 2;
-    let worldY = mouseY - height / 2;
-    if (
-      worldX >= -size * 4 && worldX <= size * 4 &&
-      worldY >= -size * 4 && worldY <= size * 4
-    ) {
-      let row = Math.floor((worldY + size * 4) / size); // Calculate row based on mouse position
-      let col = Math.floor((worldX + size * 4) / size); // Calculate column based on mouse position
-  
-      // If no piece is selected, pick up the piece on first click
-      if (selectedX === null && selectedY === null) {
-        if (chessBoard.pieces[row][col]) { // Check if there's a piece
-          selectedX = row; // Set selected row
-          selectedY = col; // Set selected column
-        }
-      } 
-      // If a piece is already selected, move the selected piece on second click
-      else {
-        const piece = chessBoard.pieces[selectedX][selectedY]; // Get the selected piece
-        chessBoard.pieces[row][col] = piece; // Place the piece in the new location
-        chessBoard.pieces[selectedX][selectedY] = null; // Remove the piece from its original location
-  
-        selectedX = null; // Deselect the piece after moving
-        selectedY = null; // Deselect the piece after moving
-      }
-    }
-  }
-  handlePieceMovement();
-}
+
+
 
