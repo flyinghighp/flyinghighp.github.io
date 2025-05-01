@@ -82,7 +82,7 @@ function draw() {
   ambientLight(255);
   directionalLight(255, 255, 255, 0, 1, -1);
 
-  //orbitControl(2, 2, 2);
+
   
   // Convert mouse position to world space (adjusted for center of the board)
   let worldX = mouseX - width / 2;
@@ -100,11 +100,8 @@ function draw() {
     hoveredX = Math.floor((worldY + size * 4) / size);
     hoveredY = Math.floor((worldX + size * 4) / size);
   }
-
  
   chessBoard.makeSide();
-  chessBoard.drawBoard(0, 0, hoveredX, hoveredY);  // Highlight the correct square
-  
 
   bishopBlackpiece.makeBbone();
   bishopBlackpiece.makeBbtwo();
@@ -125,6 +122,7 @@ function draw() {
   pawnBlackpiece.makeAll();
   pawnWhitepiece.makeAll();
 
+  chessBoard.drawBoard(0, 0, hoveredX, hoveredY);
   chessBoard.drawBoard(selectedX, selectedY);
 }
 
@@ -498,7 +496,6 @@ class blackPawn {
 class ChessBoard {
   constructor() {
     this.board = [];
-    this.pieces = Array(8).fill().map(() => Array(8).fill(""));
   }
 
   createBoard(row, col) {
@@ -834,6 +831,6 @@ function mousePressed(){
       }
     }
   }
-  
+  handlePieceMovement();
 }
 
