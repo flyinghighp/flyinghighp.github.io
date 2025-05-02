@@ -55,7 +55,14 @@ function setup() {
   size = min(width, height) / 10;
   chessBoard = new ChessBoard();
   chessBoard.createBoard(0, 0);
-  pieces = new Pieces();
+  pieces = new Pieces(0,0,'white','rook');
+  pieces = new Pieces(0,1,'white','knight');
+  pieces = new Pieces(0,2,'white','bishop');
+  pieces = new Pieces(0,3,'white','queen');
+  pieces = new Pieces(0,4,'white','king');
+  pieces = new Pieces(0,5,'white','bishop');
+  pieces = new Pieces(0,6,'white','knight');
+  pieces = new Pieces(0,7,'white','rook');
 }
 
 function draw() {
@@ -65,7 +72,7 @@ function draw() {
   let worldX = mouseX - width / 2;
   let worldY = mouseY - height / 2;
 
-  pieces.makeBwbone();
+  pieces.display();
 
   // Variables to store the hovered square
   let hoveredX = 1;
@@ -104,17 +111,19 @@ function getBoardPosition(row, col, z = 76) {
 //     PIECES       //
 //-------------------//
 class Pieces {
-  constructor() {}
+  constructor(col,row,color,piece) 
+    {this.row = row;
+    this.col = col ;
+    this.color = color;
+    this.piece = piece;
+  }
 
  
 
 
-  makeBwbone() {
-    
-    
-
+  display() {
     push();
-    const pos = getBoardPosition(0, 2); 
+    let pos= getBoardPosition(this.col, this.row); 
     translate(pos.x, pos.y, pos.z);
     scale(0.7); 
     rotate(130); 
@@ -123,9 +132,29 @@ class Pieces {
     rotateY(-90);
     stroke(110);
     strokeWeight(0.8);
-    fill(215, 210, 225);        
-    specularMaterial(215, 210, 225);
-    model(biW);
+    switch(this.color){     
+    case'white':
+    fill(215, 210, 225); 
+    specularMaterial(215, 210, 225); break;
+    case'black':
+    fill(139, 69, 19); 
+    specularMaterial(139, 69, 19); break;
+    }
+    switch(this.piece){
+      case'bishop':
+      model(biW); break;
+      case'pawn':
+      model(wp); break;
+      case'rook':
+      model(wr); break;
+      case'knight':
+      model(wkni); break;
+      case'king':
+      model(wk); break;
+      case'queen':
+      model(qw); break;
+      
+    }
     pop();
 
 
