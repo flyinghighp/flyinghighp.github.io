@@ -6,47 +6,42 @@ let thickness = 30;
 let size;
 let cam;
 let chessBoard;
-let blackBishopModel;
-let whiteBishopModel;
-let whiteKingModel;
-let blackKingModel;
-let blackKnightModel;
-let whiteKnightModel;
-let blackQueenModel;
-let whiteQueenModel;
-let whiteRookModel;
-let blackRookModel;
 let woodTexture;
-let bishopBlackpiece; 
-let bishopWhitepiece;
-let kingWhitepiece;
-let kingBlackpiece;
-let queenBlackpiece;
-let queenWhitepiece;
-let rookBlackpiece;
-let rookWhitepiece;
-let pawnBlackpiece;
-let pawnWhitepiece;
-let knightBlackpiece;
-let knightWhitepiece;
-let selectedX = null;
-let selectedY = null;
+let boardData = [];
+let row;
+let col;
+let wc;
+let bc;
+let pieces;
 
 
+  
+let biB; let bk; let qb; let br; let bp; let bkni;
+let biW; let wk; let qw; let wr; let wp; let wkni;
+boardData = [//sets board up 
+  [br, bkni, biB, qb, bk, biB, bkni, br],
+  [bp, bp, bp, bp, bp, bp, bp, bp],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [0, 0, 0, 0, 0, 0, 0, 0],
+  [wp, wp, wp, wp, wp, wp, wp, wp],
+  [wr, wkni, biW, qw, wk, biW, wkni, wr] 
+];
 
 function preload() {
-  blackBishopModel = loadModel('assets/Bishop - Copy.obj', true);
-  whiteBishopModel = loadModel('assets/Bishop.obj', true);
-  blackKingModel = loadModel('assets/King - Copy.obj', true);
-  whiteKingModel = loadModel('assets/King.obj', true);
-  whiteKnightModel = loadModel('assets/Knight.obj', true);
-  blackKnightModel = loadModel('assets/Knight - Copy.obj', true);
-  whiteQueenModel = loadModel('assets/Queen.obj', true);
-  blackQueenModel = loadModel('assets/Queen - Copy.obj', true);
-  whitePawnModel = loadModel('assets/Pawn.obj', true);
-  blackPawnModel = loadModel('assets/Pawn - Copy.obj', true);
-  whiteRookModel = loadModel('assets/Rook.obj', true);
-  blackRookModel = loadModel('assets/Rook - Copy.obj', true);
+  biB = loadModel('assets/Bishop - Copy.obj', true);
+  biW = loadModel('assets/Bishop.obj', true);
+  bk = loadModel('assets/King - Copy.obj', true);
+  wk = loadModel('assets/King.obj', true);
+  wkni = loadModel('assets/Knight.obj', true);
+  bkni = loadModel('assets/Knight - Copy.obj', true);
+  qw = loadModel('assets/Queen.obj', true);
+  qb = loadModel('assets/Queen - Copy.obj', true);
+  wp = loadModel('assets/Pawn.obj', true);
+  bp = loadModel('assets/Pawn - Copy.obj', true);
+  wr = loadModel('assets/Rook.obj', true);
+  br = loadModel('assets/Rook - Copy.obj', true);
   woodTexture = loadImage('assets/woodtexture.jpg',true); 
 }
 
@@ -60,36 +55,17 @@ function setup() {
   size = min(width, height) / 10;
   chessBoard = new ChessBoard();
   chessBoard.createBoard(0, 0);
-
-  bishopBlackpiece = new blackBishop(); 
-  bishopWhitepiece = new whiteBishop();
-
-  kingWhitepiece = new whiteKing();
-  kingBlackpiece = new blackKing();
-
-  queenWhitepiece = new whiteQueen();
-  queenBlackpiece = new blackQueen();
-
-  rookBlackpiece = new blackRook(); 
-  rookWhitepiece = new whiteRook();
-
-  knightBlackpiece = new blackKnight(); 
-  knightWhitepiece = new whiteKnight();
-
-  pawnBlackpiece = new blackPawn();
-  pawnWhitepiece = new whitePawn();
+  pieces = new Pieces();
 }
 
 function draw() {
   background(0);
   ambientLight(255);
   directionalLight(255, 255, 255, 0, 1, -1);
-
-
-  
-  // Convert mouse position to world space (adjusted for center of the board)
   let worldX = mouseX - width / 2;
   let worldY = mouseY - height / 2;
+
+  pieces.makeBwbone();
 
   // Variables to store the hovered square
   let hoveredX = 1;
@@ -103,70 +79,43 @@ function draw() {
     hoveredX = Math.floor((worldY + size * 4) / size);
     hoveredY = Math.floor((worldX + size * 4) / size);
   }
- 
+  console.log('');
   chessBoard.makeSide();
 
-  bishopBlackpiece.makeBbone();
-  bishopBlackpiece.makeBbtwo();
-  bishopWhitepiece.makeBwbone();
-  bishopWhitepiece.makeBwbtwo();
-  kingWhitepiece.makeKingone();
-  kingBlackpiece.makeKingtwo();
-  queenWhitepiece.makeQueenone();
-  queenBlackpiece.makeQueentwo();
-  rookBlackpiece.makeRookbone();
-  rookBlackpiece.makeRookbtwo();
-  rookWhitepiece.makeRookone();
-  rookWhitepiece.makeRooktwo();
-  knightBlackpiece.makeKnightbone();
-  knightBlackpiece.makeKnightbtwo();
-  knightWhitepiece.makeKnightone();
-  knightWhitepiece.makeKnighttwo();
-  pawnBlackpiece.makeAll();
-  pawnWhitepiece.makeAll();
 
-  chessBoard.drawBoard(0,0,hoveredX, hoveredY);
-  //chessBoard.drawBoard(selectedX, selectedY);
-}
-
-
-let selectedPiece = null;
-let selectedPiecePos = { row: -1, col: -1 };
-
-function mousePressed() {
-  let worldX = mouseX - width / 2;
-  let worldY = mouseY - height / 2;
-
-  let col = Math.floor((worldY + size * 4) / size);
-  let row = Math.floor((worldX + size * 4) / size);
-
-
-  if (selectedPiece === null) {
-    selectedPiece = chessBoard.board[row][col]; 
-    selectedPiecePos = { row, col };
-  }
-  else {
-    let validMoves = selectedPiece.validMoves(chessBoard.board);
-    if (validMoves.some(move => move.row === row && move.col === col)) {
-      chessBoard.board[row][col] = selectedPiece;
-      chessBoard.board[selectedPiecePos.row][selectedPiecePos.col] = null;
-      selectedPiece = null;
-      selectedPiecePos = { row: -1, col: -1 };
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      let piece = boardData[row][col];
+       
     }
   }
+  
+  chessBoard.drawBoard(0,0,hoveredX, hoveredY);
+
 }
 
+function getBoardPosition(row, col, z = 76) {
+  const x = -size * 4 + col * size + size / 2;
+  const y = -size * 4 + row * size + size / 2;
+  return { x, y, z };
+}
 
 //-------------------//
 //     PIECES       //
 //-------------------//
-class whiteBishop {
+class Pieces {
   constructor() {}
+
+ 
+
 
   makeBwbone() {
-    push();
-    translate(-size * 4 + 2 * size + size / 2, -size * 4 + 0 * size + size / 2, 76);
     
+    
+
+    push();
+    const pos = getBoardPosition(0, 2); 
+    translate(pos.x, pos.y, pos.z);
     scale(0.7); 
     rotate(130); 
     rotateX(-90);
@@ -176,357 +125,355 @@ class whiteBishop {
     strokeWeight(0.8);
     fill(215, 210, 225);        
     specularMaterial(215, 210, 225);
-    model(whiteBishopModel);
+    model(biW);
     pop();
+
 
   }
 
-  makeBwbtwo() {
-    push();
-    translate(-size * 4 + 5 * size + size / 2, -size * 4 + 0 * size + size / 2, 76);
-    scale(0.7);  
-    rotate(130); 
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-    stroke(110);
-    strokeWeight(0.8);
-    fill(215, 210, 225);        
-    specularMaterial(215, 210, 225);
-    model(whiteBishopModel);
-    pop();
-  }
+  // makeBwbtwo() {
+  //   push();
+  //   translate(-size * 4 + 5 * size + size / 2, -size * 4 + 0 * size + size / 2, 76);
+  //   scale(0.7);  
+  //   rotate(130); 
+  //   rotateX(-90);
+  //   rotateZ(90);
+  //   rotateY(-90);
+  //   stroke(110);
+  //   strokeWeight(0.8);
+  //   fill(215, 210, 225);        
+  //   specularMaterial(215, 210, 225);
+  //   model(biW);
+  //   pop();
+  // }
 }
 
-class blackBishop {
-  constructor() {}
+// class blackBishop {
+//   constructor() {}
 
-  makeBbone() {
-    push();
-    translate(-size * 4 + 2 * size + size / 2, size * 3 + 0 * size + size / 2, 76);
-    scale(0.7);  
-    rotate(130); 
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-    stroke(110);
-    strokeWeight(0.8);
-    fill(139, 69, 19);         
-    specularMaterial(139, 69, 19);
-    model(blackBishopModel);
-    pop();
-  }
+//   makeBbone() {
+//     push();
+//     translate(-size * 4 + 2 * size + size / 2, size * 3 + 0 * size + size / 2, 76);
+//     scale(0.7);  
+//     rotate(130); 
+//     rotateX(-90);
+//     rotateZ(90);
+//     rotateY(-90);
+//     stroke(110);
+//     strokeWeight(0.8);
+//     fill(139, 69, 19);         
+//     specularMaterial(139, 69, 19);
+//     model(blackBishopModel);
+//     pop();
+//   }
 
-  makeBbtwo() {
-    push();
-    translate(-size * 4 + 5 * size + size / 2, size * 3 + 0 * size + size / 2, 76);
-    scale(0.7); 
-    rotate(130); 
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-    stroke(110);
-    strokeWeight(0.8);
-    fill(139, 69, 19);         
-    specularMaterial(139, 69, 19);
-    model(blackBishopModel);
-    pop();
-  }
-}
+//   makeBbtwo() {
+//     push();
+//     translate(-size * 4 + 5 * size + size / 2, size * 3 + 0 * size + size / 2, 76);
+//     scale(0.7); 
+//     rotate(130); 
+//     rotateX(-90);
+//     rotateZ(90);
+//     rotateY(-90);
+//     stroke(110);
+//     strokeWeight(0.8);
+//     fill(139, 69, 19);         
+//     specularMaterial(139, 69, 19);
+//     model(blackBishopModel);
+//     pop();
+//   }
+// }
 
-class whiteKing {
-  constructor() {}
+// class whiteKing {
+//   constructor() {}
 
-  makeKingone() {
-    push();
+//   makeKingone() {
+//     push();
     
-    translate(-size * 4 + 3 * size + size / 2, -size * 4 + 0 * size + size / 2, 76); 
-    scale(0.7);  
-    rotate(50); 
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-    stroke(110);
-    strokeWeight(0.8);
-    fill(215, 210, 225);        
-    specularMaterial(215, 210, 225);
-    model(whiteKingModel);
-    pop();
-  }
-}
+//     translate(-size * 4 + 3 * size + size / 2, -size * 4 + 0 * size + size / 2, 76); 
+//     scale(0.7);  
+//     rotate(50); 
+//     rotateX(-90);
+//     rotateZ(90);
+//     rotateY(-90);
+//     stroke(110);
+//     strokeWeight(0.8);
+//     fill(215, 210, 225);        
+//     specularMaterial(215, 210, 225);
+//     model(whiteKingModel);
+//     pop();
+//   }
+// }
 
-class blackKing {
-  constructor() {}
+// class blackKing {
+//   constructor() {}
 
-  makeKingtwo() {
-    push();
+//   makeKingtwo() {
+//     push();
     
-    translate(-size * 4 + 3 * size + size / 2, size * 3 + 0 * size + size / 2, 76);
-    scale(0.7);  
-    rotate(50); 
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-    stroke(110);
-    strokeWeight(0.8);
-    fill(139, 69, 19);         
-    specularMaterial(139, 69, 19);
-    model(blackKingModel);
-    pop();
-  }
-}
+//     translate(-size * 4 + 3 * size + size / 2, size * 3 + 0 * size + size / 2, 76);
+//     scale(0.7);  
+//     rotate(50); 
+//     rotateX(-90);
+//     rotateZ(90);
+//     rotateY(-90);
+//     stroke(110);
+//     strokeWeight(0.8);
+//     fill(139, 69, 19);         
+//     specularMaterial(139, 69, 19);
+//     model(blackKingModel);
+//     pop();
+//   }
+// }
 
-class whiteQueen {
-  constructor() {}
+// class whiteQueen {
+//   constructor() {}
 
-  makeQueenone() {
-    push();
+//   makeQueenone() {
+//     push();
     
-    translate(-size * 4 + 4 * size + size / 2, -size * 4 + 0 * size + size / 2, 76); 
-    scale(0.7);  
-    rotate(50); 
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-    stroke(110);
-    strokeWeight(0.8);
-    fill(215, 210, 225);        
-    specularMaterial(215, 210, 225);
-    model(whiteQueenModel);
-    pop();
-  }
-}
+//     translate(-size * 4 + 4 * size + size / 2, -size * 4 + 0 * size + size / 2, 76); 
+//     scale(0.7);  
+//     rotate(50); 
+//     rotateX(-90);
+//     rotateZ(90);
+//     rotateY(-90);
+//     stroke(110);
+//     strokeWeight(0.8);
+//     fill(215, 210, 225);        
+//     specularMaterial(215, 210, 225);
+//     model(whiteQueenModel);
+//     pop();
+//   }
+// }
 
-class blackQueen {
-  constructor() {}
+// class blackQueen {
+//   constructor() {}
 
-  makeQueentwo() {
-    push();
+//   makeQueentwo() {
+//     push();
     
-    translate(-size * 4 + 4 * size + size / 2, size * 3 + 0 * size + size / 2, 76);
-    scale(0.7);  
-    rotate(23); 
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-    stroke(110);
-    strokeWeight(0.8);
-    fill(139, 69, 19);         
-    specularMaterial(139, 69, 19);
-    model(blackQueenModel);
-    pop();
-  }
-}
+//     translate(-size * 4 + 4 * size + size / 2, size * 3 + 0 * size + size / 2, 76);
+//     scale(0.7);  
+//     rotate(23); 
+//     rotateX(-90);
+//     rotateZ(90);
+//     rotateY(-90);
+//     stroke(110);
+//     strokeWeight(0.8);
+//     fill(139, 69, 19);         
+//     specularMaterial(139, 69, 19);
+//     model(blackQueenModel);
+//     pop();
+//   }
+// }
 
-class whiteRook {
-  constructor() {}
+// class whiteRook {
+//   constructor() {}
 
-  makeRookone() {
-    push();
+//   makeRookone() {
+//     push();
     
-    translate(-size * 4 + 0 * size + size / 2, -size * 4 + 0 * size + size / 2, 50); 
-    scale(0.5);  
+//     translate(-size * 4 + 0 * size + size / 2, -size * 4 + 0 * size + size / 2, 50); 
+//     scale(0.5);  
      
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-    stroke(110);
-    strokeWeight(0.8);
-    fill(215, 210, 225);        
-    specularMaterial(215, 210, 225);
-    model(whiteRookModel);
-    pop();
-  }
+//     rotateX(-90);
+//     rotateZ(90);
+//     rotateY(-90);
+//     stroke(110);
+//     strokeWeight(0.8);
+//     fill(215, 210, 225);        
+//     specularMaterial(215, 210, 225);
+//     model(whiteRookModel);
+//     pop();
+//   }
 
-  makeRooktwo() {
-    push();
+//   makeRooktwo() {
+//     push();
     
-    translate(-size * 4 + 7 * size + size / 2, -size * 4 + 0 * size + size / 2, 50); 
-    scale(0.5);  
+//     translate(-size * 4 + 7 * size + size / 2, -size * 4 + 0 * size + size / 2, 50); 
+//     scale(0.5);  
     
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-    stroke(110);
-    strokeWeight(0.8);
-    fill(215, 210, 225);        
-    specularMaterial(215, 210, 225);
-    model(whiteRookModel);
-    pop();
-  }
-}
+//     rotateX(-90);
+//     rotateZ(90);
+//     rotateY(-90);
+//     stroke(110);
+//     strokeWeight(0.8);
+//     fill(215, 210, 225);        
+//     specularMaterial(215, 210, 225);
+//     model(whiteRookModel);
+//     pop();
+//   }
+// }
 
-class blackRook {
-  constructor() {}
+// class blackRook {
+//   constructor() {}
 
-  makeRookbone() {
-    push();
+//   makeRookbone() {
+//     push();
     
-    translate(-size * 4 + 0 * size + size / 2, size * 3 + 0 * size + size / 2, 50);
-    scale(0.5);   
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-    stroke(110);
-    strokeWeight(0.8);
-    fill(139, 69, 19);         
-    specularMaterial(139, 69, 19);
-    model(blackRookModel);
-    pop();
-  }
+//     translate(-size * 4 + 0 * size + size / 2, size * 3 + 0 * size + size / 2, 50);
+//     scale(0.5);   
+//     rotateX(-90);
+//     rotateZ(90);
+//     rotateY(-90);
+//     stroke(110);
+//     strokeWeight(0.8);
+//     fill(139, 69, 19);         
+//     specularMaterial(139, 69, 19);
+//     model(blackRookModel);
+//     pop();
+//   }
 
-  makeRookbtwo() {
-    push();
+//   makeRookbtwo() {
+//     push();
     
-    translate(-size * 4 + 7 * size + size / 2, size * 3 + 0 * size + size / 2, 50);
-    scale(0.5);  
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-    stroke(110);
-    strokeWeight(0.8);
-    fill(139, 69, 19);         
-    specularMaterial(139, 69, 19);
-    model(blackRookModel);
-    pop();
-  }
-}
+//     translate(-size * 4 + 7 * size + size / 2, size * 3 + 0 * size + size / 2, 50);
+//     scale(0.5);  
+//     rotateX(-90);
+//     rotateZ(90);
+//     rotateY(-90);
+//     stroke(110);
+//     strokeWeight(0.8);
+//     fill(139, 69, 19);         
+//     specularMaterial(139, 69, 19);
+//     model(blackRookModel);
+//     pop();
+//   }
+// }
 
-class blackKnight {
-  constructor() {}
+// class blackKnight {
+//   constructor() {}
 
-  makeKnightbone() {
-    push();
+//   makeKnightbone() {
+//     push();
     
-    translate(-size * 4 + 1 * size + size / 2, size * 3 + 0 * size + size / 2, 50);
-    scale(0.5);   
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-    rotate(180);
-    stroke(110);
-    strokeWeight(0.8);
-    fill(139, 69, 19);         
-    specularMaterial(139, 69, 19);
-    model(blackKnightModel);
-    pop();
-  }
+//     translate(-size * 4 + 1 * size + size / 2, size * 3 + 0 * size + size / 2, 50);
+//     scale(0.5);   
+//     rotateX(-90);
+//     rotateZ(90);
+//     rotateY(-90);
+//     rotate(180);
+//     stroke(110);
+//     strokeWeight(0.8);
+//     fill(139, 69, 19);         
+//     specularMaterial(139, 69, 19);
+//     model(blackKnightModel);
+//     pop();
+//   }
 
-  makeKnightbtwo() {
-    push();
+//   makeKnightbtwo() {
+//     push();
     
-    translate(-size * 4 + 6 * size + size / 2, size * 3 + 0 * size + size / 2, 50);
-    scale(0.5);   
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-    rotate(180);
-    stroke(110);
-    strokeWeight(0.8);
-    fill(139, 69, 19);         
-    specularMaterial(139, 69, 19);
-    model(blackKnightModel);
-    pop();
-  }
-}
+//     translate(-size * 4 + 6 * size + size / 2, size * 3 + 0 * size + size / 2, 50);
+//     scale(0.5);   
+//     rotateX(-90);
+//     rotateZ(90);
+//     rotateY(-90);
+//     rotate(180);
+//     stroke(110);
+//     strokeWeight(0.8);
+//     fill(139, 69, 19);         
+//     specularMaterial(139, 69, 19);
+//     model(blackKnightModel);
+//     pop();
+//   }
+// }
 
-class whiteKnight {
-  constructor() {}
+// class whiteKnight {
+//   constructor() {}
 
-  makeKnightone() {
-    push();
+//   makeKnightone() {
+//     push();
 
-    translate(-size * 4 + 1 * size + size / 2, -size * 4 + 0 * size + size / 2, 50); 
-    scale(0.5);  
-    rotate(180); 
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-    rotate(180);
-    stroke(110);
-    strokeWeight(0.8);
-    fill(215, 210, 225);        
-    specularMaterial(215, 210, 225);
-    model(whiteKnightModel);
-    pop();
-  }
+//     translate(-size * 4 + 1 * size + size / 2, -size * 4 + 0 * size + size / 2, 50); 
+//     scale(0.5);  
+//     rotate(180); 
+//     rotateX(-90);
+//     rotateZ(90);
+//     rotateY(-90);
+//     rotate(180);
+//     stroke(110);
+//     strokeWeight(0.8);
+//     fill(215, 210, 225);        
+//     specularMaterial(215, 210, 225);
+//     model(whiteKnightModel);
+//     pop();
+//   }
 
-  makeKnighttwo() {
-    push();
+//   makeKnighttwo() {
+//     push();
     
-    translate(-size * 4 + 6 * size + size / 2, -size * 4 + 0 * size + size / 2, 50); 
-    scale(0.5);  
-    rotate(180); 
-    rotateX(-90);
-    rotateZ(90);
-    rotateY(-90);
-    rotate(180);
-    stroke(110);
-    strokeWeight(0.8);
-    fill(215, 210, 225);        
-    specularMaterial(215, 210, 225);
-    model(whiteKnightModel);
-    pop();
-  }
-}
+//     translate(-size * 4 + 6 * size + size / 2, -size * 4 + 0 * size + size / 2, 50); 
+//     scale(0.5);  
+//     rotate(180); 
+//     rotateX(-90);
+//     rotateZ(90);
+//     rotateY(-90);
+//     rotate(180);
+//     stroke(110);
+//     strokeWeight(0.8);
+//     fill(215, 210, 225);        
+//     specularMaterial(215, 210, 225);
+//     model(whiteKnightModel);
+//     pop();
+//   }
+// }
 
 
 
-class whitePawn {
-  constructor() {}
+// class whitePawn {
+//   constructor() {}
   
-  makeAll() {
-    for (let i = 0; i < 8; i++) {
-      push();
+//   makeAll() {
+//     for (let i = 0; i < 8; i++) {
+//       push();
       
-      translate(-size * 4 + i * size + size / 2, -size * 3 + size / 2, 50);
-      scale(0.5);
-      rotateX(-90);
-      rotateZ(90);
-      rotateY(-90);
+//       translate(-size * 4 + i * size + size / 2, -size * 3 + size / 2, 50);
+//       scale(0.5);
+//       rotateX(-90);
+//       rotateZ(90);
+//       rotateY(-90);
       
-      stroke(110);
-      strokeWeight(0.8);
-      fill(215, 210, 225);        
-      specularMaterial(215, 210, 225);
-      model(whitePawnModel);
-      pop();
-    }
-  }
-}
+//       stroke(110);
+//       strokeWeight(0.8);
+//       fill(215, 210, 225);        
+//       specularMaterial(215, 210, 225);
+//       model(whitePawnModel);
+//       pop();
+//     }
+//   }
+// }
   
-class blackPawn {
-  constructor() {}
+// class blackPawn {
+//   constructor() {}
   
-  makeAll() {
-    for (let i = 0; i < 8; i++) {
-      push();
+//   makeAll() {
+//     for (let i = 0; i < 8; i++) {
+//       push();
       
-      translate(-size * 4 + i * size + size / 2, size * 2 + size / 2, 50);
-      scale(0.5);
-      rotateX(-90);
-      rotateZ(90);
-      rotateY(-90);
+//       translate(-size * 4 + i * size + size / 2, size * 2 + size / 2, 50);
+//       scale(0.5);
+//       rotateX(-90);
+//       rotateZ(90);
+//       rotateY(-90);
       
-      stroke(110);
-      strokeWeight(0.8);
-      fill(139, 69, 19);         
-      specularMaterial(139, 69, 19);
-      model(blackPawnModel);
-      pop();
-    }
-  }
-}
+//       stroke(110);
+//       strokeWeight(0.8);
+//       fill(139, 69, 19);         
+//       specularMaterial(139, 69, 19);
+//       model(blackPawnModel);
+//       pop();
+//     }
+//   }
+// }
 
 
 
-//-------------------//
-//     BOARD      //
-//-------------------//
+
 class ChessBoard {
   constructor() {
     this.board = [];
-    
   }
 
   createBoard(row, col) {
@@ -584,7 +531,7 @@ class ChessBoard {
       fill(0, 255, 0); // Green square when hovered
     }
     else {
-      //console.log('');
+      
       fill(this.board[row][col]);
       
     }
@@ -599,243 +546,8 @@ class ChessBoard {
     else {
       this.drawBoard(row + 1, 0, hoveredX, hoveredY);
     }
-    
   }
 }
-//-------------------//
-//     PIECE LOGIC   // 
-//-------------------//
-class Pawn {
-  constructor(color, row, col) {
-    this.color = color; 
-    this.row = row;
-    this.col = col;
-    this.type = 'pawn';
-  }
-
-  validMoves(board) {
-    let moves = [];
-    let direction = this.color === 'white' ? -1 : 1; // White moves up, Black moves down
-    let startRow = this.color === 'white' ? 6 : 1;
-
-    // Regular move (one step forward)
-    if (board[this.row + direction] && board[this.row + direction][this.col] === null) {
-      moves.push({ row: this.row + direction, col: this.col });
-    }
-
-    // First move (two steps forward)
-    if (this.row === startRow && board[this.row + direction * 2] && board[this.row + direction * 2][this.col] === null) {
-      moves.push({ row: this.row + direction * 2, col: this.col });
-    }
-
-    // Capture diagonally
-    if (this.row + direction >= 0 && this.row + direction < 8) {
-      if (this.col - 1 >= 0 && board[this.row + direction][this.col - 1] && board[this.row + direction][this.col - 1].color !== this.color) {
-        moves.push({ row: this.row + direction, col: this.col - 1 });
-      }
-      if (this.col + 1 < 8 && board[this.row + direction][this.col + 1] && board[this.row + direction][this.col + 1].color !== this.color) {
-        moves.push({ row: this.row + direction, col: this.col + 1 });
-      }
-    }
-
-    return moves;
-  }
-}
-
-class Rook {
-  constructor(color, row, col) {
-    this.color = color; 
-    this.row = row;
-    this.col = col;
-    this.type = 'rook';
-  }
-
-  validMoves(board) {
-    let moves = [];
-    let directions = [
-      { row: 1, col: 0 },  // Down
-      { row: -1, col: 0 }, // Up
-      { row: 0, col: 1 },  // Right
-      { row: 0, col: -1 }, // Left
-    ];
-
-    for (let dir of directions) {
-      let r = this.row + dir.row;
-      let c = this.col + dir.col;
-
-      while (r >= 0 && r < 8 && c >= 0 && c < 8) {
-        if (board[r][c] === null) {
-          moves.push({ row: r, col: c });
-        }
-        else if (board[r][c].color !== this.color) {
-          moves.push({ row: r, col: c }); // Capture opponent's piece
-          break;
-        }
-        else {
-          break; // Blocked by same-colored piece
-        }
-        r += dir.row;
-        c += dir.col;
-      }
-    }
-
-    return moves;
-  }
-}
-
-class Knight {
-  constructor(color, row, col) {
-    this.color = color; 
-    this.row = row;
-    this.col = col;
-    this.type = 'knight';
-  }
-
-  validMoves(board) {
-    let moves = [];
-    let directions = [
-      { row: 2, col: 1 }, { row: 2, col: -1 },
-      { row: -2, col: 1 }, { row: -2, col: -1 },
-      { row: 1, col: 2 }, { row: 1, col: -2 },
-      { row: -1, col: 2 }, { row: -1, col: -2 }
-    ];
-
-    for (let dir of directions) {
-      let r = this.row + dir.row;
-      let c = this.col + dir.col;
-      if (r >= 0 && r < 8 && c >= 0 && c < 8) {
-        if (board[r][c] === null || board[r][c].color !== this.color) {
-          moves.push({ row: r, col: c });
-        }
-      }
-    }
-
-    return moves;
-  }
-}
-
-class Bishop {
-  constructor(color, row, col) {
-    this.color = color; 
-    this.row = row;
-    this.col = col;
-    this.type = 'bishop';
-  }
-
-  validMoves(board) {
-    let moves = [];
-    let directions = [
-      { row: 1, col: 1 },   // Down-Right
-      { row: 1, col: -1 },  // Down-Left
-      { row: -1, col: 1 },  // Up-Right
-      { row: -1, col: -1 }, // Up-Left
-    ];
-
-    for (let dir of directions) {
-      let r = this.row + dir.row;
-      let c = this.col + dir.col;
-
-      while (r >= 0 && r < 8 && c >= 0 && c < 8) {
-        if (board[r][c] === null) {
-          moves.push({ row: r, col: c });
-        }
-        else if (board[r][c].color !== this.color) {
-          moves.push({ row: r, col: c }); // Capture opponent's piece
-          break;
-        }
-        else {
-          break; // Blocked by same-colored piece
-        }
-        r += dir.row;
-        c += dir.col;
-      }
-    }
-
-    return moves;
-  }
-}
-
-class Queen {
-  constructor(color, row, col) {
-    this.color = color; 
-    this.row = row;
-    this.col = col;
-    this.type = 'queen';
-  }
-
-  validMoves(board) {
-    let moves = [];
-    let directions = [
-      { row: 1, col: 0 },  // Down
-      { row: -1, col: 0 }, // Up
-      { row: 0, col: 1 },  // Right
-      { row: 0, col: -1 }, // Left
-      { row: 1, col: 1 },   // Down-Right
-      { row: 1, col: -1 },  // Down-Left
-      { row: -1, col: 1 },  // Up-Right
-      { row: -1, col: -1 }, // Up-Left
-    ];
-
-    for (let dir of directions) {
-      let r = this.row + dir.row;
-      let c = this.col + dir.col;
-
-      while (r >= 0 && r < 8 && c >= 0 && c < 8) {
-        if (board[r][c] === null) {
-          moves.push({ row: r, col: c });
-        }
-        else if (board[r][c].color !== this.color) {
-          moves.push({ row: r, col: c }); // Capture opponent's piece
-          break;
-        }
-        else {
-          break; // Blocked by same-colored piece
-        }
-        r += dir.row;
-        c += dir.col;
-      }
-    }
-
-    return moves;
-  }
-}
-
-class King {
-  constructor(color, row, col) {
-    this.color = color; 
-    this.row = row;
-    this.col = col;
-    this.type = 'king';
-  }
-
-  validMoves(board) {
-    let moves = [];
-    let directions = [
-      { row: 1, col: 0 },  // Down
-      { row: -1, col: 0 }, // Up
-      { row: 0, col: 1 },  // Right
-      { row: 0, col: -1 }, // Left
-      { row: 1, col: 1 },   // Down-Right
-      { row: 1, col: -1 },  // Down-Left
-      { row: -1, col: 1 },  // Up-Right
-      { row: -1, col: -1 }, // Up-Left
-    ];
-
-    for (let dir of directions) {
-      let r = this.row + dir.row;
-      let c = this.col + dir.col;
-      if (r >= 0 && r < 8 && c >= 0 && c < 8) {
-        if (board[r][c] === null || board[r][c].color !== this.color) {
-          moves.push({ row: r, col: c });
-        }
-      }
-    }
-
-    return moves;
-  }
-}
-
-
 
 
 
