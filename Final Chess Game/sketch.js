@@ -100,7 +100,6 @@ function setup() {
 function draw() {
   background(0);
   ambientLight(255);
-  //orbitControl();
   directionalLight(255, 255, 255, 0, 1, -1);
   let worldX = mouseX - width / 2;
   let worldY = mouseY - height / 2;
@@ -186,36 +185,65 @@ class Pieces {
       specularMaterial(139, 69, 19); break;
     }
     switch(this.piece){
-    case'bishop':
-      model(biW);
-      model(biB);
-      
+    case 'bishop':
+      if (this.color === 'white') {
+        model(biW);
+      }
+      else {
+        model(biB);
+      }
       break;
-    case'pawn':
-      model(wp);
-      model(bp); 
+    
+    case 'pawn':
+      if (this.color === 'white') {
+        model(wp);
+      }
+      else {
+        model(bp);
+      }
       break;
-    case'rook':
-      model(wr); 
-      model(br);
+    
+    case 'rook':
+      if (this.color === 'white') {
+        model(wr);
+      }
+      else {
+        model(br);
+      }
       break;
-    case'knight':
-      model(wkni);
-      model(bkni);  
+    
+    case 'knight':
+      if (this.color === 'white') {
+        model(wkni);
+      }
+      else {
+        model(bkni);
+      }
       break;
-    case'king':
-      model(wk); 
-      model(bk);
+    
+    case 'king':
+      if (this.color === 'white') {
+        model(wk);
+      }
+      else {
+        model(bk);
+      }
       break;
-    case'queen':
-      model(qw); 
-      model(qb);
+    
+    case 'queen':
+      if (this.color === 'white') {
+        model(qw);
+      }
+      else {
+        model(qb);
+      }
       break;
-      
     }
+    
     pop();
 
   }
+  
 }
 
 function mousePressed() {
