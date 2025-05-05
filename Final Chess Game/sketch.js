@@ -264,19 +264,35 @@ function mousePressed() {
     }
   }
 }
+function legalMove(newRow, newCol){
+  if (!(newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8)) {
+    return false;
+  }
 
+  switch (selectedPiece.piece){
+    case 'pawn':
+    return true;
+    break;
+
+    case 'knight':
+      return false;
+      break;
+  }
+}
 function mouseReleased() {
-  if (dragging && selectedPiece) {
-    let x = mouseX - width / 2;
+
+  let x = mouseX - width / 2;
     let y = mouseY - height / 2;
 
     let newCol = Math.floor((y + size * 4) / size);
     let newRow = Math.floor((x + size * 4) / size);
+  if (dragging && selectedPiece && legalMove(newRow, newCol)) {
+    
 
-    if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
+    
       selectedPiece.row = newRow;
       selectedPiece.col = newCol;
-    }
+    
 
     dragging = false;
     selectedPiece = null;
