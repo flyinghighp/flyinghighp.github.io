@@ -286,41 +286,41 @@ function mousePressed() {
 }
 
 function legalMove(newRow, newCol) {
-  console.log(`Attempting to move piece: ${selectedPiece.piece} from (${selectedPiece.row}, ${selectedPiece.col}) to (${newRow}, ${newCol})`);
+ 
   if (!selectedPiece || selectedPiece.color !== currentTurn) {
-    console.log("Not this turn or no piece selected.");
+    
     return false;
   }
   if (!(newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8)) {
-    console.log(`Move out of bounds.`);
+    
     return false;
   }
 
   const target = pieces.find(p => p.col === newCol && p.row === newRow);
   if (target && target.color === selectedPiece.color){
-    console.log("Cannot move to occupied square by same color.");
+    
     return false;
   }
 
   const dr = newCol - selectedPiece.col;  // ****Flip column and row logic
   const dc = newRow - selectedPiece.row;  // ****Flip column and row logic
-  console.log(`Direction of move: dr = ${dr}, dc = ${dc}`)
+ 
 
   switch (selectedPiece.piece) {
     case 'pawn':
       const dir = selectedPiece.color === 'white' ? 1 : -1;
       const startCol = selectedPiece.color === 'white' ? 1 : 6;
-      console.log(`Pawn direction: ${dir}, Start row: ${startRow}`);
+      
 
       if (dc === 0 && !target) {
         // forward
         if (dr === dir || (selectedPiece.col === startCol && dr === 2 * dir &&
           !pieces.some(p => p.col === selectedPiece.col + dir && p.row === selectedPiece.row))) {
-            console.log("Valid forward move.");
+            
           return true;
         }
       } else if (Math.abs(dc) === 1 && dr === dir && target && target.color !== selectedPiece.color) {
-        console.log("Valid diagonal capture.");
+        
         // Diagonal 
         return true;
       }
