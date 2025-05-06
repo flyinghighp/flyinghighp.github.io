@@ -1,7 +1,6 @@
 // Final Project - Chess 
 // Priyansh Jhanji
 // 25 April 2025
-
 let thickness = 30;
 let size;
 let cam;
@@ -15,9 +14,9 @@ let bc;
 let pieces = [];
 let selectedPiece = null;
 let dragging = false;
+let currentTurn = 'white';
+let enPassantTarget = null;
 
-
-  
 let biB; let bk; let qb; let br; let bp; let bkni;
 let biW; let wk; let qw; let wr; let wp; let wkni;
 boardData = [//sets board up 
@@ -28,7 +27,7 @@ boardData = [//sets board up
   [0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0],
   [wp, wp, wp, wp, wp, wp, wp, wp],
-  [wr, wkni, biW, qw, wk, biW, wkni, wr] 
+  [wr, wkni, biW, qw, wk, biW, wkni, wr]
 ];
 
 function preload() {
@@ -44,7 +43,7 @@ function preload() {
   bp = loadModel('assets/Pawn - Copy.obj', true);
   wr = loadModel('assets/Rook.obj', true);
   br = loadModel('assets/Rook - Copy.obj', true);
-  woodTexture = loadImage('assets/woodtexture.jpg',true); 
+  woodTexture = loadImage('assets/woodtexture.jpg', true);
 }
 
 function setup() {
@@ -53,48 +52,48 @@ function setup() {
   cam.setPosition(0, 100, 900);
   cam.lookAt(0, 0, 0);
   angleMode(DEGREES);
-  
+
   size = min(width, height) / 10;
   chessBoard = new ChessBoard();
   chessBoard.createBoard(0, 0);
-  
+
   //WHITE//
-  pieces.push (new Pieces(0,0,'white','rook'));
-  pieces.push (new Pieces(0,1,'white','knight'));
-  pieces.push (new Pieces(0,2,'white','bishop'));
-  pieces.push (new Pieces(0,3,'white','queen'));
-  pieces.push (new Pieces(0,4,'white','king'));
-  pieces.push (new Pieces(0,5,'white','bishop'));
-  pieces.push (new Pieces(0,6,'white','knight'));
-  pieces.push (new Pieces(0,7,'white','rook'));
+  pieces.push(new Pieces(0, 0, 'white', 'rook'));
+  pieces.push(new Pieces(0, 1, 'white', 'knight'));
+  pieces.push(new Pieces(0, 2, 'white', 'bishop'));
+  pieces.push(new Pieces(0, 3, 'white', 'queen'));
+  pieces.push(new Pieces(0, 4, 'white', 'king'));
+  pieces.push(new Pieces(0, 5, 'white', 'bishop'));
+  pieces.push(new Pieces(0, 6, 'white', 'knight'));
+  pieces.push(new Pieces(0, 7, 'white', 'rook'));
 
-  pieces.push (new Pieces(1,0,'white','pawn'));
-  pieces.push (new Pieces(1,1,'white','pawn'));
-  pieces.push (new Pieces(1,2,'white','pawn'));
-  pieces.push (new Pieces(1,3,'white','pawn'));
-  pieces.push (new Pieces(1,4,'white','pawn'));
-  pieces.push (new Pieces(1,5,'white','pawn'));
-  pieces.push (new Pieces(1,6,'white','pawn'));
-  pieces.push (new Pieces(1,7,'white','pawn'));
-  
+  pieces.push(new Pieces(1, 0, 'white', 'pawn'));
+  pieces.push(new Pieces(1, 1, 'white', 'pawn'));
+  pieces.push(new Pieces(1, 2, 'white', 'pawn'));
+  pieces.push(new Pieces(1, 3, 'white', 'pawn'));
+  pieces.push(new Pieces(1, 4, 'white', 'pawn'));
+  pieces.push(new Pieces(1, 5, 'white', 'pawn'));
+  pieces.push(new Pieces(1, 6, 'white', 'pawn'));
+  pieces.push(new Pieces(1, 7, 'white', 'pawn'));
+
   // BLACK//
-  pieces.push (new Pieces(6,0,'black','pawn'));
-  pieces.push (new Pieces(6,1,'black','pawn'));
-  pieces.push (new Pieces(6,2,'black','pawn'));
-  pieces.push (new Pieces(6,3,'black','pawn'));
-  pieces.push (new Pieces(6,4,'black','pawn'));
-  pieces.push (new Pieces(6,5,'black','pawn'));
-  pieces.push (new Pieces(6,6,'black','pawn'));
-  pieces.push (new Pieces(6,7,'black','pawn'));
+  pieces.push(new Pieces(6, 0, 'black', 'pawn'));
+  pieces.push(new Pieces(6, 1, 'black', 'pawn'));
+  pieces.push(new Pieces(6, 2, 'black', 'pawn'));
+  pieces.push(new Pieces(6, 3, 'black', 'pawn'));
+  pieces.push(new Pieces(6, 4, 'black', 'pawn'));
+  pieces.push(new Pieces(6, 5, 'black', 'pawn'));
+  pieces.push(new Pieces(6, 6, 'black', 'pawn'));
+  pieces.push(new Pieces(6, 7, 'black', 'pawn'));
 
-  pieces.push (new Pieces(7,0,'black','rook'));
-  pieces.push (new Pieces(7,1,'black','knight'));
-  pieces.push (new Pieces(7,2,'black','bishop'));
-  pieces.push (new Pieces(7,3,'black','queen'));
-  pieces.push (new Pieces(7,4,'black','king'));
-  pieces.push (new Pieces(7,5,'black','bishop'));
-  pieces.push (new Pieces(7,6,'black','knight'));
-  pieces.push (new Pieces(7,7,'black','rook'));
+  pieces.push(new Pieces(7, 0, 'black', 'rook'));
+  pieces.push(new Pieces(7, 1, 'black', 'knight'));
+  pieces.push(new Pieces(7, 2, 'black', 'bishop'));
+  pieces.push(new Pieces(7, 3, 'black', 'queen'));
+  pieces.push(new Pieces(7, 4, 'black', 'king'));
+  pieces.push(new Pieces(7, 5, 'black', 'bishop'));
+  pieces.push(new Pieces(7, 6, 'black', 'knight'));
+  pieces.push(new Pieces(7, 7, 'black', 'rook'));
 }
 
 function draw() {
@@ -103,20 +102,20 @@ function draw() {
   directionalLight(255, 255, 255, 0, 1, -1);
   let worldX = mouseX - width / 2;
   let worldY = mouseY - height / 2;
-  
+
   for (let p of pieces) {
     p.display();
-  }  
+  }
 
   // Variables to store the hovered square
   let hoveredX = 1;
   let hoveredY = 1;
 
   // Calculate grid position for X and Y
- 
+
   if (worldX >= -size * 4 && worldX <= size * 4 &&
-      worldY >= -size * 4 && worldY <= size * 4) {
-    
+    worldY >= -size * 4 && worldY <= size * 4) {
+
     hoveredX = Math.floor((worldY + size * 4) / size);
     hoveredY = Math.floor((worldX + size * 4) / size);
   }
@@ -127,11 +126,11 @@ function draw() {
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
       let piece = boardData[row][col];
-       
+
     }
   }
-  
-  chessBoard.drawBoard(0,0,hoveredX, hoveredY);
+
+  chessBoard.drawBoard(0, 0, hoveredX, hoveredY);
 
 }
 
@@ -145,12 +144,12 @@ function getBoardPosition(row, col, z = 60) {
 //     PIECES       //
 //-------------------//
 class Pieces {
-  constructor(col,row,color,piece) {
+  constructor(col, row, color, piece) {
     this.row = row;
-    this.col = col ;
+    this.col = col;
     this.color = color;
     this.piece = piece;
-    
+
   }
 
   display() {
@@ -168,7 +167,7 @@ class Pieces {
 
     translate(x, y, z);
 
-    rotate(130); 
+    rotate(130);
     rotateX(-90);
     rotateZ(90);
     rotateY(-90);
@@ -176,128 +175,206 @@ class Pieces {
     stroke(110);
     scale(0.45);
     strokeWeight(0.8);
-    switch(this.color){     
-    case'white':
-      fill(215, 210, 225); 
-      specularMaterial(215, 210, 225); break;
-    case'black':
-      fill(139, 69, 19); 
-      specularMaterial(139, 69, 19); break;
+    switch (this.color) {
+      case 'white':
+        fill(215, 210, 225);
+        specularMaterial(215, 210, 225); break;
+      case 'black':
+        fill(139, 69, 19);
+        specularMaterial(139, 69, 19); break;
     }
-    switch(this.piece){
-    case 'bishop':
-      if (this.color === 'white') {
-        model(biW);
-      }
-      else {
-        model(biB);
-      }
-      break;
-    
-    case 'pawn':
-      if (this.color === 'white') {
-        model(wp);
-      }
-      else {
-        model(bp);
-      }
-      break;
-    
-    case 'rook':
-      if (this.color === 'white') {
-        model(wr);
-      }
-      else {
-        model(br);
-      }
-      break;
-    
-    case 'knight':
-      if (this.color === 'white') {
-        model(wkni);
-      }
-      else {
-        model(bkni);
-      }
-      break;
-    
-    case 'king':
-      if (this.color === 'white') {
-        model(wk);
-      }
-      else {
-        model(bk);
-      }
-      break;
-    
-    case 'queen':
-      if (this.color === 'white') {
-        model(qw);
-      }
-      else {
-        model(qb);
-      }
-      break;
+    switch (this.piece) {
+      case 'bishop':
+        if (this.color === 'white') {
+          model(biW);
+        }
+        else {
+          model(biB);
+        }
+        break;
+
+      case 'pawn':
+        if (this.color === 'white') {
+          model(wp);
+        }
+        else {
+          model(bp);
+        }
+        break;
+
+      case 'rook':
+        if (this.color === 'white') {
+          model(wr);
+        }
+        else {
+          model(br);
+        }
+        break;
+
+      case 'knight':
+        if (this.color === 'white') {
+          model(wkni);
+        }
+        else {
+          model(bkni);
+        }
+        break;
+
+      case 'king':
+        if (this.color === 'white') {
+          model(wk);
+        }
+        else {
+          model(bk);
+        }
+        break;
+
+      case 'queen':
+        if (this.color === 'white') {
+          model(qw);
+        }
+        else {
+          model(qb);
+        }
+        break;
     }
-    
+
     pop();
 
   }
-  
+
 }
+
+
+function pieceAt(row, col) {
+  return pieces.find(p => p.row === row && p.col === col);
+}
+
+function isPathClear(startRow, startCol, endRow, endCol) {
+  let rowStep = Math.sign(endRow - startRow);
+  let colStep = Math.sign(endCol - startCol);
+
+  let row = startRow + rowStep;
+  let col = startCol + colStep;
+
+  while (row !== endRow || col !== endCol) {
+    if (pieces.some(p => p.row === row && p.col === col)) {
+      return false;
+    }
+    row += rowStep;
+    col += colStep;
+  }
+  return true;
+}
+
 
 function mousePressed() {
   let x = mouseX - width / 2;
   let y = mouseY - height / 2;
-
   let col = Math.floor((y + size * 4) / size);
   let row = Math.floor((x + size * 4) / size);
 
   if (row >= 0 && row < 8 && col >= 0 && col < 8) {
     for (let p of pieces) {
-      if (p.row === row && p.col === col) {
+      if (p.row === row && p.col === col && p.color === currentTurn) {
         selectedPiece = p;
-        console.log('drag');
         dragging = true;
         break;
       }
     }
   }
 }
-function legalMove(newRow, newCol){
+
+function legalMove(newRow, newCol) {
+  console.log(`Attempting to move piece: ${selectedPiece.piece} from (${selectedPiece.row}, ${selectedPiece.col}) to (${newRow}, ${newCol})`);
+  if (!selectedPiece || selectedPiece.color !== currentTurn) {
+    console.log("Not this turn or no piece selected.");
+    return false;
+  }
   if (!(newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8)) {
+    console.log(`Move out of bounds.`);
     return false;
   }
 
-  switch (selectedPiece.piece){
+  const target = pieces.find(p => p.col === newCol && p.row === newRow);
+  if (target && target.color === selectedPiece.color){
+    console.log("Cannot move to occupied square by same color.");
+    return false;
+  }
+
+  const dr = newCol - selectedPiece.col;  // ****Flip column and row logic
+  const dc = newRow - selectedPiece.row;  // ****Flip column and row logic
+  console.log(`Direction of move: dr = ${dr}, dc = ${dc}`)
+
+  switch (selectedPiece.piece) {
     case 'pawn':
-    return true;
-    break;
+      const dir = selectedPiece.color === 'white' ? 1 : -1;
+      const startCol = selectedPiece.color === 'white' ? 1 : 6;
+      console.log(`Pawn direction: ${dir}, Start row: ${startRow}`);
+
+      if (dc === 0 && !target) {
+        // forward
+        if (dr === dir || (selectedPiece.col === startCol && dr === 2 * dir &&
+          !pieces.some(p => p.col === selectedPiece.col + dir && p.row === selectedPiece.row))) {
+            console.log("Valid forward move.");
+          return true;
+        }
+      } else if (Math.abs(dc) === 1 && dr === dir && target && target.color !== selectedPiece.color) {
+        console.log("Valid diagonal capture.");
+        // Diagonal 
+        return true;
+      }
+
+      return false;
+
+    case 'rook':
+      if (dr === 0 || dc === 0) {
+        return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
+      }
+      return false;
+
+    case 'bishop':
+      if (Math.abs(dr) === Math.abs(dc)) {
+        return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
+      }
+      return false;
+
+    case 'queen':
+      if (Math.abs(dr) === Math.abs(dc) || dr === 0 || dc === 0) {
+        return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
+      }
+      return false;
+
+    case 'king':
+      return Math.abs(dr) <= 1 && Math.abs(dc) <= 1;
 
     case 'knight':
-      return false;
-      break;
+      return (Math.abs(dr) === 2 && Math.abs(dc) === 1) || (Math.abs(dr) === 1 && Math.abs(dc) === 2);
+      
   }
+  
 }
+
 function mouseReleased() {
-
   let x = mouseX - width / 2;
-    let y = mouseY - height / 2;
+  let y = mouseY - height / 2;
+  let newCol = Math.floor((y + size * 4) / size);
+  let newRow = Math.floor((x + size * 4) / size);
 
-    let newCol = Math.floor((y + size * 4) / size);
-    let newRow = Math.floor((x + size * 4) / size);
   if (dragging && selectedPiece && legalMove(newRow, newCol)) {
-    
+    // Remove  piece
+    pieces = pieces.filter(p => !(p.row === newRow && p.col === newCol && p.color !== selectedPiece.color));
 
-    
-      selectedPiece.row = newRow;
-      selectedPiece.col = newCol;
-    
+    selectedPiece.row = newRow;
+    selectedPiece.col = newCol;
 
-    dragging = false;
-    selectedPiece = null;
+    currentTurn = currentTurn === 'white' ? 'black' : 'white';
   }
+
+  dragging = false;
+  selectedPiece = null;
 }
+
 
 class ChessBoard {
   constructor() {
@@ -359,7 +436,7 @@ class ChessBoard {
       fill(0, 255, 0); // Green square when hovered
     }
     else {
-      
+
       fill(this.board[row][col]);
 
     }
