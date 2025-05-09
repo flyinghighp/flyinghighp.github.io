@@ -15,7 +15,8 @@ let pieces = [];
 let selectedPiece = null;
 let dragging = false;
 let currentTurn = 'white';
-let enPassantTarget = null;
+let gameOver = false;
+let winner = null;
 
 let biB; let bk; let qb; let br; let bp; let bkni;
 let biW; let wk; let qw; let wr; let wp; let wkni;
@@ -44,6 +45,7 @@ function preload() {
   wr = loadModel('assets/Rook.obj', true);
   br = loadModel('assets/Rook - Copy.obj', true);
   woodTexture = loadImage('assets/woodtexture.jpg', true);
+  
 }
 
 function setup() {
@@ -52,6 +54,7 @@ function setup() {
   cam.setPosition(0, 100, 900);
   cam.lookAt(0, 0, 0);
   angleMode(DEGREES);
+ 
 
   size = min(width, height) / 10;
   chessBoard = new ChessBoard();
@@ -102,9 +105,17 @@ function draw() {
   directionalLight(255, 255, 255, 0, 1, -1);
   let worldX = mouseX - width / 2;
   let worldY = mouseY - height / 2;
+  
 
   for (let p of pieces) {
     p.display();
+  }
+  if (gameOver) {
+    push();
+    fill(255, 0, 0);
+  
+    console.log(`Game Over: ${winner} wins!`);
+    pop();
   }
 
   // Variables to store the hovered square
@@ -176,67 +187,67 @@ class Pieces {
     scale(0.45);
     strokeWeight(0.8);
     switch (this.color) {
-      case 'white':
-        fill(215, 210, 225);
-        specularMaterial(215, 210, 225); break;
-      case 'black':
-        fill(139, 69, 19);
-        specularMaterial(139, 69, 19); break;
+    case 'white':
+      fill(215, 210, 225);
+      specularMaterial(215, 210, 225); break;
+    case 'black':
+      fill(139, 69, 19);
+      specularMaterial(139, 69, 19); break;
     }
     switch (this.piece) {
-      case 'bishop':
-        if (this.color === 'white') {
-          model(biW);
-        }
-        else {
-          model(biB);
-        }
-        break;
+    case 'bishop':
+      if (this.color === 'white') {
+        model(biW);
+      }
+      else {
+        model(biB);
+      }
+      break;
 
-      case 'pawn':
-        if (this.color === 'white') {
-          model(wp);
-        }
-        else {
-          model(bp);
-        }
-        break;
+    case 'pawn':
+      if (this.color === 'white') {
+        model(wp);
+      }
+      else {
+        model(bp);
+      }
+      break;
 
-      case 'rook':
-        if (this.color === 'white') {
-          model(wr);
-        }
-        else {
-          model(br);
-        }
-        break;
+    case 'rook':
+      if (this.color === 'white') {
+        model(wr);
+      }
+      else {
+        model(br);
+      }
+      break;
 
-      case 'knight':
-        if (this.color === 'white') {
-          model(wkni);
-        }
-        else {
-          model(bkni);
-        }
-        break;
+    case 'knight':
+      if (this.color === 'white') {
+        model(wkni);
+      }
+      else {
+        model(bkni);
+      }
+      break;
 
-      case 'king':
-        if (this.color === 'white') {
-          model(wk);
-        }
-        else {
-          model(bk);
-        }
-        break;
+    case 'king':
+      if (this.color === 'white') {
+        model(wk);
+      }
+      else {
+        model(bk);
+      }
+      break;
 
-      case 'queen':
-        if (this.color === 'white') {
-          model(qw);
-        }
-        else {
-          model(qb);
-        }
-        break;
+    case 'queen':
+      if (this.color === 'white') {
+        model(qw);
+      }
+      else {
+        model(qb);
+      }
+      break;
     }
 
     pop();
@@ -307,73 +318,180 @@ function legalMove(newRow, newCol) {
  
 
   switch (selectedPiece.piece) {
-    case 'pawn':
-      const dir = selectedPiece.color === 'white' ? 1 : -1;
-      const startCol = selectedPiece.color === 'white' ? 1 : 6;
+  case 'pawn':
+    const dir = selectedPiece.color === 'white' ? 1 : -1;
+    const startCol = selectedPiece.color === 'white' ? 1 : 6;
       
 
-      if (dc === 0 && !target) {
-        // forward
-        if (dr === dir || (selectedPiece.col === startCol && dr === 2 * dir &&
-          !pieces.some(p => p.col === selectedPiece.col + dir && p.row === selectedPiece.row))) {
+    if (dc === 0 && !target) {
+      // forward
+      if (dr === dir || selectedPiece.col === startCol && dr === 2 * dir &&
+          !pieces.some(p => p.col === selectedPiece.col + dir && p.row === selectedPiece.row)) {
             
-          return true;
-        }
-      } else if (Math.abs(dc) === 1 && dr === dir && target && target.color !== selectedPiece.color) {
-        
-        // Diagonal 
         return true;
       }
+    }
+    else if (Math.abs(dc) === 1 && dr === dir && target && target.color !== selectedPiece.color) {
+        
+      // Diagonal 
+      return true;
+    }
 
-      return false;
+    return false;
 
-    case 'rook':
-      if (dr === 0 || dc === 0) {
-        return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
-      }
-      return false;
+  case 'rook':
+    if (dr === 0 || dc === 0) {
+      return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
+    }
+    return false;
 
-    case 'bishop':
-      if (Math.abs(dr) === Math.abs(dc)) {
-        return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
-      }
-      return false;
+  case 'bishop':
+    if (Math.abs(dr) === Math.abs(dc)) {
+      return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
+    }
+    return false;
 
-    case 'queen':
-      if (Math.abs(dr) === Math.abs(dc) || dr === 0 || dc === 0) {
-        return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
-      }
-      return false;
+  case 'queen':
+    if (Math.abs(dr) === Math.abs(dc) || dr === 0 || dc === 0) {
+      return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
+    }
+    return false;
 
-    case 'king':
-      return Math.abs(dr) <= 1 && Math.abs(dc) <= 1;
+  case 'king':
+    return Math.abs(dr) <= 1 && Math.abs(dc) <= 1;
 
-    case 'knight':
-      return (Math.abs(dr) === 2 && Math.abs(dc) === 1) || (Math.abs(dr) === 1 && Math.abs(dc) === 2);
+  case 'knight':
+    return Math.abs(dr) === 2 && Math.abs(dc) === 1 || Math.abs(dr) === 1 && Math.abs(dc) === 2;
       
   }
   
 }
 
-function mouseReleased() {
-  let x = mouseX - width / 2;
-  let y = mouseY - height / 2;
-  let newCol = Math.floor((y + size * 4) / size);
-  let newRow = Math.floor((x + size * 4) / size);
+// Checks if the king of the given color is under attack
+function isInCheck(color) {
+  // Find the king of the given color
+  const king = pieces.find(p => p.piece === 'king' && p.color === color);
+  if (!king) {
+    return false;
+  } // If king is missing (shouldn't happen), return false
 
-  if (dragging && selectedPiece && legalMove(newRow, newCol)) {
-    // Remove  piece
-    pieces = pieces.filter(p => !(p.row === newRow && p.col === newCol && p.color !== selectedPiece.color));
+  // Check if any enemy piece can move to the king's position
+  for (let p of pieces) {
+    if (p.color !== color) {
+      const originalSelected = selectedPiece;
+      selectedPiece = p; // Temporarily treat this enemy piece as selected
 
-    selectedPiece.row = newRow;
-    selectedPiece.col = newCol;
+      // If this piece can legally move to the king's square
+      if (legalMove(king.row, king.col)) {
+        selectedPiece = originalSelected; // Restore previous selection
+        return true; // King is in check
+      }
 
-    currentTurn = currentTurn === 'white' ? 'black' : 'white';
+      selectedPiece = originalSelected; // Restore previous selection
+    }
   }
 
-  dragging = false;
-  selectedPiece = null;
+  return false; // No enemy piece can attack the king
 }
+
+
+// Checks if the given color is in checkmate (king is in check and no legal moves save it)
+function isCheckmate(color) {
+  // If king is not in check, it's not checkmate
+  if (!isInCheck(color)) {
+    return false;
+  }
+
+  // Loop through all pieces of this color
+  for (let p of pieces) {
+    if (p.color !== color) {
+      continue;
+    } // Skip enemy pieces
+
+    // Try moving this piece to every square on the board
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        const originalRow = p.row;
+        const originalCol = p.col;
+        const captured = pieceAt(r, c); // Check if we are capturing anyone
+
+        selectedPiece = p; // Try to move this piece
+        if (legalMove(r, c)) {
+          // Simulate the move
+          p.row = r;
+          p.col = c;
+          if (captured) {
+            pieces = pieces.filter(x => x !== captured);
+          } // Temporarily remove captured piece
+
+          const inCheck = isInCheck(color); // After the move, are we still in check?
+
+          // Undo the move
+          p.row = originalRow;
+          p.col = originalCol;
+          if (captured) {
+            pieces.push(captured);
+          } // Restore captured piece
+
+          if (!inCheck) {
+            selectedPiece = null;
+            return false; // Found a move that saves the king -> not checkmate
+          }
+        }
+
+        selectedPiece = null; // Reset selection
+      }
+    }
+  }
+
+  return true; // Tried all moves, none save the king -> checkmate
+}
+
+
+function mouseReleased() {
+  if (gameOver) {
+    return;
+  } 
+
+  if (dragging && selectedPiece) {
+    
+    let x = mouseX - width / 2;
+    let y = mouseY - height / 2;
+    let newCol = Math.floor((y + size * 4) / size);
+    let newRow = Math.floor((x + size * 4) / size);
+
+    
+    newRow = constrain(newRow, 0, 7);
+    newCol = constrain(newCol, 0, 7);
+
+    
+    if (legalMove(newRow, newCol)) {
+      // Remove any enemy piece at the target square (capture)
+      pieces = pieces.filter(p => !(p.row === newRow && p.col === newCol && p.color !== selectedPiece.color));
+
+      // Move the selected piece to the new square
+      selectedPiece.row = newRow;
+      selectedPiece.col = newCol;
+
+      // Check if opponent is in checkmate after this move
+      const opponentColor = currentTurn === 'white' ? 'black' : 'white';
+      if (isCheckmate(opponentColor)) {
+        gameOver = true;
+        winner = currentTurn;
+      }
+      else {
+        // No checkmate, switch turns
+        currentTurn = opponentColor;
+      }
+    }
+  }
+
+  // Always reset dragging and selection after releasing mouse
+  selectedPiece = null;
+  dragging = false;
+}
+
+
 
 
 class ChessBoard {
@@ -456,3 +574,23 @@ class ChessBoard {
 
 
 
+function simulateCheckmate() {
+  pieces = []; // Clear all existing pieces
+
+  // White pieces
+  pieces.push(new Pieces(0, 0, 'white', 'rook'));  // White Rook on a1
+  pieces.push(new Pieces(7, 4, 'white', 'king'));  // White King on e1
+
+  // Black pieces
+  pieces.push(new Pieces(0, 7, 'black', 'king'));  // Black King on h8
+  pieces.push(new Pieces(7, 7, 'black', 'queen'));  // Black Queen on h7
+  pieces.push(new Pieces(6, 7, 'black', 'pawn'));  // Black Pawn on h6
+
+  currentTurn = 'white'; // Make sure it's white's turn to move
+}
+
+function keyPressed() {
+  if (key === 'D' || key === 'd') {
+    simulateCheckmate(); 
+  }
+}
