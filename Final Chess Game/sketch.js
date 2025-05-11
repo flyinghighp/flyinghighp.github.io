@@ -2,11 +2,8 @@
 // Priyansh Jhanji
 // 25 April 2025
 
-//add api 
-// add pawn promotion
-//add ui
-//add stale mate
-
+let gameState = 'menu';  
+let startBtn;
 let thickness = 30;
 let size;
 let cam;
@@ -23,10 +20,12 @@ let dragging = false;
 let currentTurn = 'white';
 let gameOver = false;
 let winner = null;
-let bgMusic;
+let whiteWinImg, blackWinImg;
 
 let biB; let bk; let qb; let br; let bp; let bkni;
 let biW; let wk; let qw; let wr; let wp; let wkni;
+
+let startGif;
 boardData = [//sets board up 
   [br, bkni, biB, qb, bk, biB, bkni, br],
   [bp, bp, bp, bp, bp, bp, bp, bp],
@@ -39,6 +38,7 @@ boardData = [//sets board up
 ];
 
 function preload() {
+  startGif = loadImage("assets/startPage.gif");
   biB = loadModel('assets/Bishop - Copy.obj', true);
   biW = loadModel('assets/Bishop.obj', true);
   bk = loadModel('assets/King - Copy.obj', true);
@@ -51,19 +51,30 @@ function preload() {
   bp = loadModel('assets/Pawn - Copy.obj', true);
   wr = loadModel('assets/Rook.obj', true);
   br = loadModel('assets/Rook - Copy.obj', true);
-  woodTexture = loadImage('assets/woodtexture.jpg', true);
   bgMusic = loadSound('assets/music.mp3');
-
+  woodTexture = loadImage('assets/woodtexture.jpg', true);
+  whiteWinImg = loadImage("assets/whiteWins.png");
+  blackWinImg = loadImage("assets/blackWins.png");
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
+
+  
+
   cam = createCamera();
   cam.setPosition(0, 100, 900);
   cam.lookAt(0, 0, 0);
   angleMode(DEGREES);
-
-
+  
+  startBtn = createButton('Start Game');
+  startBtn.addClass('start-ui');
+  startBtn.mousePressed(() => {
+    gameState = 'play';
+    startBtn.hide();
+    document.getElementById("gifBackground").style.display = "none";
+  });
+  
 
   size = min(width, height) / 10;
   chessBoard = new ChessBoard();
@@ -77,6 +88,7 @@ function setup() {
   createButton("Pause Music").position(20, 50).mousePressed(() => {
     bgMusic.stop();
   });
+
   //WHITE//
   pieces.push(new Pieces(0, 0, 'white', 'rook'));
   pieces.push(new Pieces(0, 1, 'white', 'knight'));
@@ -114,64 +126,67 @@ function setup() {
   pieces.push(new Pieces(7, 5, 'black', 'bishop'));
   pieces.push(new Pieces(7, 6, 'black', 'knight'));
   pieces.push(new Pieces(7, 7, 'black', 'rook'));
-
-  
-  //music();
-
 }
 
-// function music(){
-//   if (keyCode === 32){
-//   bgMusic.setLoop(true);
-//   bgMusic.setVolume(0.5); 
-//   bgMusic.play();
-//   }
-// }
-
 function draw() {
-  background(0);
-  ambientLight(255);
-  directionalLight(255, 255, 255, 0, 1, -1);
-  let worldX = mouseX - width / 2;
-  let worldY = mouseY - height / 2;
-
-
-  for (let p of pieces) {
-    p.display();
+  if (gameState === 'menu') {
+    // show a neutral background behind the button
+    background(30);
+    return; 
   }
-  if (gameOver) {
-    push();
-    fill(255, 0, 0);
+  
+  
+  if(!gameOver){
+    background(0);
+    ambientLight(255);
+    directionalLight(255, 255, 255, 0, 1, -1);
+    let worldX = mouseX - width / 2;
+    let worldY = mouseY - height / 2;
+    for (let p of pieces) {
+      p.display();
+    }
+    // Variables to store the hovered square
+    let hoveredX = 1;
+    let hoveredY = 1;
 
-    console.log(`Game Over: ${winner} wins!`);
-    pop();
-  }
+    // Calculate grid position for X and Y
 
-  // Variables to store the hovered square
-  let hoveredX = 1;
-  let hoveredY = 1;
-
-  // Calculate grid position for X and Y
-
-  if (worldX >= -size * 4 && worldX <= size * 4 &&
+    if (worldX >= -size * 4 && worldX <= size * 4 &&
     worldY >= -size * 4 && worldY <= size * 4) {
 
-    hoveredX = Math.floor((worldY + size * 4) / size);
-    hoveredY = Math.floor((worldX + size * 4) / size);
+      hoveredX = Math.floor((worldY + size * 4) / size);
+      hoveredY = Math.floor((worldX + size * 4) / size);
+    }
+    chessBoard.makeSide();
+
+
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        let piece = boardData[row][col];
+
+      }
+    }
+
+    chessBoard.drawBoard(0, 0, hoveredX, hoveredY);
+
   }
-  //console.log('');
-  chessBoard.makeSide();
 
-
-  for (let row = 0; row < 8; row++) {
-    for (let col = 0; col < 8; col++) {
-      let piece = boardData[row][col];
-
+  if (gameOver) {
+    cam.setPosition(0, 0, 500);
+    cam.lookAt(0, 0, 0);
+    imageMode(CENTER); // important: aligns image from top-left
+    if (winner === 'white') {
+      image(whiteWinImg, 0, 0, windowWidth, windowHeight); // fill entire canvas
+    }
+    else if (winner === 'black') {
+      image(blackWinImg, 0, 0, windowWidth, windowHeight);
     }
   }
+  
 
-  chessBoard.drawBoard(0, 0, hoveredX, hoveredY);
-
+  
+  //console.log('');
+ 
 }
 
 function getBoardPosition(row, col, z = 60) {
@@ -216,67 +231,67 @@ class Pieces {
     scale(0.45);
     strokeWeight(0.8);
     switch (this.color) {
-      case 'white':
-        fill(215, 210, 225);
-        specularMaterial(215, 210, 225); break;
-      case 'black':
-        fill(139, 69, 19);
-        specularMaterial(139, 69, 19); break;
+    case 'white':
+      fill(215, 210, 225);
+      specularMaterial(215, 210, 225); break;
+    case 'black':
+      fill(139, 69, 19);
+      specularMaterial(139, 69, 19); break;
     }
     switch (this.piece) {
-      case 'bishop':
-        if (this.color === 'white') {
-          model(biW);
-        }
-        else {
-          model(biB);
-        }
-        break;
+    case 'bishop':
+      if (this.color === 'white') {
+        model(biW);
+      }
+      else {
+        model(biB);
+      }
+      break;
 
-      case 'pawn':
-        if (this.color === 'white') {
-          model(wp);
-        }
-        else {
-          model(bp);
-        }
-        break;
+    case 'pawn':
+      if (this.color === 'white') {
+        model(wp);
+      }
+      else {
+        model(bp);
+      }
+      break;
 
-      case 'rook':
-        if (this.color === 'white') {
-          model(wr);
-        }
-        else {
-          model(br);
-        }
-        break;
+    case 'rook':
+      if (this.color === 'white') {
+        model(wr);
+      }
+      else {
+        model(br);
+      }
+      break;
 
-      case 'knight':
-        if (this.color === 'white') {
-          model(wkni);
-        }
-        else {
-          model(bkni);
-        }
-        break;
+    case 'knight':
+      if (this.color === 'white') {
+        model(wkni);
+      }
+      else {
+        model(bkni);
+      }
+      break;
 
-      case 'king':
-        if (this.color === 'white') {
-          model(wk);
-        }
-        else {
-          model(bk);
-        }
-        break;
+    case 'king':
+      if (this.color === 'white') {
+        model(wk);
+      }
+      else {
+        model(bk);
+      }
+      break;
 
-      case 'queen':
-        if (this.color === 'white') {
-          model(qw);
-        }
-        else {
-          model(qb);
-        }
-        break;
+    case 'queen':
+      if (this.color === 'white') {
+        model(qw);
+      }
+      else {
+        model(qb);
+      }
+      break;
     }
 
     pop();
@@ -309,6 +324,10 @@ function isPathClear(startRow, startCol, endRow, endCol) {
 
 
 function mousePressed() {
+  if (gameState === 'menu') {
+    return;
+  }
+  
   let x = mouseX - width / 2;
   let y = mouseY - height / 2;
   let col = Math.floor((y + size * 4) / size);
@@ -326,74 +345,74 @@ function mousePressed() {
 }
 
 function legalMove(newRow, newCol) {
-
+ 
   if (!selectedPiece || selectedPiece.color !== currentTurn) {
-
+    
     return false;
   }
   if (!(newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8)) {
-
+    
     return false;
   }
 
   const target = pieces.find(p => p.col === newCol && p.row === newRow);
-  if (target && target.color === selectedPiece.color) {
-
+  if (target && target.color === selectedPiece.color){
+    
     return false;
   }
 
   const dr = newCol - selectedPiece.col;  // ****Flip column and row logic
   const dc = newRow - selectedPiece.row;  // ****Flip column and row logic
-
+ 
 
   switch (selectedPiece.piece) {
-    case 'pawn':
-      const dir = selectedPiece.color === 'white' ? 1 : -1;
-      const startCol = selectedPiece.color === 'white' ? 1 : 6;
+  case 'pawn':
+    const dir = selectedPiece.color === 'white' ? 1 : -1;
+    const startCol = selectedPiece.color === 'white' ? 1 : 6;
+      
 
-
-      if (dc === 0 && !target) {
-        // forward
-        if (dr === dir || selectedPiece.col === startCol && dr === 2 * dir &&
+    if (dc === 0 && !target) {
+      // forward
+      if (dr === dir || selectedPiece.col === startCol && dr === 2 * dir &&
           !pieces.some(p => p.col === selectedPiece.col + dir && p.row === selectedPiece.row)) {
-
-          return true;
-        }
-      }
-      else if (Math.abs(dc) === 1 && dr === dir && target && target.color !== selectedPiece.color) {
-
-        // Diagonal 
+            
         return true;
       }
+    }
+    else if (Math.abs(dc) === 1 && dr === dir && target && target.color !== selectedPiece.color) {
+        
+      // Diagonal 
+      return true;
+    }
 
-      return false;
+    return false;
 
-    case 'rook':
-      if (dr === 0 || dc === 0) {
-        return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
-      }
-      return false;
+  case 'rook':
+    if (dr === 0 || dc === 0) {
+      return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
+    }
+    return false;
 
-    case 'bishop':
-      if (Math.abs(dr) === Math.abs(dc)) {
-        return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
-      }
-      return false;
+  case 'bishop':
+    if (Math.abs(dr) === Math.abs(dc)) {
+      return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
+    }
+    return false;
 
-    case 'queen':
-      if (Math.abs(dr) === Math.abs(dc) || dr === 0 || dc === 0) {
-        return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
-      }
-      return false;
+  case 'queen':
+    if (Math.abs(dr) === Math.abs(dc) || dr === 0 || dc === 0) {
+      return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
+    }
+    return false;
 
-    case 'king':
-      return Math.abs(dr) <= 1 && Math.abs(dc) <= 1;
+  case 'king':
+    return Math.abs(dr) <= 1 && Math.abs(dc) <= 1;
 
-    case 'knight':
-      return Math.abs(dr) === 2 && Math.abs(dc) === 1 || Math.abs(dr) === 1 && Math.abs(dc) === 2;
-
+  case 'knight':
+    return Math.abs(dr) === 2 && Math.abs(dc) === 1 || Math.abs(dr) === 1 && Math.abs(dc) === 2;
+      
   }
-
+  
 }
 
 // Checks if the king of the given color is under attack
@@ -480,20 +499,20 @@ function isCheckmate(color) {
 function mouseReleased() {
   if (gameOver) {
     return;
-  }
+  } 
 
   if (dragging && selectedPiece) {
-
+    
     let x = mouseX - width / 2;
     let y = mouseY - height / 2;
     let newCol = Math.floor((y + size * 4) / size);
     let newRow = Math.floor((x + size * 4) / size);
 
-
+    
     newRow = constrain(newRow, 0, 7);
     newCol = constrain(newCol, 0, 7);
 
-
+    
     if (legalMove(newRow, newCol)) {
       // Remove any enemy piece at the target square (capture)
       pieces = pieces.filter(p => !(p.row === newRow && p.col === newCol && p.color !== selectedPiece.color));
@@ -618,8 +637,10 @@ function simulateCheckmate() {
   currentTurn = 'white'; // Make sure it's white's turn to move
 }
 
+
 function keyPressed() {
   if (key === 'D' || key === 'd') {
-    simulateCheckmate();
+    simulateCheckmate(); 
   }
 }
+
