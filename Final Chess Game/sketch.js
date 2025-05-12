@@ -21,7 +21,10 @@ let currentTurn = 'white';
 let gameOver = false;
 let winner = null;
 let whiteWinImg, blackWinImg;
-
+let promotionPending = false;
+let pawnToPromote = null;
+let promotionOptions = ['queen','rook','bishop','knight'];
+let promotionButtons = [];
 let biB; let bk; let qb; let br; let bp; let bkni;
 let biW; let wk; let qw; let wr; let wp; let wkni;
 
@@ -384,8 +387,13 @@ function legalMove(newRow, newCol) {
       // Diagonal 
       return true;
     }
-
+    if(selectedPiece.piece === 'wp' && y === 0|| selectedPiece.piece === 'bp' && y === 7) {
+      promotionPending = true;
+      pawnToPromote = { x,y, color: selectedPiece.piece[0]};
+    }
+    
     return false;
+    
 
   case 'rook':
     if (dr === 0 || dc === 0) {
@@ -413,6 +421,25 @@ function legalMove(newRow, newCol) {
       
   }
   
+}
+
+function drawPomoui(x,y,color){
+  let sqSize = 60;
+  let startX = x * sqSize;
+  let startY = y * sqSize - (color === 'white' ? 4 * sqSize : 0);
+
+  promotionButtons = [];
+
+  for (let i = 0; i < promotionOptions.length; i++){
+    let buttonX = startX;
+    let buttonY = startY + i  * sqSize;
+    fill('skyblue');
+    rect(buttonX, buttonY, sqSize, sqSize);
+    fill('black');
+    textSize(13);
+    textAlign(CENTER,CENTER);
+    text(promotionOptions[i],);//fill the rest
+  }
 }
 
 // Checks if the king of the given color is under attack
