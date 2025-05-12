@@ -21,9 +21,6 @@ let currentTurn = 'white';
 let gameOver = false;
 let winner = null;
 let whiteWinImg, blackWinImg;
-let promotionPending = false;
-let pawnToPromote = null;
-let promotionOptions = ['queen','rook','bishop','knight'];
 let promotionButtons = [];
 let biB; let bk; let qb; let br; let bp; let bkni;
 let biW; let wk; let qw; let wr; let wp; let wkni;
@@ -78,6 +75,7 @@ function setup() {
     document.getElementById("gifBackground").style.display = "none";
   });
   
+
 
   size = min(width, height) / 10;
   chessBoard = new ChessBoard();
@@ -171,25 +169,20 @@ function draw() {
     }
 
     chessBoard.drawBoard(0, 0, hoveredX, hoveredY);
-
   }
 
   if (gameOver) {
     cam.setPosition(0, 0, 500);
     cam.lookAt(0, 0, 0);
-    imageMode(CENTER); // important: aligns image from top-left
+    imageMode(CENTER);
     if (winner === 'white') {
-      image(whiteWinImg, 0, 0, windowWidth, windowHeight); // fill entire canvas
+      image(whiteWinImg, 0, 0, windowWidth, windowHeight); 
     }
+
     else if (winner === 'black') {
       image(blackWinImg, 0, 0, windowWidth, windowHeight);
     }
   }
-  
-
-  
-  //console.log('');
- 
 }
 
 function getBoardPosition(row, col, z = 60) {
@@ -240,6 +233,11 @@ class Pieces {
     case 'black':
       fill(139, 69, 19);
       specularMaterial(139, 69, 19); break;
+    }
+    if(pieces.type === 'wp' && y === 0 || pieces.type === 'bp' && y === 7) {
+      promotionPending = true;
+      showPromotionOptions(pieces);
+      pawnToPromote = { x,y, color: selectedPiece.piece[0]};
     }
     switch (this.piece) {
     case 'bishop':
@@ -325,12 +323,35 @@ function isPathClear(startRow, startCol, endRow, endCol) {
   return true;
 }
 
+function clearPromotionUI(){
+  for (let button of promotionButtons) {
+    button.remove();
+  }
+  promotionButtons = [];
+}
+function showPromotionOptions(pawn) {
+  if(pawn.piece !== 'pawn') return;
+  if((pawn.color === 'white' && y === 0 )|| (pawn.color === 'black' && y === 7)) {
+  const options = ['queen', 'rook', 'bishop', 'knight'];
+  const yStart = 100;
+  clearPromotionUI();
+  for (let i = 0; i < options.length; i++){
+    btn.position(20, yStart + i * 40);
+    btn.mousePressed(() => {
+      pawn.position = options[i];
+      clearPromotionUI();
+    });
+    promotionButtons.push(ntn)
+    }
+  }
+}
 
 function mousePressed() {
   if (gameState === 'menu') {
     return;
   }
   
+
   let x = mouseX - width / 2;
   let y = mouseY - height / 2;
   let col = Math.floor((y + size * 4) / size);
@@ -387,10 +408,7 @@ function legalMove(newRow, newCol) {
       // Diagonal 
       return true;
     }
-    if(selectedPiece.piece === 'wp' && y === 0|| selectedPiece.piece === 'bp' && y === 7) {
-      promotionPending = true;
-      pawnToPromote = { x,y, color: selectedPiece.piece[0]};
-    }
+    
     
     return false;
     
@@ -423,33 +441,15 @@ function legalMove(newRow, newCol) {
   
 }
 
-function drawPomoui(x,y,color){
-  let sqSize = 60;
-  let startX = x * sqSize;
-  let startY = y * sqSize - (color === 'white' ? 4 * sqSize : 0);
 
-  promotionButtons = [];
-
-  for (let i = 0; i < promotionOptions.length; i++){
-    let buttonX = startX;
-    let buttonY = startY + i  * sqSize;
-    fill('skyblue');
-    rect(buttonX, buttonY, sqSize, sqSize);
-    fill('black');
-    textSize(13);
-    textAlign(CENTER,CENTER);
-    text(promotionOptions[i],);//fill the rest
-  }
-}
 
 // Checks if the king of the given color is under attack
 function isInCheck(color) {
-  // Find the king of the given color
+  // Find the king 
   const king = pieces.find(p => p.piece === 'king' && p.color === color);
   if (!king) {
     return false;
-  } // If king is missing (shouldn't happen), return false
-
+  } 
   // Check if any enemy piece can move to the king's position
   for (let p of pieces) {
     if (p.color !== color) {
@@ -492,7 +492,7 @@ function isCheckmate(color) {
 
         selectedPiece = p; // Try to move this piece
         if (legalMove(r, c)) {
-          // Simulate the move
+          
           p.row = r;
           p.col = c;
           if (captured) {
@@ -514,7 +514,7 @@ function isCheckmate(color) {
           }
         }
 
-        selectedPiece = null; // Reset selection
+        selectedPiece = null; 
       }
     }
   }
@@ -522,11 +522,26 @@ function isCheckmate(color) {
   return true; // Tried all moves, none save the king -> checkmate
 }
 
-
+function checkPromotion(piece){
+  if (piece.piece === 'pawn' &&((piece.color === 'white' && piece.row === 7) || (piece.color === 'black' && piece.row === 0))) {
+    showPromotionOptions(piece);
+  }
+}
 function mouseReleased() {
   if (gameOver) {
     return;
   } 
+  if (selectedPiece === 'pawn' && (selectedPiece.row === 0 || selectedPiece.row === 7)) {
+  showPromotionOptions(x,y, color);
+  }
+  else{
+    clearPromotionUI();
+  }
+
+
+  if (selectedPiece && selectedPiece.piece === 'pawn'){
+    checkPromotion(selectedPiece);
+  }
 
   if (dragging && selectedPiece) {
     
@@ -541,10 +556,10 @@ function mouseReleased() {
 
     
     if (legalMove(newRow, newCol)) {
-      // Remove any enemy piece at the target square (capture)
+     
       pieces = pieces.filter(p => !(p.row === newRow && p.col === newCol && p.color !== selectedPiece.color));
 
-      // Move the selected piece to the new square
+      
       selectedPiece.row = newRow;
       selectedPiece.col = newCol;
 
@@ -555,13 +570,14 @@ function mouseReleased() {
         winner = currentTurn;
       }
       else {
+
         // No checkmate, switch turns
         currentTurn = opponentColor;
       }
     }
   }
 
-  // Always reset dragging and selection after releasing mouse
+ 
   selectedPiece = null;
   dragging = false;
 }
@@ -650,7 +666,7 @@ class ChessBoard {
 
 
 function simulateCheckmate() {
-  pieces = []; // Clear all existing pieces
+  pieces = []; 
 
   // White pieces
   pieces.push(new Pieces(0, 0, 'white', 'rook'));  // White Rook on a1
@@ -661,13 +677,25 @@ function simulateCheckmate() {
   pieces.push(new Pieces(7, 7, 'black', 'queen'));  // Black Queen on h7
   pieces.push(new Pieces(6, 7, 'black', 'pawn'));  // Black Pawn on h6
 
-  currentTurn = 'white'; // Make sure it's white's turn to move
+  currentTurn = 'white'; 
+}
+function pawnpro() {
+  pieces = []; 
+
+  // White pieces
+  pieces.push(new Pieces(1, 0, 'black', 'pawn'));  
+  pieces.push(new Pieces(6, 0, 'white', 'pawn')); 
+
+  currentTurn = 'white'; 
 }
 
 
 function keyPressed() {
   if (key === 'D' || key === 'd') {
     simulateCheckmate(); 
+  }
+  if (key === 'p' || key === 'p') {
+    pawnpro(); 
   }
 }
 
