@@ -21,7 +21,7 @@ let currentTurn = 'white';
 let gameOver = false;
 let winner = null;
 let whiteWinImg, blackWinImg;
-let promotionButtons = [];
+
 let biB; let bk; let qb; let br; let bp; let bkni;
 let biW; let wk; let qw; let wr; let wp; let wkni;
 
@@ -48,7 +48,7 @@ function preload() {
   qw = loadModel('assets/Queen.obj', true);
   qb = loadModel('assets/Queen - Copy.obj', true);
   wp = loadModel('assets/Pawn.obj', true);
-  bp = loadModel('assets/Pawn - Copy.obj', true);
+  bp = loadModel('assets/w- Copy.obj', true);
   wr = loadModel('assets/Rook.obj', true);
   br = loadModel('assets/Rook - Copy.obj', true);
   bgMusic = loadSound('assets/music.mp3');
@@ -234,11 +234,7 @@ class Pieces {
       fill(139, 69, 19);
       specularMaterial(139, 69, 19); break;
     }
-    if(pieces.type === 'wp' && y === 0 || pieces.type === 'bp' && y === 7) {
-      promotionPending = true;
-      showPromotionOptions(pieces);
-      pawnToPromote = { x,y, color: selectedPiece.piece[0]};
-    }
+    
     switch (this.piece) {
     case 'bishop':
       if (this.color === 'white') {
@@ -323,28 +319,8 @@ function isPathClear(startRow, startCol, endRow, endCol) {
   return true;
 }
 
-function clearPromotionUI(){
-  for (let button of promotionButtons) {
-    button.remove();
-  }
-  promotionButtons = [];
-}
-function showPromotionOptions(pawn) {
-  if(pawn.piece !== 'pawn') return;
-  if((pawn.color === 'white' && y === 0 )|| (pawn.color === 'black' && y === 7)) {
-  const options = ['queen', 'rook', 'bishop', 'knight'];
-  const yStart = 100;
-  clearPromotionUI();
-  for (let i = 0; i < options.length; i++){
-    btn.position(20, yStart + i * 40);
-    btn.mousePressed(() => {
-      pawn.position = options[i];
-      clearPromotionUI();
-    });
-    promotionButtons.push(ntn)
-    }
-  }
-}
+
+
 
 function mousePressed() {
   if (gameState === 'menu') {
@@ -522,26 +498,11 @@ function isCheckmate(color) {
   return true; // Tried all moves, none save the king -> checkmate
 }
 
-function checkPromotion(piece){
-  if (piece.piece === 'pawn' &&((piece.color === 'white' && piece.row === 7) || (piece.color === 'black' && piece.row === 0))) {
-    showPromotionOptions(piece);
-  }
-}
+
 function mouseReleased() {
   if (gameOver) {
     return;
   } 
-  if (selectedPiece === 'pawn' && (selectedPiece.row === 0 || selectedPiece.row === 7)) {
-  showPromotionOptions(x,y, color);
-  }
-  else{
-    clearPromotionUI();
-  }
-
-
-  if (selectedPiece && selectedPiece.piece === 'pawn'){
-    checkPromotion(selectedPiece);
-  }
 
   if (dragging && selectedPiece) {
     
@@ -550,16 +511,13 @@ function mouseReleased() {
     let newCol = Math.floor((y + size * 4) / size);
     let newRow = Math.floor((x + size * 4) / size);
 
-    
     newRow = constrain(newRow, 0, 7);
     newCol = constrain(newCol, 0, 7);
 
-    
     if (legalMove(newRow, newCol)) {
      
       pieces = pieces.filter(p => !(p.row === newRow && p.col === newCol && p.color !== selectedPiece.color));
-
-      
+ 
       selectedPiece.row = newRow;
       selectedPiece.col = newCol;
 
