@@ -21,6 +21,11 @@ let currentTurn = 'white';
 let gameOver = false;
 let winner = null;
 let whiteWinImg, blackWinImg;
+let promotionPending = false;
+let promotionPiece = null;
+let promotionButtons = [];
+let promotionInProgress = false;
+
 
 let biB; let bk; let qb; let br; let bp; let bkni;
 let biW; let wk; let qw; let wr; let wp; let wkni;
@@ -48,7 +53,7 @@ function preload() {
   qw = loadModel('assets/Queen.obj', true);
   qb = loadModel('assets/Queen - Copy.obj', true);
   wp = loadModel('assets/Pawn.obj', true);
-  bp = loadModel('assets/w- Copy.obj', true);
+  bp = loadModel('assets/Pawn - Copy.obj', true);
   wr = loadModel('assets/Rook.obj', true);
   br = loadModel('assets/Rook - Copy.obj', true);
   bgMusic = loadSound('assets/music.mp3');
@@ -135,7 +140,6 @@ function draw() {
     background(30);
     return; 
   }
-  
   
   if(!gameOver){
     background(0);
@@ -319,9 +323,6 @@ function isPathClear(startRow, startCol, endRow, endCol) {
   return true;
 }
 
-
-
-
 function mousePressed() {
   if (gameState === 'menu') {
     return;
@@ -417,8 +418,6 @@ function legalMove(newRow, newCol) {
   
 }
 
-
-
 // Checks if the king of the given color is under attack
 function isInCheck(color) {
   // Find the king 
@@ -444,7 +443,6 @@ function isInCheck(color) {
 
   return false; // No enemy piece can attack the king
 }
-
 
 // Checks if the given color is in checkmate (king is in check and no legal moves save it)
 function isCheckmate(color) {
@@ -498,14 +496,12 @@ function isCheckmate(color) {
   return true; // Tried all moves, none save the king -> checkmate
 }
 
-
 function mouseReleased() {
   if (gameOver) {
     return;
-  } 
+  }
 
   if (dragging && selectedPiece) {
-    
     let x = mouseX - width / 2;
     let y = mouseY - height / 2;
     let newCol = Math.floor((y + size * 4) / size);
@@ -515,32 +511,29 @@ function mouseReleased() {
     newCol = constrain(newCol, 0, 7);
 
     if (legalMove(newRow, newCol)) {
-     
       pieces = pieces.filter(p => !(p.row === newRow && p.col === newCol && p.color !== selectedPiece.color));
- 
       selectedPiece.row = newRow;
       selectedPiece.col = newCol;
 
-      // Check if opponent is in checkmate after this move
-      const opponentColor = currentTurn === 'white' ? 'black' : 'white';
-      if (isCheckmate(opponentColor)) {
-        gameOver = true;
-        winner = currentTurn;
+      if (selectedPiece.piece === 'pawn' && (selectedPiece.row === 7 || selectedPiece.row === 0)) {
+        pawnPromotion(); 
       }
       else {
-
-        // No checkmate, switch turns
-        currentTurn = opponentColor;
+        const opponentColor = currentTurn === 'white' ? 'black' : 'white';
+        if (isCheckmate(opponentColor)) {
+          gameOver = true;
+          winner = currentTurn;
+        }
+        else {
+          currentTurn = opponentColor;
+        }
+        selectedPiece = null; 
       }
     }
   }
 
- 
-  selectedPiece = null;
   dragging = false;
 }
-
-
 
 
 class ChessBoard {
@@ -621,7 +614,43 @@ class ChessBoard {
   }
 }
 
+function pawnPromotion() {
+  if (!promotionInProgress) {
+    promotionInProgress = true;
 
+    let q = createButton("Queen").position(width / 2, 20);
+    let r = createButton("Rook").position(width / 2, 50);
+    let b = createButton("Bishop").position(width / 2, 80);
+    let k = createButton("Knight").position(width / 2, 110);
+
+    function promoteTo(pieceType) {
+      selectedPiece.piece = pieceType;
+      promotionInProgress = false;
+
+      q.remove();
+      r.remove();
+      b.remove();
+      k.remove();
+
+
+      const opponentColor = currentTurn === 'white' ? 'black' : 'white';
+      if (isCheckmate(opponentColor)) {
+        gameOver = true;
+        winner = currentTurn;
+      }
+      else {
+        currentTurn = opponentColor;
+      }
+
+      selectedPiece = null; 
+    }
+
+    q.mousePressed(() => promoteTo("queen"));
+    r.mousePressed(() => promoteTo("rook"));
+    b.mousePressed(() => promoteTo("bishop"));
+    k.mousePressed(() => promoteTo("knight"));
+  }
+}
 
 function simulateCheckmate() {
   pieces = []; 
@@ -647,12 +676,11 @@ function pawnpro() {
   currentTurn = 'white'; 
 }
 
-
 function keyPressed() {
   if (key === 'D' || key === 'd') {
     simulateCheckmate(); 
   }
-  if (key === 'p' || key === 'p') {
+  if (key === 'P' || key === 'p') {
     pawnpro(); 
   }
 }
