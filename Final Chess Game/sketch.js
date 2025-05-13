@@ -633,6 +633,7 @@ function pawnPromotion() {
       k.remove();
 
 
+      //RECHECK THE CHECKMATE AND RETURN THE WINNER IF AFTER THE PAWN PROMOTION KING HAS BEEN GIVEN A CHECKMATE
       const opponentColor = currentTurn === 'white' ? 'black' : 'white';
       if (isCheckmate(opponentColor)) {
         gameOver = true;
