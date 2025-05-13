@@ -418,6 +418,7 @@ function legalMove(newRow, newCol) {
   
 }
 
+// still have to fix the checkmate detection it is way to early for the checkmate 
 // Checks if the king of the given color is under attack
 function isInCheck(color) {
   // Find the king 
@@ -515,7 +516,7 @@ function mouseReleased() {
       selectedPiece.row = newRow;
       selectedPiece.col = newCol;
 
-      if (selectedPiece.piece === 'pawn' && (selectedPiece.row === 7 || selectedPiece.row === 0)) {
+      if (selectedPiece.piece === 'pawn' && (selectedPiece.col === 7 || selectedPiece.col === 0)) {
         pawnPromotion(); 
       }
       else {
@@ -634,6 +635,8 @@ function pawnPromotion() {
 
 
       //RECHECK THE CHECKMATE AND RETURN THE WINNER IF AFTER THE PAWN PROMOTION KING HAS BEEN GIVEN A CHECKMATE
+      //As in the mouse released function the checkmate is called after a leagal move
+      // to prevent the program from crashing out this detection was added 
       const opponentColor = currentTurn === 'white' ? 'black' : 'white';
       if (isCheckmate(opponentColor)) {
         gameOver = true;
@@ -652,6 +655,8 @@ function pawnPromotion() {
     k.mousePressed(() => promoteTo("knight"));
   }
 }
+
+//For Testing Purposes
 
 function simulateCheckmate() {
   pieces = []; 
