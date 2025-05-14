@@ -2,6 +2,7 @@
 // Priyansh Jhanji
 // 25 April 2025
 
+// api key - > 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
 let gameState = 'menu';  
 let startBtn;
 let thickness = 30;
@@ -25,6 +26,8 @@ let promotionPending = false;
 let promotionPiece = null;
 let promotionButtons = [];
 let promotionInProgress = false;
+
+
 
 
 let biB; let bk; let qb; let br; let bp; let bkni;
@@ -136,7 +139,7 @@ function setup() {
 
 function draw() {
   if (gameState === 'menu') {
-    // show a neutral background behind the button
+    
     background(30);
     return; 
   }
@@ -474,7 +477,7 @@ function isCheckmate(color) {
           p.col = c;
           if (captured) {
             pieces = pieces.filter(x => x !== captured);
-          } // Temporarily remove captured piece
+          } 
 
           const inCheck = isInCheck(color); // After the move, are we still in check?
 
@@ -487,7 +490,7 @@ function isCheckmate(color) {
 
           if (!inCheck) {
             selectedPiece = null;
-            return false; // Found a move that saves the king -> not checkmate
+            return false;
           }
         }
 
@@ -524,6 +527,7 @@ function mouseReleased() {
       else {
         const opponentColor = currentTurn === 'white' ? 'black' : 'white';
         if (isCheckmate(opponentColor)) {
+          //add a checkmate detection and a legal move if there are legal moves to protect the king it shouldnt say game over
           gameOver = true;
           winner = currentTurn;
         }
