@@ -411,6 +411,8 @@ function legalMove(newRow, newCol) {
   case 'king':
     return Math.abs(dr) <= 1 && Math.abs(dc) <= 1;
 
+    
+
   case 'knight':
     return Math.abs(dr) === 2 && Math.abs(dc) === 1 || Math.abs(dr) === 1 && Math.abs(dc) === 2;
       
@@ -432,20 +434,20 @@ function isInCheck(color) {
       const originalSelected = selectedPiece;
       selectedPiece = p; // Temporarily treat this enemy piece as selected
 
-      // If this piece can legally move to the king's square
+      
       if (legalMove(king.row, king.col)) {
-        selectedPiece = originalSelected; // Restore previous selection
-        return true; // King is in check
+        selectedPiece = originalSelected; 
+        return true; 
       }
 
-      selectedPiece = originalSelected; // Restore previous selection
+      selectedPiece = originalSelected;
     }
   }
 
   return false; // No enemy piece can attack the king
 }
 
-// Checks if the given color is in checkmate (king is in check and no legal moves save it)
+
 function isCheckmate(color) {
   // If king is not in check, it's not checkmate
   if (!isInCheck(color)) {
@@ -463,7 +465,7 @@ function isCheckmate(color) {
       for (let c = 0; c < 8; c++) {
         const originalRow = p.row;
         const originalCol = p.col;
-        const captured = pieceAt(r, c); // Check if we are capturing anyone
+        const captured = pieceAt(r, c); 
 
         selectedPiece = p; // Try to move this piece
         if (legalMove(r, c)) {
