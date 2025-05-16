@@ -2,6 +2,7 @@
 // Priyansh Jhanji
 // 25 April 2025
 
+//research on stockfish
 // api key - > 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
 let gameState = 'menu';  
 let startBtn;
