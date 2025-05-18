@@ -31,6 +31,7 @@ let promotionInProgress = false;
 
 
 
+
 let biB; let bk; let qb; let br; let bp; let bkni;
 let biW; let wk; let qw; let wr; let wp; let wkni;
 
@@ -80,10 +81,21 @@ function setup() {
   startBtn.addClass('start-ui');
   startBtn.mousePressed(() => {
     gameState = 'play';
+    puzzBtn.hide();
     startBtn.hide();
     document.getElementById("gifBackground").style.display = "none";
   });
   
+  puzzBtn = createButton('Puzzles');
+  puzzBtn.addClass('start-ui');
+  puzzBtn.position(width/2, height/2+100); 
+  puzzBtn.mousePressed(() => {
+    gameState = 'puzzle';
+    startPuzzles();
+    puzzBtn.hide();
+    startBtn.hide();
+    document.getElementById("gifBackground").style.display = "none";
+  });
 
 
   size = min(width, height) / 10;
@@ -145,7 +157,7 @@ function draw() {
     return; 
   }
   
-  if(!gameOver){
+  if(!gameOver || gameState === 'puzzle'){
     background(0);
     ambientLight(255);
     directionalLight(255, 255, 255, 0, 1, -1);
@@ -178,6 +190,17 @@ function draw() {
 
     chessBoard.drawBoard(0, 0, hoveredX, hoveredY);
   }
+
+  if (gameState === 'puzzle') {
+    const opp = currentTurn === 'white' ? 'black' : 'white';
+    if (isCheckmate(opp)) {
+      setTimeout(() => {
+        alert("Puzzle solved!");
+        loadNextPuzzle();      // wipes pieces & places next puzzle
+      }, 300);
+    }
+  }
+  
 
   if (gameOver) {
     cam.setPosition(0, 0, 500);
@@ -697,4 +720,5 @@ function keyPressed() {
     pawnpro(); 
   }
 }
+
 
