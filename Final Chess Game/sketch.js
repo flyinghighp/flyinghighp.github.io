@@ -447,6 +447,82 @@ function legalMove(newRow, newCol) {
   
 }
 
+
+function legalMove2(currPiece,newRow, newCol) {
+  const oppTurn=currentTurn =="white"?"black":"white";
+  if (!currPiece || currPiece.color !== oppTurn) {
+    
+    return false;
+  }
+  if (!(newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8)) {
+    
+    return false;
+  }
+
+  const target = pieces.find(p => p.col === newCol && p.row === newRow);
+  if (target && target.color === currPiece.color){
+    
+    return false;
+  }
+
+  const dr = newCol - currPiece.col;  // ****Flip column and row logic
+  const dc = newRow - currPiece.row;  // ****Flip column and row logic
+ 
+
+  switch (currPiece.piece) {
+  case 'pawn':
+    const dir = currPiece.color === 'white' ? 1 : -1;
+    const startCol = currPiece.color === 'white' ? 1 : 6;
+      
+
+    if (dc === 0 && !target) {
+      // forward
+      if (dr === dir || currPiece.col === startCol && dr === 2 * dir &&
+          !pieces.some(p => p.col === currPiece.col + dir && p.row === currPiece.row)) {
+            
+        return true;
+      }
+    }
+    else if (Math.abs(dc) === 1 && dr === dir && target && target.color !== currPiece.color) {
+        
+      // Diagonal 
+      return true;
+    }
+    
+    
+    return false;
+    
+
+  case 'rook':
+    if (dr === 0 || dc === 0) {
+      return isPathClear(currPiece.row, currPiece.col, newRow, newCol);
+    }
+    return false;
+
+  case 'bishop':
+    if (Math.abs(dr) === Math.abs(dc)) {
+      return isPathClear(currPiece.row, currPiece.col, newRow, newCol);
+    }
+    return false;
+
+  case 'queen':
+    if (Math.abs(dr) === Math.abs(dc) || dr === 0 || dc === 0) {
+      return isPathClear(currPiece.row, currPiece.col, newRow, newCol);
+    }
+    return false;
+
+  case 'king':
+    return Math.abs(dr) <= 1 && Math.abs(dc) <= 1;
+
+    
+
+  case 'knight':
+    return Math.abs(dr) === 2 && Math.abs(dc) === 1 || Math.abs(dr) === 1 && Math.abs(dc) === 2;
+      
+  }
+  
+}
+
 // still have to fix the checkmate detection it is way to early for the checkmate 
 // Checks if the king of the given color is under attack
 function isInCheck(color) {
@@ -458,23 +534,19 @@ function isInCheck(color) {
   // Check if any enemy piece can move to the king's position
   for (let p of pieces) {
     if (p.color !== color) {
-      const originalSelected = selectedPiece;
-      selectedPiece = p; // Temporarily treat this enemy piece as selected
-
-      
-      if (legalMove(king.row, king.col)) {
-        selectedPiece = originalSelected; 
+      if (legalMove2(p,king.row, king.col)) {
         return true; 
       }
-
-      selectedPiece = originalSelected;
     }
   }
 
   return false; // No enemy piece can attack the king
 }
 
+function noKing(){
 
+
+}
 function isCheckmate(color) {
   // If king is not in check, it's not checkmate
   if (!isInCheck(color)) {
@@ -495,7 +567,7 @@ function isCheckmate(color) {
         const captured = pieceAt(r, c); 
 
         selectedPiece = p; // Try to move this piece
-        if (legalMove(r, c)) {
+        if (legalMove2(p,r, c)) {
           
           p.row = r;
           p.col = c;
@@ -692,15 +764,15 @@ function simulateCheckmate() {
   pieces = []; 
 
   // White pieces
-  pieces.push(new Pieces(0, 0, 'white', 'rook'));  // White Rook on a1
-  pieces.push(new Pieces(7, 4, 'white', 'king'));  // White King on e1
+  pieces.push(new Pieces(0, 3, 'white', 'rook'));  // White Rook on a1
+  pieces.push(new Pieces(2, 0, 'white', 'king'));  // White King on e1
 
   // Black pieces
-  pieces.push(new Pieces(0, 7, 'black', 'king'));  // Black King on h8
-  pieces.push(new Pieces(7, 7, 'black', 'queen'));  // Black Queen on h7
+  pieces.push(new Pieces(0, 0, 'black', 'king'));  // Black King on h8
+  //pieces.push(new Pieces(0, 0, 'black', 'queen'));  // Black Queen on h7
   pieces.push(new Pieces(6, 7, 'black', 'pawn'));  // Black Pawn on h6
 
-  currentTurn = 'white'; 
+  currentTurn = 'black'; 
 }
 function pawnpro() {
   pieces = []; 
@@ -720,5 +792,3 @@ function keyPressed() {
     pawnpro(); 
   }
 }
-
-
