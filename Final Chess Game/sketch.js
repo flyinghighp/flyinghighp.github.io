@@ -384,6 +384,13 @@ function legalMove(newRow, newCol) {
   }
 
   const target = pieces.find(p => p.col === newCol && p.row === newRow);
+  if (target && target.piece === 'king') {
+    return false;
+  } 
+  if (target && target.color === selectedPiece.color) {
+    return false;
+  }
+
   if (target && target.color === selectedPiece.color){
     
     return false;
@@ -460,6 +467,13 @@ function legalMove2(currPiece,newRow, newCol) {
   }
 
   const target = pieces.find(p => p.col === newCol && p.row === newRow);
+  if (target && target.piece === 'king') {
+    return false;
+  } 
+  if (target && target.color === selectedPiece.color) {
+    return false;
+  }
+
   if (target && target.color === currPiece.color){
     
     return false;
