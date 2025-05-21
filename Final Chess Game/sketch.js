@@ -208,16 +208,16 @@ function draw() {
       gameOver = true;
       winner = currentTurn;
     }
-   
 
 
-    // if (currentTurn === 'white' && !aiThinking) {
-    //   aiThinking = true;
-    //   setTimeout(() => {
-    //     aiMoveWhite();
-    //     aiThinking = false;
-    //   });
-    // }
+    if (currentTurn === 'white' && !aiThinking) {
+      aiThinking = true;
+      setTimeout(() => {
+        aiMoveWhite();
+        aiThinking = false;
+      }, 100);
+    }
+
   }
 
 
@@ -708,9 +708,15 @@ function mouseReleased() {
           winner = currentTurn;
         }
 
-        
         else {
           currentTurn = opponentColor;
+          if (currentTurn === 'white'){
+            aiThinking = true;
+            setTimeout(() => {
+            aiMoveWhite();
+            aiThinking = false;
+            }, 10);
+          }
         }
 
         selectedPiece = null;

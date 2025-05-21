@@ -1,5 +1,3 @@
-
-
 function evaluateBoard() {
   const values = {
     pawn: 1,
@@ -7,7 +5,7 @@ function evaluateBoard() {
     bishop: 3,
     rook: 5,
     queen: 9,
-    king: 0,
+    king: 0
   };
 
   let score = 0;
@@ -40,42 +38,94 @@ function undoMove(move) {
   }
 }
 
-function generateLegalMoves(color){
+function generateLegalMoves(color) {
   const moves = [];
 
-  for (let p of pieces){
-    if(p.color !== color){
-      continue;
-    }
-  }
-  for (let r = 0; r < 8; r++){
-    for (let c = 0; c < 8; c++){
-      if (!legalMove.bind({selectedPiece: p})(r,c)){
-        continue;
-      }
+  for (let p of pieces) {
+    if (p.color !== color) continue;
 
-      const originalRow = p.row;
-      const originalCol = p.col;
-      const captured = pieceAt(r,c);
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        
+        const origRow = p.row;
+        const origCol = p.col;
+        const captured = pieceAt(r, c);
 
-      p.row =r;
-      p.col =c;
+        selectedPiece = p;
+        if (!legalMove(r, c)) continue;
 
-      if(captured){
-        pieces = pieces.filter(x => x !== captured);
-      }
+        p.row = r;
+        p.col = c;
+        if (captured) pieces = pieces.filter(x => x !== captured);
 
-      if (!isInCheck(color)){
-        moves.push({piece: p,row: r,col: c, captured});
-      }
+        if (!isInCheck(color)) {
+          moves.push({ piece: p, row: r, col: c, captured });
+        }
 
-      p.row = originalRow;
-      p.col = originalCol;
-      if (captured){
-        pieces.push(captured);
+        // Undo
+        p.row = origRow;
+        p.col = origCol;
+        if (captured) pieces.push(captured);
       }
     }
   }
+
   return moves;
 }
 
+function minimax(depth, maximizingPlayer) {
+  if (depth === 0 || gameOver) return evaluateBoard();
+
+  const color = maximizingPlayer ? 'white' : 'black';
+  const moves = generateLegalMoves(color);
+  if (moves.length === 0) return evaluateBoard();
+
+  let bestScore = maximizingPlayer ? -Infinity : Infinity;
+
+  for (let move of moves) {
+    makeMove(move);
+    const score = minimax(depth - 1, !maximizingPlayer);
+    undoMove(move);
+
+    bestScore = maximizingPlayer
+      ? Math.max(bestScore, score)
+      : Math.min(bestScore, score);
+  }
+
+  return bestScore;
+}
+
+function aiMoveWhite() {
+  if (currentTurn !== 'white' || gameOver) return;
+
+  const moves = generateLegalMoves('white');
+  let bestScore = -Infinity;
+  let bestMove = null;
+
+  for (let move of moves) {
+    makeMove(move);
+    const score = minimax(1, false); 
+    undoMove(move);
+
+    if (score > bestScore) {
+      bestScore = score;
+      bestMove = move;
+    }
+  }
+
+  if (bestMove) {
+    makeMove(bestMove);
+
+    if (bestMove.piece.piece === 'pawn' &&
+        (bestMove.piece.col === 0 || bestMove.piece.col === 7)) {
+      bestMove.piece.piece = 'queen';
+    }
+
+    if (isCheckmate('black')) {
+      gameOver = true;
+      winner = 'white';
+    } else {
+      currentTurn = 'black';
+    }
+  }
+}
