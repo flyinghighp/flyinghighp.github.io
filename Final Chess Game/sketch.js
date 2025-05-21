@@ -2,8 +2,7 @@
 // Priyansh Jhanji
 // 25 April 2025
 
-//research on stockfish
-// api key - > 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
+let aiThinking = false;
 let gameState = 'menu';  
 let startBtn;
 let thickness = 30;
@@ -27,7 +26,7 @@ let promotionPending = false;
 let promotionPiece = null;
 let promotionButtons = [];
 let promotionInProgress = false;
-
+let stalmateImg;
 
 
 
@@ -65,12 +64,11 @@ function preload() {
   woodTexture = loadImage('assets/woodtexture.jpg', true);
   whiteWinImg = loadImage("assets/whiteWins.png");
   blackWinImg = loadImage("assets/blackWins.png");
+  stalmateImg = loadImage("assets/stalemate.png");
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
-
-  
 
   cam = createCamera();
   cam.setPosition(0, 100, 900);
@@ -111,7 +109,7 @@ function setup() {
     bgMusic.stop();
   });
 
-  //WHITE//
+  //WHITE
   pieces.push(new Pieces(0, 0, 'white', 'rook'));
   pieces.push(new Pieces(0, 1, 'white', 'knight'));
   pieces.push(new Pieces(0, 2, 'white', 'bishop'));
@@ -151,6 +149,7 @@ function setup() {
 }
 
 function draw() {
+
   if (gameState === 'menu') {
     
     background(30);
@@ -196,22 +195,47 @@ function draw() {
     if (isCheckmate(opp)) {
       setTimeout(() => {
         alert("Puzzle solved!");
-        loadNextPuzzle();      // wipes pieces & places next puzzle
-      }, 300);
+        loadNextPuzzle();     
+      }, 3);
     }
   }
   
+  if (!gameOver && gameState === 'play') {
+    updateScoreDisplay();
+
+    const opp = currentTurn === 'white' ? 'black' : 'white';
+    if (isCheckmate(opp)) {
+      gameOver = true;
+      winner = currentTurn;
+    }
+   
+
+
+    // if (currentTurn === 'white' && !aiThinking) {
+    //   aiThinking = true;
+    //   setTimeout(() => {
+    //     aiMoveWhite();
+    //     aiThinking = false;
+    //   });
+    // }
+  }
+
 
   if (gameOver) {
     cam.setPosition(0, 0, 500);
     cam.lookAt(0, 0, 0);
     imageMode(CENTER);
+
     if (winner === 'white') {
       image(whiteWinImg, 0, 0, windowWidth, windowHeight); 
     }
 
     else if (winner === 'black') {
       image(blackWinImg, 0, 0, windowWidth, windowHeight);
+    }
+    
+    if (winner === 'stalemate'){
+      image(stalmateImg, 0, 0, windowWidth,windowHeight);
     }
   }
 }
@@ -221,6 +245,49 @@ function getBoardPosition(row, col, z = 60) {
   const y = -size * 4 + row * size + size / 2;
   return { x, y, z };
 }
+
+function updateScoreDisplay() {
+  const scoreDiv = document.getElementById("scoreDisplay");
+
+  
+  if (gameState !== 'play') {
+    scoreDiv.style.display = "none";
+    return;
+  } 
+  else {
+    scoreDiv.style.display = "block";
+  }
+
+  const pieceValues = {
+    pawn: 1,
+    knight: 3,
+    bishop: 3,
+    rook: 5,
+    queen: 9
+  };
+
+  const initialCounts = {
+    white: { pawn: 8, knight: 2, bishop: 2, rook: 2, queen: 1 },
+    black: { pawn: 8, knight: 2, bishop: 2, rook: 2, queen: 1 }
+  };
+
+  for (let p of pieces) {
+    if (p.piece in pieceValues) {
+      initialCounts[p.color][p.piece]--;
+    }
+  }
+
+  let whiteScore = 0;
+  let blackScore = 0;
+
+  for (let piece in pieceValues) {
+    whiteScore += initialCounts.black[piece] * pieceValues[piece];
+    blackScore += initialCounts.white[piece] * pieceValues[piece];
+  }
+
+  scoreDiv.innerText = `White: ${whiteScore} | Black: ${blackScore}`;
+}
+
 
 //-------------------//
 //     PIECES       //
@@ -342,8 +409,9 @@ function isPathClear(startRow, startCol, endRow, endCol) {
 
   while (row !== endRow || col !== endCol) {
     if (pieces.some(p => p.row === row && p.col === col)) {
-      return false;
+      return false;  
     }
+
     row += rowStep;
     col += colStep;
   }
@@ -455,57 +523,43 @@ function legalMove(newRow, newCol) {
 }
 
 
-function legalMove2(currPiece,newRow, newCol) {
-  const oppTurn=currentTurn =="white"?"black":"white";
-  if (!currPiece || currPiece.color !== oppTurn) {
-    
+function legalMove2(currPiece, newRow, newCol) {
+  //THE FIX YAY!!!! WORKS NOW :)
+  if (!currPiece) {
     return false;
   }
   if (!(newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8)) {
-    
     return false;
   }
 
   const target = pieces.find(p => p.col === newCol && p.row === newRow);
-  if (target && target.piece === 'king') {
+  // Cannot capture own pieces or own king
+  if (target && target.piece === 'king' && target.color === currPiece.color) {
     return false;
-  } 
-  if (target && target.color === selectedPiece.color) {
+  }
+  if (target && target.color === currPiece.color) {
     return false;
   }
 
-  if (target && target.color === currPiece.color){
-    
-    return false;
-  }
-
-  const dr = newCol - currPiece.col;  // ****Flip column and row logic
-  const dc = newRow - currPiece.row;  // ****Flip column and row logic
- 
+  const dr = newCol - currPiece.col;  // ****Flip column and row logic (unchanged)
+  const dc = newRow - currPiece.row;  // ****Flip column and row logic (unchanged)
 
   switch (currPiece.piece) {
   case 'pawn':
     const dir = currPiece.color === 'white' ? 1 : -1;
     const startCol = currPiece.color === 'white' ? 1 : 6;
-      
-
+    // Forward move
     if (dc === 0 && !target) {
-      // forward
       if (dr === dir || currPiece.col === startCol && dr === 2 * dir &&
-          !pieces.some(p => p.col === currPiece.col + dir && p.row === currPiece.row)) {
-            
+            !pieces.some(p => p.col === currPiece.col + dir && p.row === currPiece.row)) {
         return true;
       }
     }
+    // Diagonal capture
     else if (Math.abs(dc) === 1 && dr === dir && target && target.color !== currPiece.color) {
-        
-      // Diagonal 
       return true;
     }
-    
-    
     return false;
-    
 
   case 'rook':
     if (dr === 0 || dc === 0) {
@@ -528,17 +582,12 @@ function legalMove2(currPiece,newRow, newCol) {
   case 'king':
     return Math.abs(dr) <= 1 && Math.abs(dc) <= 1;
 
-    
-
   case 'knight':
-    return Math.abs(dr) === 2 && Math.abs(dc) === 1 || Math.abs(dr) === 1 && Math.abs(dc) === 2;
-      
+    return Math.abs(dr) === 2 && Math.abs(dc) === 1 ||
+             Math.abs(dr) === 1 && Math.abs(dc) === 2;
   }
-  
 }
 
-// still have to fix the checkmate detection it is way to early for the checkmate 
-// Checks if the king of the given color is under attack
 function isInCheck(color) {
   // Find the king 
   const king = pieces.find(p => p.piece === 'king' && p.color === color);
@@ -557,10 +606,6 @@ function isInCheck(color) {
   return false; // No enemy piece can attack the king
 }
 
-function noKing(){
-
-
-}
 function isCheckmate(color) {
   // If king is not in check, it's not checkmate
   if (!isInCheck(color)) {
@@ -627,30 +672,55 @@ function mouseReleased() {
     newCol = constrain(newCol, 0, 7);
 
     if (legalMove(newRow, newCol)) {
-      pieces = pieces.filter(p => !(p.row === newRow && p.col === newCol && p.color !== selectedPiece.color));
+      const originalRow = selectedPiece.row;
+      const originalCol = selectedPiece.col;
+      const captured = pieceAt(newRow, newCol);
+
       selectedPiece.row = newRow;
       selectedPiece.col = newCol;
+      if (captured) {
+        pieces = pieces.filter(p => p !== captured);
+      }
 
-      if (selectedPiece.piece === 'pawn' && (selectedPiece.col === 7 || selectedPiece.col === 0)) {
-        pawnPromotion(); 
+      // Check if move puts self in check (illegal)
+      if (isInCheck(currentTurn)) {
+        selectedPiece.row = originalRow;
+        selectedPiece.col = originalCol;
+        if (captured) {
+          pieces.push(captured);
+        }
+        selectedPiece = null;
+        dragging = false;
+        return;
+      }
+
+      // Handle pawn promotion
+      if (selectedPiece.piece === 'pawn' &&
+         (selectedPiece.col === 0 || selectedPiece.col === 7)) {
+        pawnPromotion();
       }
       else {
         const opponentColor = currentTurn === 'white' ? 'black' : 'white';
+
+        // Check for checkmate
         if (isCheckmate(opponentColor)) {
-          //add a checkmate detection and a legal move if there are legal moves to protect the king it shouldnt say game over
           gameOver = true;
           winner = currentTurn;
         }
+
+        
         else {
           currentTurn = opponentColor;
         }
-        selectedPiece = null; 
+
+        selectedPiece = null;
       }
     }
   }
 
   dragging = false;
 }
+
 
 
 class ChessBoard {
@@ -776,18 +846,20 @@ function pawnPromotion() {
 
 function simulateCheckmate() {
   pieces = []; 
+  gameState = 'play'; 
 
   // White pieces
-  pieces.push(new Pieces(0, 3, 'white', 'rook'));  // White Rook on a1
-  pieces.push(new Pieces(2, 0, 'white', 'king'));  // White King on e1
+  pieces.push(new Pieces(1, 3, 'white', 'rook'));  
+  pieces.push(new Pieces(2, 0, 'white', 'king'));  
 
   // Black pieces
-  pieces.push(new Pieces(0, 0, 'black', 'king'));  // Black King on h8
-  //pieces.push(new Pieces(0, 0, 'black', 'queen'));  // Black Queen on h7
-  pieces.push(new Pieces(6, 7, 'black', 'pawn'));  // Black Pawn on h6
+  pieces.push(new Pieces(0, 0, 'black', 'king'));  
+  pieces.push(new Pieces(6, 7, 'black', 'pawn'));  
 
-  currentTurn = 'black'; 
+  currentTurn = 'white'; 
 }
+
+
 function pawnpro() {
   pieces = []; 
 
@@ -805,4 +877,6 @@ function keyPressed() {
   if (key === 'P' || key === 'p') {
     pawnpro(); 
   }
+
+
 }

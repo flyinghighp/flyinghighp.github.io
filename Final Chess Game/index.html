@@ -23,8 +23,25 @@
   </head>
 
   <body>
-    <img id="gifBackground" src="assets/startPage.gif" alt="Background GIF">
+    
+  <img id="gifBackground" src="assets/startPage.gif" alt="Background GIF">
+  <div id="scoreDisplay" style="position:absolute; 
+    top:20px;
+    left:50%; 
+    transform:translateX(-50%);
+    font-family:Arial, sans-serif;
+    background:#222; 
+    color:#fff; 
+    padding:10px 20px; 
+    border-radius:8px; 
+    display: none;">
+    White: 0 | Black: 0
+</div>
+
+
+
     <script src="puzzle.js"></script>
+    <script src="ai.js"></script>
     <script src="sketch.js"></script>
   </body>
 </html>
