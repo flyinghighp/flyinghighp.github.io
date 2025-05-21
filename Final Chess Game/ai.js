@@ -40,3 +40,42 @@ function undoMove(move) {
   }
 }
 
+function generateLegalMoves(color){
+  const moves = [];
+
+  for (let p of pieces){
+    if(p.color !== color){
+      continue;
+    }
+  }
+  for (let r = 0; r < 8; r++){
+    for (let c = 0; c < 8; c++){
+      if (!legalMove.bind({selectedPiece: p})(r,c)){
+        continue;
+      }
+
+      const originalRow = p.row;
+      const originalCol = p.col;
+      const captured = pieceAt(r,c);
+
+      p.row =r;
+      p.col =c;
+
+      if(captured){
+        pieces = pieces.filter(x => x !== captured);
+      }
+
+      if (!isInCheck(color)){
+        moves.push({piece: p,row: r,col: c, captured});
+      }
+
+      p.row = originalRow;
+      p.col = originalCol;
+      if (captured){
+        pieces.push(captured);
+      }
+    }
+  }
+  return moves;
+}
+
