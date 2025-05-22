@@ -26,7 +26,8 @@ let promotionPending = false;
 let promotionPiece = null;
 let promotionButtons = [];
 let promotionInProgress = false;
-let stalmateImg;
+
+
 
 
 
@@ -64,10 +65,11 @@ function preload() {
   woodTexture = loadImage('assets/woodtexture.jpg', true);
   whiteWinImg = loadImage("assets/whiteWins.png");
   blackWinImg = loadImage("assets/blackWins.png");
-  stalmateImg = loadImage("assets/stalemate.png");
+
 }
 
 function setup() {
+
   createCanvas(windowWidth, windowHeight, WEBGL);
 
   cam = createCamera();
@@ -234,9 +236,7 @@ function draw() {
       image(blackWinImg, 0, 0, windowWidth, windowHeight);
     }
     
-    if (winner === 'stalemate'){
-      image(stalmateImg, 0, 0, windowWidth,windowHeight);
-    }
+    
   }
 }
 
@@ -419,6 +419,7 @@ function isPathClear(startRow, startCol, endRow, endCol) {
 }
 
 function mousePressed() {
+  
   if (gameState === 'menu') {
     return;
   }
@@ -713,8 +714,8 @@ function mouseReleased() {
           if (currentTurn === 'white'){
             aiThinking = true;
             setTimeout(() => {
-            aiMoveWhite();
-            aiThinking = false;
+              aiMoveWhite();
+              aiThinking = false;
             }, 10);
           }
         }
@@ -876,6 +877,8 @@ function pawnpro() {
   currentTurn = 'white'; 
 }
 
+
+
 function keyPressed() {
   if (key === 'D' || key === 'd') {
     simulateCheckmate(); 
@@ -883,6 +886,6 @@ function keyPressed() {
   if (key === 'P' || key === 'p') {
     pawnpro(); 
   }
-
+  
 
 }
