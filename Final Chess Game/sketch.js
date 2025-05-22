@@ -27,11 +27,6 @@ let promotionPiece = null;
 let promotionButtons = [];
 let promotionInProgress = false;
 
-
-
-
-
-
 let biB; let bk; let qb; let br; let bp; let bkni;
 let biW; let wk; let qw; let wr; let wp; let wkni;
 
@@ -83,6 +78,7 @@ function setup() {
     gameState = 'play';
     puzzBtn.hide();
     startBtn.hide();
+    resignBtn.show();
     document.getElementById("gifBackground").style.display = "none";
   });
   
@@ -92,12 +88,13 @@ function setup() {
   puzzBtn.mousePressed(() => {
     gameState = 'puzzle';
     startPuzzles();
+    resignBtn.hide();
     puzzBtn.hide();
     startBtn.hide();
     document.getElementById("gifBackground").style.display = "none";
   });
 
-
+  
   size = min(width, height) / 10;
   chessBoard = new ChessBoard();
   chessBoard.createBoard(0, 0);
@@ -110,6 +107,15 @@ function setup() {
   createButton("Pause Music").position(20, 50).mousePressed(() => {
     bgMusic.stop();
   });
+
+  
+  resignBtn = createButton("RESIGN");
+  resignBtn.position(width/2+100, 26);
+  resignBtn.mousePressed(() => {
+    gameOver = true;
+    winner = 'white';
+  });
+  resignBtn.hide();
 
   //WHITE
   pieces.push(new Pieces(0, 0, 'white', 'rook'));
@@ -227,6 +233,7 @@ function draw() {
     cam.setPosition(0, 0, 500);
     cam.lookAt(0, 0, 0);
     imageMode(CENTER);
+    resignBtn.hide();
 
     if (winner === 'white') {
       image(whiteWinImg, 0, 0, windowWidth, windowHeight); 
@@ -658,6 +665,50 @@ function isCheckmate(color) {
   return true; // Tried all moves, none save the king -> checkmate
 }
 
+function isStalemate(color) {
+  if (isInCheck(color)){
+    return false;
+  }
+
+  for (let p of pieces) {
+    if (p.color !== color){
+       continue;
+    }
+
+    for (let r = 0; r < 8; r++) {
+      for (let c = 0; c < 8; c++) {
+        const originalRow = p.row;
+        const originalCol = p.col;
+        const captured = pieceAt(r, c);
+
+        selectedPiece = p;
+        if (legalMove2(p, r, c)) {
+          
+          p.row = r;
+          p.col = c;
+          if (captured) pieces = pieces.filter(x => x !== captured);
+
+          const inCheck = isInCheck(color);
+
+          // Undo the move
+          p.row = originalRow;
+          p.col = originalCol;
+          if (captured) pieces.push(captured);
+
+          if (!inCheck) {
+            selectedPiece = null;
+            return false;
+          }
+        }
+        selectedPiece = null;
+      }
+    }
+  }
+
+  return true;
+}
+
+
 function mouseReleased() {
   if (gameOver) {
     return;
@@ -727,8 +778,6 @@ function mouseReleased() {
 
   dragging = false;
 }
-
-
 
 class ChessBoard {
   constructor() {
@@ -807,7 +856,7 @@ class ChessBoard {
     }
   }
 }
-
+ 
 function pawnPromotion() {
   if (!promotionInProgress) {
     promotionInProgress = true;
