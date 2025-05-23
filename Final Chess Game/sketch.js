@@ -21,7 +21,7 @@ let dragging = false;
 let currentTurn = 'white';
 let gameOver = false;
 let winner = null;
-let whiteWinImg, blackWinImg;
+let whiteWinImg, blackWinImg, stalemateImg;
 let promotionPending = false;
 let promotionPiece = null;
 let promotionButtons = [];
@@ -60,7 +60,7 @@ function preload() {
   woodTexture = loadImage('assets/woodtexture.jpg', true);
   whiteWinImg = loadImage("assets/whiteWins.png");
   blackWinImg = loadImage("assets/blackWins.png");
-
+  stalemateImg = loadImage("assets/stalemate.png");
 }
 
 function setup() {
@@ -188,12 +188,12 @@ function draw() {
     chessBoard.makeSide();
 
 
-    for (let row = 0; row < 8; row++) {
-      for (let col = 0; col < 8; col++) {
-        let piece = boardData[row][col];
+    // for (let row = 0; row < 8; row++) {
+    //   for (let col = 0; col < 8; col++) {
+    //     let piece = boardData[row][col];
 
-      }
-    }
+    //   }
+    // }
 
     chessBoard.drawBoard(0, 0, hoveredX, hoveredY);
   }
@@ -215,6 +215,11 @@ function draw() {
     if (isCheckmate(opp)) {
       gameOver = true;
       winner = currentTurn;
+    }
+    
+    if (isStalemate(opp)) {
+      gameOver = true;
+      winner = 'draw';
     }
 
 
@@ -241,6 +246,10 @@ function draw() {
 
     else if (winner === 'black') {
       image(blackWinImg, 0, 0, windowWidth, windowHeight);
+    }
+    else  {
+      image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
+      console.log("Stalemate");
     }
     
     
@@ -666,47 +675,56 @@ function isCheckmate(color) {
 }
 
 function isStalemate(color) {
-  if (isInCheck(color)){
-    return false;
+  if (isInCheck(color)) {
+    return false; // Not stalemate if player is in check
   }
 
+  // Loop through all pieces of this color
   for (let p of pieces) {
     if (p.color !== color){
-       continue;
+     continue;
     }
 
+    const originalRow = p.row;
+    const originalCol = p.col;
+
+    // Try moving this piece to every square on the board
     for (let r = 0; r < 8; r++) {
       for (let c = 0; c < 8; c++) {
-        const originalRow = p.row;
-        const originalCol = p.col;
         const captured = pieceAt(r, c);
 
-        selectedPiece = p;
         if (legalMove2(p, r, c)) {
-          
+          // Make the move
           p.row = r;
           p.col = c;
-          if (captured) pieces = pieces.filter(x => x !== captured);
+          if (captured) {
+            pieces = pieces.filter(x => x !== captured);
+          }
 
-          const inCheck = isInCheck(color);
+          const stillInCheck = isInCheck(color);
 
           // Undo the move
           p.row = originalRow;
           p.col = originalCol;
-          if (captured) pieces.push(captured);
+          if (captured) {
+            pieces.push(captured);
+          }
 
-          if (!inCheck) {
-            selectedPiece = null;
-            return false;
+          if (!stillInCheck) {
+            return false; // Found at least one legal move that doesn't leave king in check
           }
         }
-        selectedPiece = null;
       }
     }
   }
 
-  return true;
+  gameOver = true; // Had to add it beacuse there was a bug that I coudn't figure out so added it to work arounf the bug
+  return true; // No legal moves and not in check => stalemate
+  
 }
+
+
+
 
 
 function mouseReleased() {
@@ -758,6 +776,12 @@ function mouseReleased() {
         if (isCheckmate(opponentColor)) {
           gameOver = true;
           winner = currentTurn;
+        }
+        // Check for stalemate
+         if (isStalemate(opponentColor)) {
+          gameOver = true;
+          winner = 'draw';
+          console.log("Stalemate! The game is a draw.");
         }
 
         else {
@@ -858,6 +882,7 @@ class ChessBoard {
 }
  
 function pawnPromotion() {
+  
   if (!promotionInProgress) {
     promotionInProgress = true;
 
@@ -884,6 +909,10 @@ function pawnPromotion() {
         gameOver = true;
         winner = currentTurn;
       }
+      else if (isStalemate) {
+        gameOver = true;
+        winner = 'draw';
+      }
       else {
         currentTurn = opponentColor;
       }
@@ -902,7 +931,7 @@ function pawnPromotion() {
 
 function simulateCheckmate() {
   pieces = []; 
-  gameState = 'play'; 
+  gameState = 'testing'; 
 
   // White pieces
   pieces.push(new Pieces(1, 3, 'white', 'rook'));  
@@ -915,10 +944,26 @@ function simulateCheckmate() {
   currentTurn = 'white'; 
 }
 
+function setupStalemateTest() {
+  pieces = [];
+  gameState = 'testing'; 
+  // White king on f7 (row 1, col 5)
+  pieces.push(new Pieces( 1, 5, 'white', 'king'));
+
+  // White queen on g6 (row 2, col 6)
+  pieces.push(new Pieces( 2, 6, 'white','queen'));
+
+  // Black king on h8 (row 0, col 7)
+  pieces.push(new Pieces( 0, 7, 'black','king'));
+  currentTurn = 'black'; 
+  
+  console.log("Stalemate for black?", isStalemate('black'));
+}
+
 
 function pawnpro() {
   pieces = []; 
-
+  gameState = 'testing'; 
   // White pieces
   pieces.push(new Pieces(1, 0, 'black', 'pawn'));  
   pieces.push(new Pieces(6, 0, 'white', 'pawn')); 
@@ -934,6 +979,9 @@ function keyPressed() {
   }
   if (key === 'P' || key === 'p') {
     pawnpro(); 
+  }
+  if (key === 'S' || key === 's') {
+    setupStalemateTest(); 
   }
   
 
