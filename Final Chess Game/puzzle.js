@@ -31,17 +31,9 @@ function loadNextPuzzle() {
   currentPuzzleIndex++;
 }
 
-
-function puzzle1() {
-  // White rook gives check to Black king on an otherwise empty board
-  pieces.push(new Pieces(0, 0, 'white', 'rook'));   // attacker
-  pieces.push(new Pieces(7, 7, 'white', 'king'));   // white king safe
-  pieces.push(new Pieces(0, 7, 'black', 'king'));
-  pieces.push(new Pieces(1, 5, 'white', 'bishop'));   
-  pieces.push(new Pieces(7, 0, 'white', 'bishop'));
-}
-
-
+ 
+//https://lichess.org/training/mix 
+//use this website to create puzzles
 
 
 

@@ -188,12 +188,6 @@ function draw() {
     chessBoard.makeSide();
 
 
-    // for (let row = 0; row < 8; row++) {
-    //   for (let col = 0; col < 8; col++) {
-    //     let piece = boardData[row][col];
-
-    //   }
-    // }
 
     chessBoard.drawBoard(0, 0, hoveredX, hoveredY);
   }
