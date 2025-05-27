@@ -31,16 +31,8 @@ let biB; let bk; let qb; let br; let bp; let bkni;
 let biW; let wk; let qw; let wr; let wp; let wkni;
 
 let startGif;
-boardData = [//sets board up 
-  [br, bkni, biB, qb, bk, biB, bkni, br],
-  [bp, bp, bp, bp, bp, bp, bp, bp],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0],
-  [wp, wp, wp, wp, wp, wp, wp, wp],
-  [wr, wkni, biW, qw, wk, biW, wkni, wr]
-];
+
+
 
 function preload() {
   startGif = loadImage("assets/startPage.gif");
@@ -61,6 +53,7 @@ function preload() {
   whiteWinImg = loadImage("assets/whiteWins.png");
   blackWinImg = loadImage("assets/blackWins.png");
   stalemateImg = loadImage("assets/stalemate.png");
+
 }
 
 function setup() {

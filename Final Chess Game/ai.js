@@ -5,27 +5,49 @@ function evaluateBoard() {
     bishop: 3.3,
     rook: 5,
     queen: 9,
-    king: 0
+    king: 0  // we don’t give points for the king here since checkmate is scored separately
   };
 
+  // Give a huge bonus if the AI checkmates, and punish if it causes a stalemate
+  if (isCheckmate('black')) return 1000;
+  if (isStalemate('black')) return -50;
+
   let score = 0;
+
   for (let p of pieces) {
     let value = values[p.piece] || 0;
     let bonus = 0;
 
-   
+    // Bonus for controlling the center of the board — central control is powerful
+    if (p.row >= 2 && p.row <= 5 && p.col >= 2 && p.col <= 5) {
+      bonus += 0.2;
+    }
+
+    // Pawns get a bonus the further they’ve advanced
     if (p.piece === 'pawn') {
       bonus += (p.color === 'white' ? p.col : 7 - p.col) * 0.1;
     }
 
-    if (p.row >= 2 && p.row <= 5 && p.col >= 2 && p.col <= 5) {
-      bonus += 0.1;
+    // Penalize the king if it’s too exposed — fewer friendly pieces nearby
+    if (p.piece === 'king') {
+      const surrounding = [
+        pieceAt(p.row - 1, p.col), pieceAt(p.row + 1, p.col),
+        pieceAt(p.row, p.col - 1), pieceAt(p.row, p.col + 1)
+      ];
+      let defenders = surrounding.filter(x => x && x.color === p.color).length;
+      if (defenders < 2) bonus -= 0.3;
     }
 
-    if (p.piece !== 'pawn' && (p.color === 'white' && p.col > 1) || p.color === 'black' && p.col < 6) {
-      bonus += 0.05;
+    // Small bonus if this piece is protected by another friendly piece
+    for (let ally of pieces) {
+      if (ally.color === p.color && ally !== p) {
+        let dx = Math.abs(ally.row - p.row);
+        let dy = Math.abs(ally.col - p.col);
+        if (dx <= 1 && dy <= 1) bonus += 0.05;
+      }
     }
 
+    // White pieces add to the score, black pieces subtract
     score += (value + bonus) * (p.color === 'white' ? 1 : -1);
   }
 
@@ -33,11 +55,15 @@ function evaluateBoard() {
 }
 
 function makeMove(move) {
+  // Save the original position in case we want to undo
   move.originalRow = move.piece.row;
   move.originalCol = move.piece.col;
+
+  // Move the piece
   move.piece.row = move.row;
   move.piece.col = move.col;
 
+  // If there's a captured piece, remove it from the board
   if (move.captured) {
     move.removed = move.captured;
     pieces = pieces.filter(p => p !== move.captured);
@@ -45,9 +71,11 @@ function makeMove(move) {
 }
 
 function undoMove(move) {
+  // Put the piece back to where it was
   move.piece.row = move.originalRow;
   move.piece.col = move.originalCol;
 
+  // If we removed a piece earlier, bring it back
   if (move.removed) {
     pieces.push(move.removed);
   }
@@ -57,38 +85,33 @@ function generateLegalMoves(color) {
   const moves = [];
 
   for (let p of pieces) {
-    if (p.color !== color) {
-      continue;
-    }
+    if (p.color !== color) continue;  // skip opponent pieces
 
     for (let r = 0; r < 8; r++) {
       for (let c = 0; c < 8; c++) {
-        
         const origRow = p.row;
         const origCol = p.col;
         const captured = pieceAt(r, c);
 
         selectedPiece = p;
-        if (!legalMove(r, c)) {
-          continue;
-        }
 
+        // Skip if the move isn’t legal
+        if (!legalMove(r, c)) continue;
+
+        // Try the move temporarily
         p.row = r;
         p.col = c;
-        if (captured) {
-          pieces = pieces.filter(x => x !== captured);
-        }
+        if (captured) pieces = pieces.filter(x => x !== captured);
 
+        // Only keep the move if it doesn’t leave the king in check
         if (!isInCheck(color)) {
           moves.push({ piece: p, row: r, col: c, captured });
         }
 
-        // Undo
+        // Undo the temporary move
         p.row = origRow;
         p.col = origCol;
-        if (captured) {
-          pieces.push(captured);
-        }
+        if (captured) pieces.push(captured);
       }
     }
   }
@@ -98,24 +121,28 @@ function generateLegalMoves(color) {
 
 function minimax(depth, maximizingPlayer) {
   if (depth === 0 || gameOver) {
-    return evaluateBoard();
+    return evaluateBoard();  // base case: evaluate this board position
   }
 
   const color = maximizingPlayer ? 'white' : 'black';
   const moves = generateLegalMoves(color);
   if (moves.length === 0) {
-    return evaluateBoard();
+    return evaluateBoard();  // no legal moves, return score
   }
 
   let bestScore = maximizingPlayer ? -Infinity : Infinity;
 
   for (let move of moves) {
     makeMove(move);
-    const randomness = Math.random() * 0.3; 
-    const score = minimax(3, false) + randomness;
+
+    let score = minimax(depth - 1, !maximizingPlayer);
+
+    // Add a small random value to avoid repetitive AI behavior
+    score += (Math.random() - 0.5) * 0.1;
 
     undoMove(move);
 
+    // Pick the best or worst score depending on who's playing
     bestScore = maximizingPlayer
       ? Math.max(bestScore, score)
       : Math.min(bestScore, score);
@@ -125,48 +152,76 @@ function minimax(depth, maximizingPlayer) {
 }
 
 function aiMoveWhite() {
-  if (currentTurn !== 'white' || gameOver) {
-    return;
-  }
+  if (currentTurn !== 'white' || gameOver) return;
 
   const moves = generateLegalMoves('white');
   let bestScore = -Infinity;
   let bestMoves = [];
 
   for (let move of moves) {
+    // Bonus for capturing valuable pieces
+    let captureBonus = 0;
+    if (move.captured) {
+      const captureValues = {
+        pawn: 1,
+        knight: 3.2,
+        bishop: 3.3,
+        rook: 5,
+        queen: 9
+      };
+      captureBonus = captureValues[move.captured.piece] || 0;
+    }
+
     makeMove(move);
-    const score = minimax(3, false);  
+    const score = minimax(4, false) + captureBonus * 0.3;
     undoMove(move);
 
-    
+   
+    // Collect best-scoring moves (not just one)
     if (score > bestScore - 0.2) {
       if (score > bestScore) {
         bestScore = score;
         bestMoves = [move];
-      }
-      else {
+      } else {
         bestMoves.push(move);
       }
     }
   }
 
+  // Randomly choose from equally strong options
   if (bestMoves.length > 0) {
     const chosen = random(bestMoves); 
     makeMove(chosen);
 
+    // Promote pawns that reach the back rank
     if (chosen.piece.piece === 'pawn' && (chosen.piece.col === 0 || chosen.piece.col === 7)) {
       chosen.piece.piece = 'queen';
     }
 
-    if (isCheckmate('black')) {
+    const opponentColor = 'black';
+
+    // Check for checkmate
+    if (isCheckmate(opponentColor)) {
       gameOver = true;
       winner = 'white';
+
+    // Avoid stalemate unless the position is already really bad
+    } else if (isStalemate(opponentColor)) {
+      if (bestScore < -10) {
+        gameOver = true;
+        winner = 'draw';
+      }
+
+    // Switch turn to black
+    } else {
+      currentTurn = opponentColor;
     }
 
-    else {
-      currentTurn = 'black';
+  } else {
+    // If no legal moves, check for stalemate
+    if (isStalemate('white')) {
+      gameOver = true;
+      winner = 'draw';
     }
   }
 }
-
-
