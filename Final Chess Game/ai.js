@@ -9,8 +9,12 @@ function evaluateBoard() {
   };
 
   // Give a huge bonus if the AI checkmates, and punish if it causes a stalemate
-  if (isCheckmate('black')) return 1000;
-  if (isStalemate('black')) return -50;
+  if (isCheckmate('black')) {
+    return 1000;
+  }
+  if (isStalemate('black')) {
+    return -50;
+  }
 
   let score = 0;
 
@@ -35,7 +39,9 @@ function evaluateBoard() {
         pieceAt(p.row, p.col - 1), pieceAt(p.row, p.col + 1)
       ];
       let defenders = surrounding.filter(x => x && x.color === p.color).length;
-      if (defenders < 2) bonus -= 0.3;
+      if (defenders < 2) {
+        bonus -= 0.3;
+      }
     }
 
     // Small bonus if this piece is protected by another friendly piece
@@ -43,7 +49,9 @@ function evaluateBoard() {
       if (ally.color === p.color && ally !== p) {
         let dx = Math.abs(ally.row - p.row);
         let dy = Math.abs(ally.col - p.col);
-        if (dx <= 1 && dy <= 1) bonus += 0.05;
+        if (dx <= 1 && dy <= 1) {
+          bonus += 0.05;
+        }
       }
     }
 
@@ -85,7 +93,9 @@ function generateLegalMoves(color) {
   const moves = [];
 
   for (let p of pieces) {
-    if (p.color !== color) continue;  // skip opponent pieces
+    if (p.color !== color) {
+      continue;
+    }  // skip opponent pieces
 
     for (let r = 0; r < 8; r++) {
       for (let c = 0; c < 8; c++) {
@@ -96,12 +106,16 @@ function generateLegalMoves(color) {
         selectedPiece = p;
 
         // Skip if the move isn’t legal
-        if (!legalMove(r, c)) continue;
+        if (!legalMove(r, c)) {
+          continue;
+        }
 
         // Try the move temporarily
         p.row = r;
         p.col = c;
-        if (captured) pieces = pieces.filter(x => x !== captured);
+        if (captured) {
+          pieces = pieces.filter(x => x !== captured);
+        }
 
         // Only keep the move if it doesn’t leave the king in check
         if (!isInCheck(color)) {
@@ -111,7 +125,9 @@ function generateLegalMoves(color) {
         // Undo the temporary move
         p.row = origRow;
         p.col = origCol;
-        if (captured) pieces.push(captured);
+        if (captured) {
+          pieces.push(captured);
+        }
       }
     }
   }
@@ -152,7 +168,9 @@ function minimax(depth, maximizingPlayer) {
 }
 
 function aiMoveWhite() {
-  if (currentTurn !== 'white' || gameOver) return;
+  if (currentTurn !== 'white' || gameOver) {
+    return;
+  }
 
   const moves = generateLegalMoves('white');
   let bestScore = -Infinity;
@@ -182,7 +200,8 @@ function aiMoveWhite() {
       if (score > bestScore) {
         bestScore = score;
         bestMoves = [move];
-      } else {
+      }
+      else {
         bestMoves.push(move);
       }
     }
@@ -206,18 +225,21 @@ function aiMoveWhite() {
       winner = 'white';
 
     // Avoid stalemate unless the position is already really bad
-    } else if (isStalemate(opponentColor)) {
+    }
+    else if (isStalemate(opponentColor)) {
       if (bestScore < -10) {
         gameOver = true;
         winner = 'draw';
       }
 
     // Switch turn to black
-    } else {
+    }
+    else {
       currentTurn = opponentColor;
     }
 
-  } else {
+  }
+  else {
     // If no legal moves, check for stalemate
     if (isStalemate('white')) {
       gameOver = true;

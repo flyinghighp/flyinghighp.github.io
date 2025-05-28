@@ -5,6 +5,8 @@
 let aiThinking = false;
 let gameState = 'menu';  
 let startBtn;
+let puzzBtn;
+let ovoBtn;
 let thickness = 30;
 let size;
 let cam;
@@ -65,16 +67,18 @@ function setup() {
   cam.lookAt(0, 0, 0);
   angleMode(DEGREES);
   
-  startBtn = createButton('Start Game');
+  startBtn = createButton('Play Vs Ai');
   startBtn.addClass('start-ui');
   startBtn.mousePressed(() => {
     gameState = 'play';
     puzzBtn.hide();
     startBtn.hide();
+    ovoBtn.hide();
     resignBtn.show();
     document.getElementById("gifBackground").style.display = "none";
   });
-  
+
+
   puzzBtn = createButton('Puzzles');
   puzzBtn.addClass('start-ui');
   puzzBtn.position(width/2, height/2+100); 
@@ -84,10 +88,22 @@ function setup() {
     resignBtn.hide();
     puzzBtn.hide();
     startBtn.hide();
+    ovoBtn.hide();
     document.getElementById("gifBackground").style.display = "none";
   });
 
-  
+  ovoBtn = createButton('1 V 1');
+  ovoBtn.addClass('start-ui');
+  ovoBtn.position(width/2, height/2-100); 
+  ovoBtn.mousePressed(() => {
+    gameState = 'ovo';
+    puzzBtn.hide();
+    startBtn.hide();
+    resignBtn.show();
+    ovoBtn.hide();
+    document.getElementById("gifBackground").style.display = "none";
+  });
+
   size = min(width, height) / 10;
   chessBoard = new ChessBoard();
   chessBoard.createBoard(0, 0);
@@ -110,6 +126,7 @@ function setup() {
   });
   resignBtn.hide();
 
+  
   //WHITE
   pieces.push(new Pieces(0, 0, 'white', 'rook'));
   pieces.push(new Pieces(0, 1, 'white', 'knight'));
@@ -194,10 +211,12 @@ function draw() {
       }, 3);
     }
   }
-  
-  if (!gameOver && gameState === 'play') {
-    updateScoreDisplay();
 
+
+  if (!gameOver && gameState === 'play') {
+    
+    updateScoreDisplay();
+    
     const opp = currentTurn === 'white' ? 'black' : 'white';
     if (isCheckmate(opp)) {
       gameOver = true;
@@ -218,6 +237,45 @@ function draw() {
       }, 100);
     }
 
+  }
+
+  if (!gameOver && gameState === 'ovo') {
+    updateScoreDisplay();
+
+    resignBtn.hide();
+
+    const opp = currentTurn === 'white' ? 'black' : 'white';
+    if (isCheckmate(opp)) {
+      gameOver = true;
+      winner = currentTurn;
+    }
+    
+    if (isStalemate(opp)) {
+      gameOver = true;
+      winner = 'draw';
+    }
+
+
+    if (gameOver) {
+      cam.setPosition(0, 0, 500);
+      cam.lookAt(0, 0, 0);
+      imageMode(CENTER);
+      resignBtn.hide();
+
+      if (winner === 'white') {
+        image(whiteWinImg, 0, 0, windowWidth, windowHeight); 
+      }
+
+      else if (winner === 'black') {
+        image(blackWinImg, 0, 0, windowWidth, windowHeight);
+      }
+      else  {
+        image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
+        console.log("Stalemate");
+      }
+    
+    
+    }
   }
 
 
@@ -253,10 +311,11 @@ function updateScoreDisplay() {
   const scoreDiv = document.getElementById("scoreDisplay");
 
   
-  if (gameState !== 'play') {
+  if (gameState !== 'play' && gameState !== 'ovo') {
     scoreDiv.style.display = "none";
     return;
-  } 
+  }
+  
   else {
     scoreDiv.style.display = "block";
   }
@@ -669,7 +728,7 @@ function isStalemate(color) {
   // Loop through all pieces of this color
   for (let p of pieces) {
     if (p.color !== color){
-     continue;
+      continue;
     }
 
     const originalRow = p.row;
@@ -765,7 +824,7 @@ function mouseReleased() {
           winner = currentTurn;
         }
         // Check for stalemate
-         if (isStalemate(opponentColor)) {
+        if (isStalemate(opponentColor)) {
           gameOver = true;
           winner = 'draw';
           console.log("Stalemate! The game is a draw.");
@@ -773,7 +832,7 @@ function mouseReleased() {
 
         else {
           currentTurn = opponentColor;
-          if (currentTurn === 'white'){
+          if (gameState === 'play' && currentTurn === 'white') {
             aiThinking = true;
             setTimeout(() => {
               aiMoveWhite();
