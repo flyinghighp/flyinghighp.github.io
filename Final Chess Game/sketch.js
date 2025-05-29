@@ -7,7 +7,6 @@ let gameState = 'menu';
 let startBtn;
 let puzzBtn;
 let ovoBtn;
-let restartBtn;
 let thickness = 30;
 let size;
 let cam;
@@ -29,7 +28,6 @@ let promotionPending = false;
 let promotionPiece = null;
 let promotionButtons = [];
 let promotionInProgress = false;
-let restartImg;
 
 let biB; let bk; let qb; let br; let bp; let bkni;
 let biW; let wk; let qw; let wr; let wp; let wkni;
@@ -57,7 +55,6 @@ function preload() {
   whiteWinImg = loadImage("assets/whiteWins.png");
   blackWinImg = loadImage("assets/blackWins.png");
   stalemateImg = loadImage("assets/stalemate.png");
-  restartImg = loadImage("assets/restart.png");
 }
 
 function setup() {
@@ -77,8 +74,8 @@ function setup() {
     startBtn.hide();
     ovoBtn.hide();
     resignBtn.show();
-    //restartBtn.show();
     document.getElementById("gifBackground").style.display = "none";
+    document.getElementById("gameTitle").style.display = "none";
   });
 
 
@@ -91,8 +88,8 @@ function setup() {
     resignBtn.hide();
     puzzBtn.hide();
     startBtn.hide();
-    ovoBtn.hide();
-    //restartBtn.show();
+    ovoBtn.hide();  
+    document.getElementById("gameTitle").style.display = "none";
     document.getElementById("gifBackground").style.display = "none";
   });
 
@@ -104,25 +101,11 @@ function setup() {
     puzzBtn.hide();
     startBtn.hide();
     resignBtn.show();
-    //restartBtn.show();
     ovoBtn.hide();
     document.getElementById("gifBackground").style.display = "none";
+    document.getElementById("gameTitle").style.display = "none";
   });
 
-  // restartBtn = createButton('');
-  // restartBtn.style('background-image', `url('assets/restart.png')`);
-  // restartBtn.style('background-size', 'cover');
-  // restartBtn.style('width', '50px');
-  // restartBtn.style('height', '50px');
-  // restartBtn.style('border', 'none');
-  // restartBtn.style('position', 'fixed'); 
-  // restartBtn.style('bottom', '20px');    
-  // restartBtn.style('right', '20px');     
-  // restartBtn.mousePressed(() => {
-  //   gameState = 'menu'; 
-  // });
-
-  
   size = min(width, height) / 10;
   chessBoard = new ChessBoard();
   chessBoard.createBoard(0, 0);
@@ -1051,3 +1034,4 @@ function keyPressed() {
   
 
 }
+
