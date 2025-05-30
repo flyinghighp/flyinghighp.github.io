@@ -239,11 +239,5 @@ function aiMoveWhite() {
     }
 
   }
-  else {
-    // If no legal moves, check for stalemate
-    if (isStalemate('white')) {
-      gameOver = true;
-      winner = 'draw';
-    }
-  }
+  
 }

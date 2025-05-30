@@ -5,7 +5,6 @@
 let aiThinking = false;
 let gameState = 'menu';  
 let startBtn;
-let puzzBtn;
 let ovoBtn;
 let thickness = 30;
 let size;
@@ -70,7 +69,6 @@ function setup() {
   startBtn.addClass('start-ui');
   startBtn.mousePressed(() => {
     gameState = 'play';
-    puzzBtn.hide();
     startBtn.hide();
     ovoBtn.hide();
     resignBtn.show();
@@ -78,27 +76,11 @@ function setup() {
     document.getElementById("gameTitle").style.display = "none";
   });
 
-
-  puzzBtn = createButton('Puzzles');
-  puzzBtn.addClass('start-ui');
-  puzzBtn.position(width/2, height/2+100); 
-  puzzBtn.mousePressed(() => {
-    gameState = 'puzzle';
-    startPuzzles();
-    resignBtn.hide();
-    puzzBtn.hide();
-    startBtn.hide();
-    ovoBtn.hide();  
-    document.getElementById("gameTitle").style.display = "none";
-    document.getElementById("gifBackground").style.display = "none";
-  });
-
   ovoBtn = createButton('1 V 1');
   ovoBtn.addClass('start-ui');
   ovoBtn.position(width/2, height/2-100); 
   ovoBtn.mousePressed(() => {
     gameState = 'ovo';
-    puzzBtn.hide();
     startBtn.hide();
     resignBtn.show();
     ovoBtn.hide();
@@ -176,7 +158,7 @@ function draw() {
     return; 
   }
   
-  if(!gameOver || gameState === 'puzzle'){
+  if(!gameOver){
     background(0);
     ambientLight(255);
     directionalLight(255, 255, 255, 0, 1, -1);
@@ -203,17 +185,6 @@ function draw() {
 
     chessBoard.drawBoard(0, 0, hoveredX, hoveredY);
   }
-
-  if (gameState === 'puzzle') {
-    const opp = currentTurn === 'white' ? 'black' : 'white';
-    if (isCheckmate(opp)) {
-      setTimeout(() => {
-        alert("Puzzle solved!");
-        loadNextPuzzle();     
-      }, 3);
-    }
-  }
-
 
   if (!gameOver && gameState === 'play') {
     
