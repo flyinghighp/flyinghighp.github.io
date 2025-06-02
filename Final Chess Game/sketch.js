@@ -6,6 +6,10 @@ let aiThinking = false;
 let gameState = 'menu';  
 let startBtn;
 let ovoBtn;
+let resignBtn;
+let bgMusic;
+let isMuted = false;
+let infoBtn;
 let thickness = 30;
 let size;
 let cam;
@@ -32,8 +36,6 @@ let biB; let bk; let qb; let br; let bp; let bkni;
 let biW; let wk; let qw; let wr; let wp; let wkni;
 
 let startGif;
-
-
 
 function preload() {
   startGif = loadImage("assets/startPage.gif");
@@ -65,6 +67,7 @@ function setup() {
   cam.lookAt(0, 0, 0);
   angleMode(DEGREES);
   
+  
   startBtn = createButton('Play Vs A.I');
   startBtn.addClass('start-ui');
   startBtn.mousePressed(() => {
@@ -92,15 +95,30 @@ function setup() {
   chessBoard = new ChessBoard();
   chessBoard.createBoard(0, 0);
 
-  createButton("Play Music").position(20, 20).mousePressed(() => {
-    bgMusic.setLoop(true);
-    bgMusic.setVolume(0.5);
-    bgMusic.play();
-  });
-  createButton("Pause Music").position(20, 50).mousePressed(() => {
-    bgMusic.stop();
+  const infoIcon = createImg('assets/info.png', 'Info');
+  infoIcon.id('infoIcon'); 
+  infoIcon.parent(document.body); 
+  infoIcon.mousePressed(() => {
+    window.open('https://www.chess.com/learn-how-to-play-chess', '_blank');
   });
 
+  const audioIcon = document.getElementById("audioIcon");
+  bgMusic.setVolume(0);
+
+  audioIcon.addEventListener("click", () => {
+    isMuted = !isMuted;
+
+    if (isMuted) {
+      bgMusic.setVolume(0);
+      bgMusic.stop(); 
+      audioIcon.src = "assets/pause.png"; 
+    }
+    else {
+      bgMusic.setVolume(1); 
+      bgMusic.loop();
+      audioIcon.src = "assets/unpause.png"; 
+    }
+  });
   
   resignBtn = createButton("RESIGN");
   resignBtn.position(width/2+100, 26);
@@ -110,7 +128,6 @@ function setup() {
   });
   resignBtn.hide();
 
-  
   //WHITE
   pieces.push(new Pieces(0, 0, 'white', 'rook'));
   pieces.push(new Pieces(0, 1, 'white', 'knight'));
@@ -928,7 +945,7 @@ function pawnPromotion() {
         gameOver = true;
         winner = currentTurn;
       }
-      else if (isStalemate) {
+      if (isStalemate) {
         gameOver = true;
         winner = 'draw';
       }

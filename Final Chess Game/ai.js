@@ -227,10 +227,10 @@ function aiMoveWhite() {
     // Avoid stalemate unless the position is already really bad
     }
     else if (isStalemate(opponentColor)) {
-      if (bestScore < -10) {
-        gameOver = true;
-        winner = 'draw';
-      }
+      
+      gameOver = true;
+      winner = 'draw';
+      
 
     // Switch turn to black
     }
