@@ -52,7 +52,7 @@ function preload() {
   wr = loadModel('assets/Rook.obj', true);
   br = loadModel('assets/Rook - Copy.obj', true);
   bgMusic = loadSound('assets/music.mp3');
-  woodTexture = loadImage('assets/woodtexture.jpg', true);
+  woodTexture = loadImage('assets/woodtexture.jpg');
   whiteWinImg = loadImage("assets/whiteWins.png");
   blackWinImg = loadImage("assets/blackWins.png");
   stalemateImg = loadImage("assets/stalemate.png");
