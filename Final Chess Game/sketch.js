@@ -83,6 +83,13 @@ function setup() {
     document.getElementById("gameTitle").style.display = "none";
   });
 
+  let saveBtn = createButton('Save Game');
+  saveBtn.position(20,20);
+  saveBtn.mousePressed(saveGameState);
+  let loadBtn = createButton('load Game');
+  loadBtn.position(20,60);
+  loadBtn.mousePressed(loadGameState);
+  
   ovoBtn = createButton('1 V 1');
   ovoBtn.addClass('start-ui');
   ovoBtn.position(width/2, height/2-100); 
@@ -301,13 +308,12 @@ function draw() {
 
     if (winner === 'white') {
       image(whiteWinImg, 0, 0, windowWidth, windowHeight); 
-      
     }
 
-    else if (winner === 'black') {
+    if (winner === 'black') {
       image(blackWinImg, 0, 0, windowWidth, windowHeight);
     }
-    else  {
+    if  (winner ==='draw'){
       image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
       console.log("Stalemate");
     }
@@ -719,7 +725,7 @@ function isCheckmate(color) {
           p.col = originalCol;
           if (captured) {
             pieces.push(captured);
-          } // Restore captured piece
+          } // Restore captured draw
 
           if (!inCheck) {
             selectedPiece = null;
@@ -783,10 +789,6 @@ function isStalemate(color) {
   return true; // No legal moves and not in check => stalemate
   
 }
-
-
-
-
 
 function mouseReleased() {
   if (gameOver) {
@@ -988,7 +990,50 @@ function pawnPromotion() {
   }
 }
 
-//For Testing Purposes
+function saveGameState(){
+  if(!gameOver){
+  const currState = {
+    pieces : pieces.map(p => ({
+      row: p.row,
+      col: p.col,
+      color: p.color,
+      piece: p.piece
+    })),
+    currentTurn,
+    
+    gameState
+  };
+  localStorage.setItem("savedChessGame",JSON.stringify(currState));
+  alert("Game Saved");
+  }
+}
+
+function loadGameState(){
+  if(!gameOver){
+  const data = localStorage.getItem("savedChessGame");
+  if(!data){
+    alert("No Saved Game Found.");
+    return;
+  }
+  const currState = JSON.parse(data);
+  pieces = currState.pieces.map(p => new Pieces(p.col, p.row, p.piece));
+  currentTurn = currState.currentTurn;
+  
+  gameState = currState.gameState;
+
+    winner = null
+    selectedPiece = null;
+    dragging = false;
+    aiThinking = false;
+    promotionPiece = null;
+    promotionButtons = [];
+    promotionInProgress = false;
+  alert("Game Loaded.")
+  }
+}
+//---------------//
+//    TESTING    //
+//---------------//
 
 function simulateCheckmate() {
   pieces = []; 
@@ -1021,7 +1066,6 @@ function setupStalemateTest() {
   console.log("Stalemate for black?", isStalemate('black'));
 }
 
-
 function pawnpro() {
   pieces = []; 
   gameState = 'testing'; 
@@ -1031,8 +1075,6 @@ function pawnpro() {
 
   currentTurn = 'white'; 
 }
-
-
 
 function keyPressed() {
   if (key === 'D' || key === 'd') {
@@ -1045,6 +1087,5 @@ function keyPressed() {
     setupStalemateTest(); 
   }
   
-
 }
 
