@@ -9,7 +9,9 @@ let ovoBtn;
 let resignBtn;
 let bgMusic;
 let isMuted = false;
-let infoBtn;
+let infoIcon;
+let controlIcon;
+let playagainIcon;
 let thickness = 30;
 let size;
 let cam;
@@ -75,6 +77,8 @@ function setup() {
     startBtn.hide();
     ovoBtn.hide();
     resignBtn.show();
+    controlIcon.hide();
+    playagainIcon.hide();
     document.getElementById("gifBackground").style.display = "none";
     document.getElementById("gameTitle").style.display = "none";
   });
@@ -87,6 +91,8 @@ function setup() {
     startBtn.hide();
     resignBtn.show();
     ovoBtn.hide();
+    controlIcon.hide();
+    playagainIcon.hide();
     document.getElementById("gifBackground").style.display = "none";
     document.getElementById("gameTitle").style.display = "none";
   });
@@ -95,12 +101,27 @@ function setup() {
   chessBoard = new ChessBoard();
   chessBoard.createBoard(0, 0);
 
-  const infoIcon = createImg('assets/info.png', 'Info');
+  infoIcon = createImg('assets/info.png', 'Info');
   infoIcon.id('infoIcon'); 
   infoIcon.parent(document.body); 
   infoIcon.mousePressed(() => {
     window.open('https://www.chess.com/learn-how-to-play-chess', '_blank');
   });
+
+  controlIcon = createImg('assets/gameController.png', 'Controls');
+  controlIcon.id('controlIcon');  
+  controlIcon.parent(document.body); 
+  controlIcon.mousePressed(() => {
+    window.open('Controls.html', '_blank');
+    playagainIcon.hide(); 
+  });
+  playagainIcon = createImg('assets/restartButton.jpg', 'Play Again');
+  playagainIcon.id('playagainIcon');  
+  playagainIcon.parent(document.body); 
+  playagainIcon.mousePressed(() => {
+    window.open('index.html', '_blank');
+  });
+  playagainIcon.hide();
 
   const audioIcon = document.getElementById("audioIcon");
   bgMusic.setVolume(0);
@@ -198,8 +219,6 @@ function draw() {
     }
     chessBoard.makeSide();
 
-
-
     chessBoard.drawBoard(0, 0, hoveredX, hoveredY);
   }
 
@@ -218,7 +237,6 @@ function draw() {
       winner = 'draw';
     }
 
-
     if (currentTurn === 'white' && !aiThinking) {
       aiThinking = true;
       setTimeout(() => {
@@ -233,16 +251,18 @@ function draw() {
     updateScoreDisplay();
     
     resignBtn.hide();
-
+    
     const opp = currentTurn === 'white' ? 'black' : 'white';
     if (isCheckmate(opp)) {
       gameOver = true;
       winner = currentTurn;
+      playagainIcon.show();
     }
     
     if (isStalemate(opp)) {
       gameOver = true;
       winner = 'draw';
+      playagainIcon.show();
     }
 
 
@@ -251,6 +271,9 @@ function draw() {
       cam.lookAt(0, 0, 0);
       imageMode(CENTER);
       resignBtn.hide();
+      controlIcon.hide();
+      infoIcon.hide();
+      playagainIcon.show();
 
       if (winner === 'white') {
         image(whiteWinImg, 0, 0, windowWidth, windowHeight); 
@@ -261,22 +284,24 @@ function draw() {
       }
       else  {
         image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
-        console.log("Stalemate");
       }
     
     
     }
   }
 
-
   if (gameOver) {
     cam.setPosition(0, 0, 500);
     cam.lookAt(0, 0, 0);
     imageMode(CENTER);
     resignBtn.hide();
+    controlIcon.hide();
+    infoIcon.hide();
+    playagainIcon.show();
 
     if (winner === 'white') {
       image(whiteWinImg, 0, 0, windowWidth, windowHeight); 
+      
     }
 
     else if (winner === 'black') {
