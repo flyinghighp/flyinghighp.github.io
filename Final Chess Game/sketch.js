@@ -992,45 +992,58 @@ function pawnPromotion() {
 
 function saveGameState(){
   if(!gameOver){
-  const currState = {
-    pieces : pieces.map(p => ({
-      row: p.row,
-      col: p.col,
-      color: p.color,
-      piece: p.piece
-    })),
-    currentTurn,
+    const currState = {
+      pieces : pieces.map(p => ({
+        row: p.row,
+        col: p.col,
+        color: p.color,
+        piece: p.piece
+      })),
+      currentTurn,
     
-    gameState
-  };
-  localStorage.setItem("savedChessGame",JSON.stringify(currState));
-  alert("Game Saved");
+      gameState
+    };
+    localStorage.setItem("savedChessGame",JSON.stringify(currState));
+    alert("Game Saved");
   }
 }
 
-function loadGameState(){
-  if(!gameOver){
-  const data = localStorage.getItem("savedChessGame");
-  if(!data){
-    alert("No Saved Game Found.");
-    return;
-  }
-  const currState = JSON.parse(data);
-  pieces = currState.pieces.map(p => new Pieces(p.col, p.row, p.piece));
-  currentTurn = currState.currentTurn;
-  
-  gameState = currState.gameState;
+function loadGameState() {
+  if (!gameOver) {
+    const data = localStorage.getItem("savedChessGame");
+    if (!data) {
+      alert("No Saved Game Found.");
+      return;
+    }
 
-    winner = null
+    const currState = JSON.parse(data);
+    pieces = currState.pieces.map(p => new Pieces(p.col, p.row, p.color, p.piece));
+    currentTurn = currState.currentTurn;
+    gameState = currState.gameState;
+
+    winner = null;
     selectedPiece = null;
     dragging = false;
     aiThinking = false;
     promotionPiece = null;
     promotionButtons = [];
     promotionInProgress = false;
-  alert("Game Loaded.")
+
+    alert("Game Loaded.");
+
+    // Delay AI move to prevent false stalemate or checkmate
+    setTimeout(() => {
+      if (!gameOver && gameState === 'play' && currentTurn === 'white') {
+        aiThinking = true;
+        setTimeout(() => {
+          aiMoveWhite();
+          aiThinking = false;
+        }, 100);
+      }
+    }, 200);
   }
 }
+
 //---------------//
 //    TESTING    //
 //---------------//
