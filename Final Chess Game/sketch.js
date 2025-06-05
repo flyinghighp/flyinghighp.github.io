@@ -12,6 +12,8 @@ let isMuted = false;
 let infoIcon;
 let controlIcon;
 let playagainIcon;
+let loadBtn;
+let saveBtn;
 let thickness = 30;
 let size;
 let cam;
@@ -79,17 +81,24 @@ function setup() {
     resignBtn.show();
     controlIcon.hide();
     playagainIcon.hide();
+    loadBtn.show();
+    saveBtn.show();
     document.getElementById("gifBackground").style.display = "none";
     document.getElementById("gameTitle").style.display = "none";
   });
 
-  let saveBtn = createButton('Save Game');
-  saveBtn.position(20,20);
+  saveBtn = createImg('assets/save.png', 'Save Game');
+  saveBtn.id('saveIcon');
+  saveBtn.parent(document.body); 
   saveBtn.mousePressed(saveGameState);
-  let loadBtn = createButton('load Game');
-  loadBtn.position(20,60);
+  saveBtn.hide();
+
+  loadBtn = createImg('assets/load.png', 'Load Saved Game');
+  loadBtn.id('loadIcon');
+  loadBtn.parent(document.body); 
   loadBtn.mousePressed(loadGameState);
-  
+  loadBtn.hide();
+
   ovoBtn = createButton('1 V 1');
   ovoBtn.addClass('start-ui');
   ovoBtn.position(width/2, height/2-100); 
@@ -100,6 +109,8 @@ function setup() {
     ovoBtn.hide();
     controlIcon.hide();
     playagainIcon.hide();
+    loadBtn.show();
+    saveBtn.show();
     document.getElementById("gifBackground").style.display = "none";
     document.getElementById("gameTitle").style.display = "none";
   });
@@ -121,6 +132,8 @@ function setup() {
   controlIcon.mousePressed(() => {
     window.open('Controls.html', '_blank');
     playagainIcon.hide(); 
+    loadBtn.hide();
+    saveBtn.hide();
   });
   playagainIcon = createImg('assets/restartButton.jpg', 'Play Again');
   playagainIcon.id('playagainIcon');  
@@ -148,8 +161,10 @@ function setup() {
     }
   });
   
-  resignBtn = createButton("RESIGN");
-  resignBtn.position(width/2+100, 26);
+  resignBtn = createImg('assets/resign.png', 'RESIGN');
+  resignBtn.position(width/2+110, 9);
+  resignBtn.id('resignIcon');
+  resignBtn.parent(document.body); 
   resignBtn.mousePressed(() => {
     gameOver = true;
     winner = 'white';
