@@ -15,7 +15,6 @@ let playagainIcon;
 let loadBtn;
 let saveBtn;
 let pieceTooltip;
-let tooltip; 
 let thickness = 30;
 let size;
 let cam;
@@ -32,7 +31,7 @@ let dragging = false;
 let currentTurn = 'White';
 let gameOver = false;
 let winner = null;
-let WhiteWinImg, BlackWinImg, stalemateImg;
+let whitewinImg, blackwinImg, stalemateImg;
 let promotionPending = false;
 let promotionPiece = null;
 let promotionButtons = [];
@@ -59,8 +58,8 @@ function preload() {
   br = loadModel('assets/Rook - Copy.obj', true);
   bgMusic = loadSound('assets/music.mp3');
   woodTexture = loadImage('assets/woodtexture.jpg');
-  WhiteWinImg = loadImage("assets/WhiteWins.png");
-  BlackWinImg = loadImage("assets/BlackWins.png");
+  whitewinImg = loadImage("assets/WhiteWins.png");
+  blackwinImg = loadImage("assets/BlackWins.png");
   stalemateImg = loadImage("assets/stalemate.png");
 }
 
@@ -215,8 +214,6 @@ function setup() {
   pieceTooltip.id('pieceTooltip');
   pieceTooltip.html('');
 
-  tooltip = document.getElementById('pieceTooltip');
-
 }
 
 function draw() {
@@ -326,11 +323,11 @@ function draw() {
       playagainIcon.show();
 
       if (winner === 'White') {
-        image(WhiteWinImg, 0, 0, windowWidth, windowHeight); 
+        image(whitewinImg, 0, 0, windowWidth, windowHeight); 
       }
 
       else if (winner === 'Black') {
-        image(BlackWinImg, 0, 0, windowWidth, windowHeight);
+        image(blackwinImg, 0, 0, windowWidth, windowHeight);
       }
       else  {
         image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
@@ -349,11 +346,11 @@ function draw() {
     playagainIcon.show();
 
     if (winner === 'White') {
-      image(WhiteWinImg, 0, 0, windowWidth, windowHeight); 
+      image(whitewinImg, 0, 0, windowWidth, windowHeight); 
     }
 
     if (winner === 'Black') {
-      image(BlackWinImg, 0, 0, windowWidth, windowHeight);
+      image(blackwinImg, 0, 0, windowWidth, windowHeight);
     }
     if  (winner ==='draw'){
       image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
