@@ -14,6 +14,7 @@ let controlIcon;
 let playagainIcon;
 let loadBtn;
 let saveBtn;
+let pieceTooltip;
 let thickness = 30;
 let size;
 let cam;
@@ -27,10 +28,10 @@ let bc;
 let pieces = [];
 let selectedPiece = null;
 let dragging = false;
-let currentTurn = 'white';
+let currentTurn = 'White';
 let gameOver = false;
 let winner = null;
-let whiteWinImg, blackWinImg, stalemateImg;
+let WhiteWinImg, BlackWinImg, stalemateImg;
 let promotionPending = false;
 let promotionPiece = null;
 let promotionButtons = [];
@@ -57,8 +58,8 @@ function preload() {
   br = loadModel('assets/Rook - Copy.obj', true);
   bgMusic = loadSound('assets/music.mp3');
   woodTexture = loadImage('assets/woodtexture.jpg');
-  whiteWinImg = loadImage("assets/whiteWins.png");
-  blackWinImg = loadImage("assets/blackWins.png");
+  WhiteWinImg = loadImage("assets/WhiteWins.png");
+  BlackWinImg = loadImage("assets/BlackWins.png");
   stalemateImg = loadImage("assets/stalemate.png");
 }
 
@@ -71,8 +72,7 @@ function setup() {
   cam.lookAt(0, 0, 0);
   angleMode(DEGREES);
   
-  
-  startBtn = createButton('Play Vs A.I');
+  startBtn = createButton('Play Vs AI');
   startBtn.addClass('start-ui');
   startBtn.mousePressed(() => {
     gameState = 'play';
@@ -86,6 +86,7 @@ function setup() {
     document.getElementById("gifBackground").style.display = "none";
     document.getElementById("gameTitle").style.display = "none";
   });
+
 
   saveBtn = createImg('assets/save.png', 'Save Game');
   saveBtn.id('saveIcon');
@@ -167,47 +168,52 @@ function setup() {
   resignBtn.parent(document.body); 
   resignBtn.mousePressed(() => {
     gameOver = true;
-    winner = 'white';
+    winner = 'White';
   });
   resignBtn.hide();
 
   //WHITE
-  pieces.push(new Pieces(0, 0, 'white', 'rook'));
-  pieces.push(new Pieces(0, 1, 'white', 'knight'));
-  pieces.push(new Pieces(0, 2, 'white', 'bishop'));
-  pieces.push(new Pieces(0, 3, 'white', 'queen'));
-  pieces.push(new Pieces(0, 4, 'white', 'king'));
-  pieces.push(new Pieces(0, 5, 'white', 'bishop'));
-  pieces.push(new Pieces(0, 6, 'white', 'knight'));
-  pieces.push(new Pieces(0, 7, 'white', 'rook'));
+  pieces.push(new Pieces(0, 0, 'White', 'Rook'));
+  pieces.push(new Pieces(0, 1, 'White', 'Knight'));
+  pieces.push(new Pieces(0, 2, 'White', 'Bishop'));
+  pieces.push(new Pieces(0, 3, 'White', 'Queen'));
+  pieces.push(new Pieces(0, 4, 'White', 'King'));
+  pieces.push(new Pieces(0, 5, 'White', 'Bishop'));
+  pieces.push(new Pieces(0, 6, 'White', 'Knight'));
+  pieces.push(new Pieces(0, 7, 'White', 'Rook'));
 
-  pieces.push(new Pieces(1, 0, 'white', 'pawn'));
-  pieces.push(new Pieces(1, 1, 'white', 'pawn'));
-  pieces.push(new Pieces(1, 2, 'white', 'pawn'));
-  pieces.push(new Pieces(1, 3, 'white', 'pawn'));
-  pieces.push(new Pieces(1, 4, 'white', 'pawn'));
-  pieces.push(new Pieces(1, 5, 'white', 'pawn'));
-  pieces.push(new Pieces(1, 6, 'white', 'pawn'));
-  pieces.push(new Pieces(1, 7, 'white', 'pawn'));
+  pieces.push(new Pieces(1, 0, 'White', 'Pawn'));
+  pieces.push(new Pieces(1, 1, 'White', 'Pawn'));
+  pieces.push(new Pieces(1, 2, 'White', 'Pawn'));
+  pieces.push(new Pieces(1, 3, 'White', 'Pawn'));
+  pieces.push(new Pieces(1, 4, 'White', 'Pawn'));
+  pieces.push(new Pieces(1, 5, 'White', 'Pawn'));
+  pieces.push(new Pieces(1, 6, 'White', 'Pawn'));
+  pieces.push(new Pieces(1, 7, 'White', 'Pawn'));
 
   // BLACK//
-  pieces.push(new Pieces(6, 0, 'black', 'pawn'));
-  pieces.push(new Pieces(6, 1, 'black', 'pawn'));
-  pieces.push(new Pieces(6, 2, 'black', 'pawn'));
-  pieces.push(new Pieces(6, 3, 'black', 'pawn'));
-  pieces.push(new Pieces(6, 4, 'black', 'pawn'));
-  pieces.push(new Pieces(6, 5, 'black', 'pawn'));
-  pieces.push(new Pieces(6, 6, 'black', 'pawn'));
-  pieces.push(new Pieces(6, 7, 'black', 'pawn'));
+  pieces.push(new Pieces(6, 0, 'Black', 'Pawn'));
+  pieces.push(new Pieces(6, 1, 'Black', 'Pawn'));
+  pieces.push(new Pieces(6, 2, 'Black', 'Pawn'));
+  pieces.push(new Pieces(6, 3, 'Black', 'Pawn'));
+  pieces.push(new Pieces(6, 4, 'Black', 'Pawn'));
+  pieces.push(new Pieces(6, 5, 'Black', 'Pawn'));
+  pieces.push(new Pieces(6, 6, 'Black', 'Pawn'));
+  pieces.push(new Pieces(6, 7, 'Black', 'Pawn'));
 
-  pieces.push(new Pieces(7, 0, 'black', 'rook'));
-  pieces.push(new Pieces(7, 1, 'black', 'knight'));
-  pieces.push(new Pieces(7, 2, 'black', 'bishop'));
-  pieces.push(new Pieces(7, 3, 'black', 'queen'));
-  pieces.push(new Pieces(7, 4, 'black', 'king'));
-  pieces.push(new Pieces(7, 5, 'black', 'bishop'));
-  pieces.push(new Pieces(7, 6, 'black', 'knight'));
-  pieces.push(new Pieces(7, 7, 'black', 'rook'));
+  pieces.push(new Pieces(7, 0, 'Black', 'Rook'));
+  pieces.push(new Pieces(7, 1, 'Black', 'Knight'));
+  pieces.push(new Pieces(7, 2, 'Black', 'Bishop'));
+  pieces.push(new Pieces(7, 3, 'Black', 'Queen'));
+  pieces.push(new Pieces(7, 4, 'Black', 'King'));
+  pieces.push(new Pieces(7, 5, 'Black', 'Bishop'));
+  pieces.push(new Pieces(7, 6, 'Black', 'Knight'));
+  pieces.push(new Pieces(7, 7, 'Black', 'Rook'));
+
+  pieceTooltip = createDiv('');
+  pieceTooltip.id('pieceTooltip');
+  pieceTooltip.html('');
+
 }
 
 function draw() {
@@ -231,6 +237,26 @@ function draw() {
     let hoveredX = 1;
     let hoveredY = 1;
 
+    let found = false;
+
+    for (let p of pieces) {
+      let pos = getBoardPosition(p.col, p.row);
+      let d = dist(worldX, worldY, pos.x, pos.y);
+
+      if (d < size * 0.5) {
+        pieceTooltip.html(p.color + ' ' + p.piece);
+        pieceTooltip.position(mouseX + 10, mouseY + 10);
+        pieceTooltip.style('display', 'block');
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      pieceTooltip.style('display', 'none');
+    }
+
+    
     // Calculate grid position for X and Y
 
     if (worldX >= -size * 4 && worldX <= size * 4 &&
@@ -243,12 +269,12 @@ function draw() {
 
     chessBoard.drawBoard(0, 0, hoveredX, hoveredY);
   }
-
+  
   if (!gameOver && gameState === 'play') {
     
     updateScoreDisplay();
-    
-    const opp = currentTurn === 'white' ? 'black' : 'white';
+
+    const opp = currentTurn === 'White' ? 'Black' : 'White';
     if (isCheckmate(opp)) {
       gameOver = true;
       winner = currentTurn;
@@ -259,7 +285,7 @@ function draw() {
       winner = 'draw';
     }
 
-    if (currentTurn === 'white' && !aiThinking) {
+    if (currentTurn === 'White' && !aiThinking) {
       aiThinking = true;
       setTimeout(() => {
         aiMoveWhite();
@@ -273,8 +299,8 @@ function draw() {
     updateScoreDisplay();
     
     resignBtn.hide();
-    
-    const opp = currentTurn === 'white' ? 'black' : 'white';
+
+    const opp = currentTurn === 'White' ? 'Black' : 'White';
     if (isCheckmate(opp)) {
       gameOver = true;
       winner = currentTurn;
@@ -287,7 +313,6 @@ function draw() {
       playagainIcon.show();
     }
 
-
     if (gameOver) {
       cam.setPosition(0, 0, 500);
       cam.lookAt(0, 0, 0);
@@ -297,17 +322,16 @@ function draw() {
       infoIcon.hide();
       playagainIcon.show();
 
-      if (winner === 'white') {
-        image(whiteWinImg, 0, 0, windowWidth, windowHeight); 
+      if (winner === 'White') {
+        image(WhiteWinImg, 0, 0, windowWidth, windowHeight); 
       }
 
-      else if (winner === 'black') {
-        image(blackWinImg, 0, 0, windowWidth, windowHeight);
+      else if (winner === 'Black') {
+        image(BlackWinImg, 0, 0, windowWidth, windowHeight);
       }
       else  {
         image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
       }
-    
     
     }
   }
@@ -321,12 +345,12 @@ function draw() {
     infoIcon.hide();
     playagainIcon.show();
 
-    if (winner === 'white') {
-      image(whiteWinImg, 0, 0, windowWidth, windowHeight); 
+    if (winner === 'White') {
+      image(WhiteWinImg, 0, 0, windowWidth, windowHeight); 
     }
 
-    if (winner === 'black') {
-      image(blackWinImg, 0, 0, windowWidth, windowHeight);
+    if (winner === 'Black') {
+      image(BlackWinImg, 0, 0, windowWidth, windowHeight);
     }
     if  (winner ==='draw'){
       image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
@@ -357,16 +381,16 @@ function updateScoreDisplay() {
   }
 
   const pieceValues = {
-    pawn: 1,
-    knight: 3,
-    bishop: 3,
-    rook: 5,
-    queen: 9
+    Pawn: 1,
+    Knight: 3,
+    Bishop: 3,
+    Rook: 5,
+    Queen: 9
   };
 
   const initialCounts = {
-    white: { pawn: 8, knight: 2, bishop: 2, rook: 2, queen: 1 },
-    black: { pawn: 8, knight: 2, bishop: 2, rook: 2, queen: 1 }
+    White: { Pawn: 8, Knight: 2, Bishop: 2, Rook: 2, Queen: 1 },
+    Black: { Pawn: 8, Knight: 2, Bishop: 2, Rook: 2, Queen: 1 }
   };
 
   for (let p of pieces) {
@@ -375,17 +399,16 @@ function updateScoreDisplay() {
     }
   }
 
-  let whiteScore = 0;
-  let blackScore = 0;
+  let WhiteScore = 0;
+  let BlackScore = 0;
 
   for (let piece in pieceValues) {
-    whiteScore += initialCounts.black[piece] * pieceValues[piece];
-    blackScore += initialCounts.white[piece] * pieceValues[piece];
+    WhiteScore += initialCounts.Black[piece] * pieceValues[piece];
+    BlackScore += initialCounts.White[piece] * pieceValues[piece];
   }
 
-  scoreDiv.innerText = `White: ${whiteScore} | Black: ${blackScore}`;
+  scoreDiv.innerText = `White: ${WhiteScore} | Black: ${BlackScore}`;
 }
-
 
 //-------------------//
 //     PIECES       //
@@ -423,17 +446,17 @@ class Pieces {
     scale(0.45);
     strokeWeight(0.8);
     switch (this.color) {
-    case 'white':
+    case 'White':
       fill(215, 210, 225);
       specularMaterial(215, 210, 225); break;
-    case 'black':
+    case 'Black':
       fill(139, 69, 19);
       specularMaterial(139, 69, 19); break;
     }
     
     switch (this.piece) {
-    case 'bishop':
-      if (this.color === 'white') {
+    case 'Bishop':
+      if (this.color === 'White') {
         model(biW);
       }
       else {
@@ -441,8 +464,8 @@ class Pieces {
       }
       break;
 
-    case 'pawn':
-      if (this.color === 'white') {
+    case 'Pawn':
+      if (this.color === 'White') {
         model(wp);
       }
       else {
@@ -450,8 +473,8 @@ class Pieces {
       }
       break;
 
-    case 'rook':
-      if (this.color === 'white') {
+    case 'Rook':
+      if (this.color === 'White') {
         model(wr);
       }
       else {
@@ -459,8 +482,8 @@ class Pieces {
       }
       break;
 
-    case 'knight':
-      if (this.color === 'white') {
+    case 'Knight':
+      if (this.color === 'White') {
         model(wkni);
       }
       else {
@@ -468,8 +491,8 @@ class Pieces {
       }
       break;
 
-    case 'king':
-      if (this.color === 'white') {
+    case 'King':
+      if (this.color === 'White') {
         model(wk);
       }
       else {
@@ -477,8 +500,8 @@ class Pieces {
       }
       break;
 
-    case 'queen':
-      if (this.color === 'white') {
+    case 'Queen':
+      if (this.color === 'White') {
         model(qw);
       }
       else {
@@ -492,7 +515,6 @@ class Pieces {
   }
 
 }
-
 
 function pieceAt(row, col) {
   return pieces.find(p => p.row === row && p.col === col);
@@ -522,7 +544,6 @@ function mousePressed() {
     return;
   }
   
-
   let x = mouseX - width / 2;
   let y = mouseY - height / 2;
   let col = Math.floor((y + size * 4) / size);
@@ -551,7 +572,7 @@ function legalMove(newRow, newCol) {
   }
 
   const target = pieces.find(p => p.col === newCol && p.row === newRow);
-  if (target && target.piece === 'king') {
+  if (target && target.piece === 'King') {
     return false;
   } 
   if (target && target.color === selectedPiece.color) {
@@ -566,13 +587,11 @@ function legalMove(newRow, newCol) {
   const dr = newCol - selectedPiece.col;  // ****Flip column and row logic
   const dc = newRow - selectedPiece.row;  // ****Flip column and row logic
  
-
   switch (selectedPiece.piece) {
-  case 'pawn':
-    const dir = selectedPiece.color === 'white' ? 1 : -1;
-    const startCol = selectedPiece.color === 'white' ? 1 : 6;
+  case 'Pawn':
+    const dir = selectedPiece.color === 'White' ? 1 : -1;
+    const startCol = selectedPiece.color === 'White' ? 1 : 6;
       
-
     if (dc === 0 && !target) {
       // forward
       if (dr === dir || selectedPiece.col === startCol && dr === 2 * dir &&
@@ -587,34 +606,32 @@ function legalMove(newRow, newCol) {
       return true;
     }
     
-    
     return false;
     
-
-  case 'rook':
+  case 'Rook':
     if (dr === 0 || dc === 0) {
       return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
     }
     return false;
 
-  case 'bishop':
+  case 'Bishop':
     if (Math.abs(dr) === Math.abs(dc)) {
       return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
     }
     return false;
 
-  case 'queen':
+  case 'Queen':
     if (Math.abs(dr) === Math.abs(dc) || dr === 0 || dc === 0) {
       return isPathClear(selectedPiece.row, selectedPiece.col, newRow, newCol);
     }
     return false;
 
-  case 'king':
+  case 'King':
     return Math.abs(dr) <= 1 && Math.abs(dc) <= 1;
 
     
 
-  case 'knight':
+  case 'Knight':
     return Math.abs(dr) === 2 && Math.abs(dc) === 1 || Math.abs(dr) === 1 && Math.abs(dc) === 2;
       
   }
@@ -632,8 +649,8 @@ function legalMove2(currPiece, newRow, newCol) {
   }
 
   const target = pieces.find(p => p.col === newCol && p.row === newRow);
-  // Cannot capture own pieces or own king
-  if (target && target.piece === 'king' && target.color === currPiece.color) {
+  // Cannot capture own pieces or own King
+  if (target && target.piece === 'King' && target.color === currPiece.color) {
     return false;
   }
   if (target && target.color === currPiece.color) {
@@ -644,9 +661,9 @@ function legalMove2(currPiece, newRow, newCol) {
   const dc = newRow - currPiece.row;  // ****Flip column and row logic (unchanged)
 
   switch (currPiece.piece) {
-  case 'pawn':
-    const dir = currPiece.color === 'white' ? 1 : -1;
-    const startCol = currPiece.color === 'white' ? 1 : 6;
+  case 'Pawn':
+    const dir = currPiece.color === 'White' ? 1 : -1;
+    const startCol = currPiece.color === 'White' ? 1 : 6;
     // Forward move
     if (dc === 0 && !target) {
       if (dr === dir || currPiece.col === startCol && dr === 2 * dir &&
@@ -660,53 +677,53 @@ function legalMove2(currPiece, newRow, newCol) {
     }
     return false;
 
-  case 'rook':
+  case 'Rook':
     if (dr === 0 || dc === 0) {
       return isPathClear(currPiece.row, currPiece.col, newRow, newCol);
     }
     return false;
 
-  case 'bishop':
+  case 'Bishop':
     if (Math.abs(dr) === Math.abs(dc)) {
       return isPathClear(currPiece.row, currPiece.col, newRow, newCol);
     }
     return false;
 
-  case 'queen':
+  case 'Queen':
     if (Math.abs(dr) === Math.abs(dc) || dr === 0 || dc === 0) {
       return isPathClear(currPiece.row, currPiece.col, newRow, newCol);
     }
     return false;
 
-  case 'king':
+  case 'King':
     return Math.abs(dr) <= 1 && Math.abs(dc) <= 1;
 
-  case 'knight':
+  case 'Knight':
     return Math.abs(dr) === 2 && Math.abs(dc) === 1 ||
              Math.abs(dr) === 1 && Math.abs(dc) === 2;
   }
 }
 
 function isInCheck(color) {
-  // Find the king 
-  const king = pieces.find(p => p.piece === 'king' && p.color === color);
-  if (!king) {
+  // Find the King 
+  const King = pieces.find(p => p.piece === 'King' && p.color === color);
+  if (!King) {
     return false;
   } 
-  // Check if any enemy piece can move to the king's position
+  // Check if any enemy piece can move to the King's position
   for (let p of pieces) {
     if (p.color !== color) {
-      if (legalMove2(p,king.row, king.col)) {
+      if (legalMove2(p,King.row, King.col)) {
         return true; 
       }
     }
   }
 
-  return false; // No enemy piece can attack the king
+  return false; // No enemy piece can attack the King
 }
 
 function isCheckmate(color) {
-  // If king is not in check, it's not checkmate
+  // If King is not in check, it's not checkmate
   if (!isInCheck(color)) {
     return false;
   }
@@ -753,7 +770,7 @@ function isCheckmate(color) {
     }
   }
 
-  return true; // Tried all moves, none save the king -> checkmate
+  return true; // Tried all moves, none save the King -> checkmate
 }
 
 function isStalemate(color) {
@@ -793,7 +810,7 @@ function isStalemate(color) {
           }
 
           if (!stillInCheck) {
-            return false; // Found at least one legal move that doesn't leave king in check
+            return false; // Found at least one legal move that doesn't leave King in check
           }
         }
       }
@@ -842,13 +859,13 @@ function mouseReleased() {
         return;
       }
 
-      // Handle pawn promotion
-      if (selectedPiece.piece === 'pawn' &&
+      // Handle Pawn promotion
+      if (selectedPiece.piece === 'Pawn' &&
          (selectedPiece.col === 0 || selectedPiece.col === 7)) {
-        pawnPromotion();
+        PawnPromotion();
       }
       else {
-        const opponentColor = currentTurn === 'white' ? 'black' : 'white';
+        const opponentColor = currentTurn === 'White' ? 'Black' : 'White';
 
         // Check for checkmate
         if (isCheckmate(opponentColor)) {
@@ -864,7 +881,7 @@ function mouseReleased() {
 
         else {
           currentTurn = opponentColor;
-          if (gameState === 'play' && currentTurn === 'white') {
+          if (gameState === 'play' && currentTurn === 'White') {
             aiThinking = true;
             setTimeout(() => {
               aiMoveWhite();
@@ -959,7 +976,7 @@ class ChessBoard {
   }
 }
  
-function pawnPromotion() {
+function PawnPromotion() {
   
   if (!promotionInProgress) {
     promotionInProgress = true;
@@ -978,11 +995,10 @@ function pawnPromotion() {
       b.remove();
       k.remove();
 
-
       //RECHECK THE CHECKMATE AND RETURN THE WINNER IF AFTER THE PAWN PROMOTION KING HAS BEEN GIVEN A CHECKMATE
       //As in the mouse released function the checkmate is called after a leagal move
       // to prevent the program from crashing out this detection was added 
-      const opponentColor = currentTurn === 'white' ? 'black' : 'white';
+      const opponentColor = currentTurn === 'White' ? 'Black' : 'White';
       if (isCheckmate(opponentColor)) {
         gameOver = true;
         winner = currentTurn;
@@ -998,10 +1014,10 @@ function pawnPromotion() {
       selectedPiece = null; 
     }
 
-    q.mousePressed(() => promoteTo("queen"));
-    r.mousePressed(() => promoteTo("rook"));
-    b.mousePressed(() => promoteTo("bishop"));
-    k.mousePressed(() => promoteTo("knight"));
+    q.mousePressed(() => promoteTo("Queen"));
+    r.mousePressed(() => promoteTo("Rook"));
+    b.mousePressed(() => promoteTo("Bishop"));
+    k.mousePressed(() => promoteTo("Knight"));
   }
 }
 
@@ -1048,7 +1064,7 @@ function loadGameState() {
 
     // Delay AI move to prevent false stalemate or checkmate
     setTimeout(() => {
-      if (!gameOver && gameState === 'play' && currentTurn === 'white') {
+      if (!gameOver && gameState === 'play' && currentTurn === 'White') {
         aiThinking = true;
         setTimeout(() => {
           aiMoveWhite();
@@ -1068,40 +1084,38 @@ function simulateCheckmate() {
   gameState = 'testing'; 
 
   // White pieces
-  pieces.push(new Pieces(1, 3, 'white', 'rook'));  
-  pieces.push(new Pieces(2, 0, 'white', 'king'));  
+  pieces.push(new Pieces(1, 3, 'White', 'Rook'));  
+  pieces.push(new Pieces(2, 0, 'White', 'King'));  
 
   // Black pieces
-  pieces.push(new Pieces(0, 0, 'black', 'king'));  
-  pieces.push(new Pieces(6, 7, 'black', 'pawn'));  
+  pieces.push(new Pieces(0, 0, 'Black', 'King'));  
+  pieces.push(new Pieces(6, 7, 'Black', 'Pawn'));  
 
-  currentTurn = 'white'; 
+  currentTurn = 'White'; 
 }
 
 function setupStalemateTest() {
   pieces = [];
   gameState = 'testing'; 
-  // White king on f7 (row 1, col 5)
-  pieces.push(new Pieces( 1, 5, 'white', 'king'));
 
-  // White queen on g6 (row 2, col 6)
-  pieces.push(new Pieces( 2, 6, 'white','queen'));
+  pieces.push(new Pieces( 1, 5, 'White', 'King'));
 
-  // Black king on h8 (row 0, col 7)
-  pieces.push(new Pieces( 0, 7, 'black','king'));
-  currentTurn = 'black'; 
+  pieces.push(new Pieces( 2, 6, 'White','Queen'));
+
+  pieces.push(new Pieces( 0, 7, 'Black','King'));
+  currentTurn = 'Black'; 
   
-  console.log("Stalemate for black?", isStalemate('black'));
+  console.log("Stalemate for Black?", isStalemate('Black'));
 }
 
-function pawnpro() {
+function Pawnpro() {
   pieces = []; 
   gameState = 'testing'; 
   // White pieces
-  pieces.push(new Pieces(1, 0, 'black', 'pawn'));  
-  pieces.push(new Pieces(6, 0, 'white', 'pawn')); 
+  pieces.push(new Pieces(1, 0, 'Black', 'Pawn'));  
+  pieces.push(new Pieces(6, 0, 'White', 'Pawn')); 
 
-  currentTurn = 'white'; 
+  currentTurn = 'White'; 
 }
 
 function keyPressed() {
@@ -1109,7 +1123,7 @@ function keyPressed() {
     simulateCheckmate(); 
   }
   if (key === 'P' || key === 'p') {
-    pawnpro(); 
+    Pawnpro(); 
   }
   if (key === 'S' || key === 's') {
     setupStalemateTest(); 

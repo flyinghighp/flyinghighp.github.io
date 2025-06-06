@@ -1,18 +1,18 @@
 function evaluateBoard() {
   const values = {
-    pawn: 1,
-    knight: 3.2,
-    bishop: 3.3,
-    rook: 5,
-    queen: 9,
-    king: 0  // we don’t give points for the king here since checkmate is scored separately
+    Pawn: 1,
+    Knight: 3.2,
+    Bishop: 3.3,
+    Rook: 5,
+    Queen: 9,
+    King: 0  // we don’t give points for the King here since checkmate is scored separately
   };
 
   // Give a huge bonus if the AI checkmates, and punish if it causes a stalemate
-  if (isCheckmate('black')) {
+  if (isCheckmate('Black')) {
     return 1000;
   }
-  if (isStalemate('black')) {
+  if (isStalemate('Black')) {
     return -50;
   }
 
@@ -28,12 +28,12 @@ function evaluateBoard() {
     }
 
     // Pawns get a bonus the further they’ve advanced
-    if (p.piece === 'pawn') {
-      bonus += (p.color === 'white' ? p.col : 7 - p.col) * 0.1;
+    if (p.piece === 'Pawn') {
+      bonus += (p.color === 'White' ? p.col : 7 - p.col) * 0.1;
     }
 
-    // Penalize the king if it’s too exposed — fewer friendly pieces nearby
-    if (p.piece === 'king') {
+    // Penalize the King if it’s too exposed — fewer friendly pieces nearby
+    if (p.piece === 'King') {
       const surrounding = [
         pieceAt(p.row - 1, p.col), pieceAt(p.row + 1, p.col),
         pieceAt(p.row, p.col - 1), pieceAt(p.row, p.col + 1)
@@ -55,8 +55,8 @@ function evaluateBoard() {
       }
     }
 
-    // White pieces add to the score, black pieces subtract
-    score += (value + bonus) * (p.color === 'white' ? 1 : -1);
+    // White pieces add to the score, Black pieces subtract
+    score += (value + bonus) * (p.color === 'White' ? 1 : -1);
   }
 
   return score;
@@ -117,7 +117,7 @@ function generateLegalMoves(color) {
           pieces = pieces.filter(x => x !== captured);
         }
 
-        // Only keep the move if it doesn’t leave the king in check
+        // Only keep the move if it doesn’t leave the King in check
         if (!isInCheck(color)) {
           moves.push({ piece: p, row: r, col: c, captured });
         }
@@ -140,7 +140,7 @@ function minimax(depth, maximizingPlayer) {
     return evaluateBoard();  // base case: evaluate this board position
   }
 
-  const color = maximizingPlayer ? 'white' : 'black';
+  const color = maximizingPlayer ? 'White' : 'Black';
   const moves = generateLegalMoves(color);
   if (moves.length === 0) {
     return evaluateBoard();  // no legal moves, return score
@@ -168,11 +168,11 @@ function minimax(depth, maximizingPlayer) {
 }
 
 function aiMoveWhite() {
-  if (currentTurn !== 'white' || gameOver) {
+  if (currentTurn !== 'White' || gameOver) {
     return;
   }
 
-  const moves = generateLegalMoves('white');
+  const moves = generateLegalMoves('White');
   let bestScore = -Infinity;
   let bestMoves = [];
 
@@ -181,11 +181,11 @@ function aiMoveWhite() {
     let captureBonus = 0;
     if (move.captured) {
       const captureValues = {
-        pawn: 1,
-        knight: 3.2,
-        bishop: 3.3,
-        rook: 5,
-        queen: 9
+        Pawn: 1,
+        Knight: 3.2,
+        Bishop: 3.3,
+        Rook: 5,
+        Queen: 9
       };
       captureBonus = captureValues[move.captured.piece] || 0;
     }
@@ -194,7 +194,6 @@ function aiMoveWhite() {
     const score = minimax(4, false) + captureBonus * 0.3;
     undoMove(move);
 
-   
     // Collect best-scoring moves (not just one)
     if (score > bestScore - 0.2) {
       if (score > bestScore) {
@@ -212,17 +211,17 @@ function aiMoveWhite() {
     const chosen = random(bestMoves); 
     makeMove(chosen);
 
-    // Promote pawns that reach the back rank
-    if (chosen.piece.piece === 'pawn' && (chosen.piece.col === 0 || chosen.piece.col === 7)) {
-      chosen.piece.piece = 'queen';
+    // Promote Pawns that reach the back rank
+    if (chosen.piece.piece === 'Pawn' && (chosen.piece.col === 0 || chosen.piece.col === 7)) {
+      chosen.piece.piece = 'Queen';
     }
 
-    const opponentColor = 'black';
+    const opponentColor = 'Black';
 
     // Check for checkmate
     if (isCheckmate(opponentColor)) {
       gameOver = true;
-      winner = 'white';
+      winner = 'White';
 
     // Avoid stalemate unless the position is already really bad
     }
@@ -230,9 +229,8 @@ function aiMoveWhite() {
       
       gameOver = true;
       winner = 'draw';
-      
-
-    // Switch turn to black
+        
+    // Switch turn to Black
     }
     else {
       currentTurn = opponentColor;

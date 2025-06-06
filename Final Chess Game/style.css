@@ -124,6 +124,20 @@ canvas {
   user-select: none;
 }
 
+#pieceTooltip {
+  position: fixed;
+  background: rgba(51, 51, 51, 0.95); 
+  color: White;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  display: none;
+  pointer-events: none;
+  z-index: 9999;
+  font-family: sans-serif;
+  White-space: nowrap;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+}
 
 
 
