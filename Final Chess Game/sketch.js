@@ -15,6 +15,7 @@ let playagainIcon;
 let loadBtn;
 let saveBtn;
 let pieceTooltip;
+let tooltip; 
 let thickness = 30;
 let size;
 let cam;
@@ -213,6 +214,8 @@ function setup() {
   pieceTooltip = createDiv('');
   pieceTooltip.id('pieceTooltip');
   pieceTooltip.html('');
+
+  tooltip = document.getElementById('pieceTooltip');
 
 }
 
