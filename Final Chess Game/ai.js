@@ -210,6 +210,8 @@ function aiMoveWhite() {
   if (bestMoves.length > 0) {
     const chosen = random(bestMoves); 
     makeMove(chosen);
+    moveMusic.setVolume(1);
+    moveMusic.play();
 
     // Promote Pawns that reach the back rank
     if (chosen.piece.piece === 'Pawn' && (chosen.piece.col === 0 || chosen.piece.col === 7)) {

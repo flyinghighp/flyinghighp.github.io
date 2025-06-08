@@ -1,0 +1,7 @@
+https://p5js.org/reference/
+https://www.w3schools.com/css/css3_user_interface.asp
+https://www.w3schools.com/css/css_tooltip.asp
+https://www.w3schools.com/css/css3_backgrounds.asp
+https://www.youtube.com/watch?v=Qv0fvm5B0EM&pp=0gcJCdgAo7VqN5tD
+https://www.youtube.com/watch?v=wYRRVRrK0R8
+https://dev.to/zeyu2001/build-a-simple-chess-ai-in-javascript-18eg

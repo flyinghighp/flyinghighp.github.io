@@ -9,6 +9,7 @@ let ovoBtn;
 let resignBtn;
 let bgMusic;
 let isMuted = false;
+let moveMusic;
 let infoIcon;
 let controlIcon;
 let playagainIcon;
@@ -57,6 +58,7 @@ function preload() {
   wr = loadModel('assets/Rook.obj', true);
   br = loadModel('assets/Rook - Copy.obj', true);
   bgMusic = loadSound('assets/music.mp3');
+  moveMusic = loadSound('assets/pieceMovement.mp3');
   woodTexture = loadImage('assets/woodtexture.jpg');
   whitewinImg = loadImage("assets/whiteWins.png");
   blackwinImg = loadImage("assets/blackWins.png");
@@ -71,6 +73,7 @@ function setup() {
   cam.setPosition(0, 100, 900);
   cam.lookAt(0, 0, 0);
   angleMode(DEGREES);
+  moveMusic.setVolume(0);
   
   startBtn = createButton('Play Vs AI');
   startBtn.addClass('start-ui');
@@ -843,10 +846,14 @@ function mouseReleased() {
 
       selectedPiece.row = newRow;
       selectedPiece.col = newCol;
+      moveMusic.setVolume(1);
+      moveMusic.play();
       if (captured) {
         pieces = pieces.filter(p => p !== captured);
+        moveMusic.setVolume(1);
+        moveMusic.play();
       }
-
+      
       // Check if move puts self in check (illegal)
       if (isInCheck(currentTurn)) {
         selectedPiece.row = originalRow;
