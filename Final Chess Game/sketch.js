@@ -330,14 +330,14 @@ function draw() {
         image(whitewinImg, 0, 0, windowWidth, windowHeight); 
       }
 
-      if (winner === 'Black') {
+      else if (winner === 'Black') {
         image(blackwinImg, 0, 0, windowWidth, windowHeight);
       }
-      if (winner === 'draw')
+      else if (winner === 'draw')
         image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
       }
-      if(winner ==='byInsufficientMaterial'){
-        image(insufficentmaterialdrawImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
+      if (winner ==='byInsufficientMaterial'){
+        image(insufficentmaterialdrawImg, 0, 0, windowWidth, windowHeight);
       }
 
     }
@@ -834,11 +834,21 @@ function isInsufficientMaterial(){
 
   //Only Kings
   if (count === 2){
+    let allKings = true;
+    for (let i = 0; i < pieces.length; i++){
+      if (pieces[i].piece !=='King'){
+        allKings = false;
+        break;
+      }
+    }
+    if(allKings){
+      return true;
+    }
+  }
     
-   
   //Case 2 
   return false;
-  }
+  
 }
 function mouseReleased() {
   if (gameOver) {
