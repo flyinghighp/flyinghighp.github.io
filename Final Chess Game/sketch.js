@@ -330,13 +330,16 @@ function draw() {
         image(whitewinImg, 0, 0, windowWidth, windowHeight); 
       }
 
-      else if (winner === 'Black') {
+      if (winner === 'Black') {
         image(blackwinImg, 0, 0, windowWidth, windowHeight);
       }
-      else  {
+      if (winner === 'draw')
         image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
       }
-    
+      if(winner ==='byInsufficientMaterial'){
+        image(insufficentmaterialdrawImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
+      }
+
     }
   }
 
@@ -359,10 +362,11 @@ function draw() {
     if  (winner ==='draw'){
       image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
     }
-    
-    
+    if  (winner ==='byInsufficientMaterial'){
+      image(insufficentmaterialdrawImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
+    }
   }
-}
+
 
 function getBoardPosition(row, col, z = 60) {
   const x = -size * 4 + col * size + size / 2;
@@ -825,6 +829,17 @@ function isStalemate(color) {
   
 }
 
+function isInsufficientMaterial(){
+  const count = pieces.length;
+
+  //Only Kings
+  if (count === 2){
+    
+   
+  //Case 2 
+  return false;
+  }
+}
 function mouseReleased() {
   if (gameOver) {
     return;
@@ -883,9 +898,11 @@ function mouseReleased() {
         if (isStalemate(opponentColor)) {
           gameOver = true;
           winner = 'draw';
-          console.log("Stalemate! The game is a draw.");
         }
-
+        if (isInsufficientMaterial()) {
+          gameOver = true;
+          winner = 'byInsufficientMaterial';
+        }
         else {
           currentTurn = opponentColor;
           if (gameState === 'play' && currentTurn === 'White') {
@@ -1111,6 +1128,17 @@ function setupStalemateTest() {
   
   console.log("Stalemate for Black?", isStalemate('Black'));
 }
+function setupisInsufficientMaterialTest() {
+  pieces = [];
+  gameState = 'testing'; 
+
+  pieces.push(new Pieces( 1, 5, 'White', 'King'));
+
+  pieces.push(new Pieces( 0, 7, 'Black','King'));
+  currentTurn = 'Black'; 
+  
+  console.log("isInsufficent Material?", isInsufficientMaterial('true'));
+}
 
 function Pawnpro() {
   pieces = []; 
@@ -1131,6 +1159,9 @@ function keyPressed() {
   }
   if (key === 'S' || key === 's') {
     setupStalemateTest(); 
+  }
+  if (key === 'w' || key === 'W') {
+    setupisInsufficientMaterialTest(); 
   }
   
 }

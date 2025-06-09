@@ -224,15 +224,17 @@ function aiMoveWhite() {
     if (isCheckmate(opponentColor)) {
       gameOver = true;
       winner = 'White';
-
-    // Avoid stalemate unless the position is already really bad
     }
-    else if (isStalemate(opponentColor)) {
+    // Check for stalemate
+    if (isStalemate(opponentColor)) {
       
       gameOver = true;
       winner = 'draw';
-        
-    // Switch turn to Black
+    }
+    // Check for InsufficientMaterial
+    if (isInsufficientMaterial()) {
+      gameOver = true;
+      winner = 'byInsufficientMaterial';
     }
     else {
       currentTurn = opponentColor;
