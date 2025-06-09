@@ -32,7 +32,7 @@ let dragging = false;
 let currentTurn = 'White';
 let gameOver = false;
 let winner = null;
-let whitewinImg, blackwinImg, stalemateImg;
+let whitewinImg, blackwinImg, stalemateImg, insufficentmaterialdrawImg; 
 let promotionPending = false;
 let promotionPiece = null;
 let promotionButtons = [];
@@ -63,6 +63,7 @@ function preload() {
   whitewinImg = loadImage("assets/whiteWins.png");
   blackwinImg = loadImage("assets/blackWins.png");
   stalemateImg = loadImage("assets/stalemate.png");
+  insufficentmaterialdrawImg = loadImage("assets/drawByInsufficient.png");
 }
 
 function setup() {
@@ -357,7 +358,6 @@ function draw() {
     }
     if  (winner ==='draw'){
       image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
-      console.log("Stalemate");
     }
     
     
@@ -1002,15 +1002,12 @@ function PawnPromotion() {
       b.remove();
       k.remove();
 
-      //RECHECK THE CHECKMATE AND RETURN THE WINNER IF AFTER THE PAWN PROMOTION KING HAS BEEN GIVEN A CHECKMATE
-      //As in the mouse released function the checkmate is called after a leagal move
-      // to prevent the program from crashing out this detection was added 
       const opponentColor = currentTurn === 'White' ? 'Black' : 'White';
       if (isCheckmate(opponentColor)) {
         gameOver = true;
         winner = currentTurn;
       }
-      if (isStalemate) {
+      else if (isStalemate(opponentColor)) {
         gameOver = true;
         winner = 'draw';
       }
