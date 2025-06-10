@@ -231,11 +231,6 @@ function aiMoveWhite() {
       gameOver = true;
       winner = 'draw';
     }
-    // Check for InsufficientMaterial
-    if (isInsufficientMaterial()) {
-      gameOver = true;
-      winner = 'byInsufficientMaterial';
-    }
     else {
       currentTurn = opponentColor;
     }

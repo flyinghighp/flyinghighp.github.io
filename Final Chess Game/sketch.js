@@ -32,7 +32,7 @@ let dragging = false;
 let currentTurn = 'White';
 let gameOver = false;
 let winner = null;
-let whitewinImg, blackwinImg, stalemateImg, insufficentmaterialdrawImg; 
+let whitewinImg, blackwinImg, stalemateImg; 
 let promotionPending = false;
 let promotionPiece = null;
 let promotionButtons = [];
@@ -61,9 +61,8 @@ function preload() {
   moveMusic = loadSound('assets/pieceMovement.mp3');
   woodTexture = loadImage('assets/woodtexture.jpg');
   whitewinImg = loadImage("assets/whiteWins.png");
-  blackwinImg = loadImage("assets/blackWins.png");
+  blackwinImg = loadImage("assets/blackwins.png");
   stalemateImg = loadImage("assets/stalemate.png");
-  insufficentmaterialdrawImg = loadImage("assets/drawByInsufficient.png");
 }
 
 function setup() {
@@ -223,11 +222,11 @@ function setup() {
 function draw() {
 
   if (gameState === 'menu') {
-    
+
     background(30);
     return; 
   }
-  
+
   if(!gameOver){
     background(0);
     ambientLight(255);
@@ -260,7 +259,7 @@ function draw() {
       pieceTooltip.style('display', 'none');
     }
 
-    
+
     // Calculate grid position for X and Y
 
     if (worldX >= -size * 4 && worldX <= size * 4 &&
@@ -273,9 +272,9 @@ function draw() {
 
     chessBoard.drawBoard(0, 0, hoveredX, hoveredY);
   }
-  
+
   if (!gameOver && gameState === 'play') {
-    
+
     updateScoreDisplay();
 
     const opp = currentTurn === 'White' ? 'Black' : 'White';
@@ -283,7 +282,7 @@ function draw() {
       gameOver = true;
       winner = currentTurn;
     }
-    
+
     if (isStalemate(opp)) {
       gameOver = true;
       winner = 'draw';
@@ -301,7 +300,7 @@ function draw() {
 
   if (!gameOver && gameState === 'ovo') {
     updateScoreDisplay();
-    
+
     resignBtn.hide();
 
     const opp = currentTurn === 'White' ? 'Black' : 'White';
@@ -310,7 +309,7 @@ function draw() {
       winner = currentTurn;
       playagainIcon.show();
     }
-    
+
     if (isStalemate(opp)) {
       gameOver = true;
       winner = 'draw';
@@ -333,11 +332,8 @@ function draw() {
       else if (winner === 'Black') {
         image(blackwinImg, 0, 0, windowWidth, windowHeight);
       }
-      else if (winner === 'draw')
+      else  {
         image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
-      }
-      if (winner ==='byInsufficientMaterial'){
-        image(insufficentmaterialdrawImg, 0, 0, windowWidth, windowHeight);
       }
 
     }
@@ -361,11 +357,12 @@ function draw() {
     }
     if  (winner ==='draw'){
       image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
+      console.log("Stalemate");
     }
-    if  (winner ==='byInsufficientMaterial'){
-      image(insufficentmaterialdrawImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
-    }
+
+
   }
+}
 
 
 function getBoardPosition(row, col, z = 60) {
@@ -829,27 +826,6 @@ function isStalemate(color) {
   
 }
 
-function isInsufficientMaterial(){
-  const count = pieces.length;
-
-  //Only Kings
-  if (count === 2){
-    let allKings = true;
-    for (let i = 0; i < pieces.length; i++){
-      if (pieces[i].piece !=='King'){
-        allKings = false;
-        break;
-      }
-    }
-    if(allKings){
-      return true;
-    }
-  }
-    
-  //Case 2 
-  return false;
-  
-}
 function mouseReleased() {
   if (gameOver) {
     return;
@@ -908,10 +884,6 @@ function mouseReleased() {
         if (isStalemate(opponentColor)) {
           gameOver = true;
           winner = 'draw';
-        }
-        if (isInsufficientMaterial()) {
-          gameOver = true;
-          winner = 'byInsufficientMaterial';
         }
         else {
           currentTurn = opponentColor;
@@ -1138,17 +1110,6 @@ function setupStalemateTest() {
   
   console.log("Stalemate for Black?", isStalemate('Black'));
 }
-function setupisInsufficientMaterialTest() {
-  pieces = [];
-  gameState = 'testing'; 
-
-  pieces.push(new Pieces( 1, 5, 'White', 'King'));
-
-  pieces.push(new Pieces( 0, 7, 'Black','King'));
-  currentTurn = 'Black'; 
-  
-  console.log("isInsufficent Material?", isInsufficientMaterial('true'));
-}
 
 function Pawnpro() {
   pieces = []; 
@@ -1170,9 +1131,7 @@ function keyPressed() {
   if (key === 'S' || key === 's') {
     setupStalemateTest(); 
   }
-  if (key === 'w' || key === 'W') {
-    setupisInsufficientMaterialTest(); 
-  }
+
   
 }
 
