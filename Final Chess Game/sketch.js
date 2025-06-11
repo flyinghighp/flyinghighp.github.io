@@ -32,7 +32,7 @@ let dragging = false;
 let currentTurn = 'White';
 let gameOver = false;
 let winner = null;
-let whitewinImg, blackwinImg, stalemateImg; 
+let whitewinImg, blackwinImg, stalemateImg, drawImg; 
 let promotionPending = false;
 let promotionPiece = null;
 let promotionButtons = [];
@@ -63,6 +63,7 @@ function preload() {
   whitewinImg = loadImage("assets/whiteWins.png");
   blackwinImg = loadImage("assets/blackwins.png");
   stalemateImg = loadImage("assets/stalemate.png");
+  drawImg = loadImage("assets/drawByInsufficient.png");
 }
 
 function setup() {
@@ -241,7 +242,7 @@ function draw() {
     let hoveredY = 1;
 
     let found = false;
-
+    
     for (let p of pieces) {
       let pos = getBoardPosition(p.col, p.row);
       let d = dist(worldX, worldY, pos.x, pos.y);
@@ -287,6 +288,10 @@ function draw() {
       gameOver = true;
       winner = 'draw';
     }
+    if (isDraw(opp)){
+      gameOver = true;
+      winner = 'byInsufficient';
+    }
 
     if (currentTurn === 'White' && !aiThinking) {
       aiThinking = true;
@@ -315,6 +320,11 @@ function draw() {
       winner = 'draw';
       playagainIcon.show();
     }
+    if (isDraw(opp)){
+      gameOver = true;
+      winner = 'byInsufficient';
+      playagainIcon.show;
+    }
 
     if (gameOver) {
       cam.setPosition(0, 0, 500);
@@ -331,6 +341,10 @@ function draw() {
 
       else if (winner === 'Black') {
         image(blackwinImg, 0, 0, windowWidth, windowHeight);
+      }
+      else if (winner === 'byInsufficient'){
+        imageMode(CENTER);
+        image(drawImg, 0, 0, windowWidth, windowHeight); 
       }
       else  {
         image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
@@ -354,6 +368,10 @@ function draw() {
 
     if (winner === 'Black') {
       image(blackwinImg, 0, 0, windowWidth, windowHeight);
+    }
+    if (winner === 'byInsufficient'){
+      imageMode(CENTER);
+      image(drawImg, 0, 0, windowWidth, windowHeight); 
     }
     if  (winner ==='draw'){
       image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
@@ -826,6 +844,10 @@ function isStalemate(color) {
   
 }
 
+function isDraw(color){
+
+}
+
 function mouseReleased() {
   if (gameOver) {
     return;
@@ -1132,6 +1154,5 @@ function keyPressed() {
     setupStalemateTest(); 
   }
 
-  
 }
 
