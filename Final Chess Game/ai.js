@@ -231,6 +231,11 @@ function aiMoveWhite() {
       gameOver = true;
       winner = 'draw';
     }
+    if (isDraw(opponentColor)){
+      gameOver = true;
+      winner = 'byInsufficient';
+    }
+    
     else {
       currentTurn = opponentColor;
     }

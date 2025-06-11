@@ -140,6 +140,7 @@ function setup() {
     loadBtn.hide();
     saveBtn.hide();
   });
+
   playagainIcon = createImg('assets/restartButton.jpg', 'Play Again');
   playagainIcon.id('playagainIcon');  
   playagainIcon.parent(document.body); 
@@ -312,45 +313,17 @@ function draw() {
     if (isCheckmate(opp)) {
       gameOver = true;
       winner = currentTurn;
-      playagainIcon.show();
     }
 
     if (isStalemate(opp)) {
       gameOver = true;
       winner = 'draw';
-      playagainIcon.show();
     }
     if (isDraw(opp)){
       gameOver = true;
       winner = 'byInsufficient';
-      playagainIcon.show;
     }
 
-    if (gameOver) {
-      cam.setPosition(0, 0, 500);
-      cam.lookAt(0, 0, 0);
-      imageMode(CENTER);
-      resignBtn.hide();
-      controlIcon.hide();
-      infoIcon.hide();
-      playagainIcon.show();
-
-      if (winner === 'White') {
-        image(whitewinImg, 0, 0, windowWidth, windowHeight); 
-      }
-
-      else if (winner === 'Black') {
-        image(blackwinImg, 0, 0, windowWidth, windowHeight);
-      }
-      else if (winner === 'byInsufficient'){
-        imageMode(CENTER);
-        image(drawImg, 0, 0, windowWidth, windowHeight); 
-      }
-      else  {
-        image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
-      }
-
-    }
   }
 
   if (gameOver) {
@@ -361,6 +334,9 @@ function draw() {
     controlIcon.hide();
     infoIcon.hide();
     playagainIcon.show();
+    loadBtn.hide();
+    saveBtn.hide();
+    pieceTooltip.hide();
 
     if (winner === 'White') {
       image(whitewinImg, 0, 0, windowWidth, windowHeight); 
@@ -371,11 +347,10 @@ function draw() {
     }
     if (winner === 'byInsufficient'){
       imageMode(CENTER);
-      image(drawImg, 0, 0, windowWidth, windowHeight); 
+      image(drawImg, 0, 0, windowWidth, windowHeight*0.85); 
     }
     if  (winner ==='draw'){
       image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
-      console.log("Stalemate");
     }
 
 
@@ -660,7 +635,6 @@ function legalMove(newRow, newCol) {
   
 }
 
-
 function legalMove2(currPiece, newRow, newCol) {
   //THE FIX YAY!!!! WORKS NOW :)
   if (!currPiece) {
@@ -844,9 +818,53 @@ function isStalemate(color) {
   
 }
 
-function isDraw(color){
 
+function isDraw() {
+
+  let whitePieces = pieces.filter(p => p.color === 'White');
+  let blackPieces = pieces.filter(p => p.color === 'Black');
+
+  // Get non-king pieces
+  const countMaterial = list => {
+    return list.map(p => p.piece).filter(p => p !== 'King');
+  };
+
+  let whiteMaterial = countMaterial(whitePieces);
+  let blackMaterial = countMaterial(blackPieces);
+
+  // Case 1: King vs King
+  if (whiteMaterial.length === 0 && blackMaterial.length === 0) {
+    return true;
+  }
+
+  // Case 2: King + Bishop or Knight vs King
+  if (
+    (whiteMaterial.length === 1 && (whiteMaterial[0] === 'Bishop' || whiteMaterial[0] === 'Knight') && blackMaterial.length === 0) ||
+    (blackMaterial.length === 1 && (blackMaterial[0] === 'Bishop' || blackMaterial[0] === 'Knight') && whiteMaterial.length === 0)
+  ) {
+    return true;
+  }
+
+  // Case 3: King + Bishop vs King + Bishop (same color squares)
+  if (
+    whiteMaterial.length === 1 && whiteMaterial[0] === 'Bishop' &&
+    blackMaterial.length === 1 && blackMaterial[0] === 'Bishop'
+  ) {
+    let whiteBishop = whitePieces.find(p => p.piece === 'Bishop');
+    let blackBishop = blackPieces.find(p => p.piece === 'Bishop');
+
+    let whiteIsLight = (whiteBishop.row + whiteBishop.col) % 2 === 0;
+    let blackIsLight = (blackBishop.row + blackBishop.col) % 2 === 0;
+
+    if (whiteIsLight === blackIsLight) {
+      return true;
+    }
+  }
+
+  return false;
 }
+
+
 
 function mouseReleased() {
   if (gameOver) {
@@ -1143,6 +1161,16 @@ function Pawnpro() {
   currentTurn = 'White'; 
 }
 
+function drawo() {
+  pieces = []; 
+  gameState = 'play'; 
+  // White pieces
+  pieces.push(new Pieces(1, 0, 'Black', 'King'));  
+  pieces.push(new Pieces(6, 0, 'White', 'King')); 
+
+  currentTurn = 'White'; 
+}
+
 function keyPressed() {
   if (key === 'D' || key === 'd') {
     simulateCheckmate(); 
@@ -1152,6 +1180,9 @@ function keyPressed() {
   }
   if (key === 'S' || key === 's') {
     setupStalemateTest(); 
+  }
+  if (key === 'W' || key === 'w') {
+    drawo(); 
   }
 
 }
