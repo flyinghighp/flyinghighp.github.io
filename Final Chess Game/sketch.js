@@ -8,6 +8,10 @@ let startBtn;
 let ovoBtn;
 let resignBtn;
 let bgMusic;
+let bgMusic2;
+let bgMusic3;
+let winMusic;
+let looseMusic;
 let isMuted = false;
 let moveMusic;
 let infoIcon;
@@ -59,6 +63,8 @@ function preload() {
   br = loadModel('assets/Rook - Copy.obj', true);
   bgMusic = loadSound('assets/music.mp3');
   moveMusic = loadSound('assets/pieceMovement.mp3');
+  winMusic = loadSound('assets/win.mp3');
+  looseMusic = loadSound('assets/loosing.mp3');
   woodTexture = loadImage('assets/woodtexture.jpg');
   whitewinImg = loadImage("assets/whiteWins.png");
   blackwinImg = loadImage("assets/blackwins.png");
@@ -151,18 +157,54 @@ function setup() {
 
   const audioIcon = document.getElementById("audioIcon");
   bgMusic.setVolume(0);
+  winMusic.setVolume(0);
+  looseMusic.setVolume(0);
 
   audioIcon.addEventListener("click", () => {
     isMuted = !isMuted;
 
     if (isMuted) {
+      if (!gameOver){
       bgMusic.setVolume(0);
       bgMusic.stop(); 
+      }
+      if (gameOver && gameState === 'ovo'){
+        bgMusic.stop(); 
+        winMusic.stop();
+      }
+      if (gameOver && gameState === 'play' && winner === 'black'){
+        bgMusic.stop(); 
+        winMusic.stop();
+      }
+      if (gameOver && gameState === 'play' && winner === 'white'){
+        bgMusic.stop(); 
+        looseMusic.stop();
+      }
       audioIcon.src = "assets/pause.png"; 
     }
     else {
-      bgMusic.setVolume(1); 
-      bgMusic.loop();
+      if (!gameOver){
+        winMusic.stop();
+        looseMusic.stop();
+        bgMusic.setVolume(1); 
+        bgMusic.loop(); 
+        }
+        if (gameOver && gameState === 'ovo'){
+          bgMusic.stop(); 
+          winMusic.setVolume(1);
+          winMusic.loop();
+        }
+        if (gameOver && gameState === 'play' && winner === 'black'){
+          bgMusic.stop(); 
+          winMusic.setVolume(1);
+          winMusic.loop();
+        }
+        if (gameOver && gameState === 'play' && winner === 'white'){
+          bgMusic.stop(); 
+          looseMusic.setVolume(1);
+          looseMusic.loop();
+        }
+     
       audioIcon.src = "assets/unpause.png"; 
     }
   });
@@ -1124,7 +1166,7 @@ function loadGameState() {
 
 function simulateCheckmate() {
   pieces = []; 
-  gameState = 'testing'; 
+  gameState = 'ovo'; 
 
   // White pieces
   pieces.push(new Pieces(1, 3, 'White', 'Rook'));  
@@ -1139,7 +1181,7 @@ function simulateCheckmate() {
 
 function setupStalemateTest() {
   pieces = [];
-  gameState = 'testing'; 
+  gameState = 'ovo'; 
 
   pieces.push(new Pieces( 1, 5, 'White', 'King'));
 
@@ -1153,7 +1195,7 @@ function setupStalemateTest() {
 
 function Pawnpro() {
   pieces = []; 
-  gameState = 'testing'; 
+  gameState = 'ovo'; 
   // White pieces
   pieces.push(new Pieces(1, 0, 'Black', 'Pawn'));  
   pieces.push(new Pieces(6, 0, 'White', 'Pawn')); 
@@ -1163,7 +1205,7 @@ function Pawnpro() {
 
 function drawo() {
   pieces = []; 
-  gameState = 'play'; 
+  gameState = 'ovo'; 
   // White pieces
   pieces.push(new Pieces(1, 0, 'Black', 'King'));  
   pieces.push(new Pieces(6, 0, 'White', 'King')); 
