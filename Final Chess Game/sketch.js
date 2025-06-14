@@ -66,7 +66,7 @@ function preload() {
   looseMusic = loadSound('assets/loosing.mp3');
   woodTexture = loadImage('assets/woodtexture.jpg');
   whitewinImg = loadImage("assets/whiteWins.png");
-  blackwinImg = loadImage("assets/blackwins.png");
+  blackwinImg = loadImage("assets/blackWins.png");
   stalemateImg = loadImage("assets/stalemate.png");
   drawImg = loadImage("assets/drawByInsufficient.png");
 }
