@@ -1,60 +1,61 @@
 <!DOCTYPE html>
-<html lang="en"> <!-- BEGIN WEBSITE -->
+<html lang="en"> 
+
 <head> 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo Webpage</title>
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Controls</title>
+
     <style>
         body {
-            background-color: #000;
-            color: #fff;
+            background-color: #000; /* Black background */
+            color: #fff; /* White text color */
             font-family: Arial, Helvetica, sans-serif;
-            display: flex;
+            display: flex; /* Use flexbox to center content */
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            margin: 0;
+            min-height: 100vh; /* Full viewport height */
+            margin: 0; /* Remove default margin */
         }
 
         .image-container {
-            margin-bottom: 30px;
+            margin-bottom: 30px; /* Space below image */
         }
 
         img {
-            max-width: 90vw;
-            max-height: 80vh;
-            border: 4px solid #ffffff22;
-            border-radius: 12px;
-            box-shadow: 0 0 20px #00ffff55;
+            max-width: 90vw; /* Image max width relative to viewport */
+            max-height: 80vh; /* Image max height relative to viewport */
+            border: 4px solid #ffffff22; /* Semi-transparent white border */
+            border-radius: 12px; /* Rounded corners */
+            box-shadow: 0 0 20px #00ffff55; /* Cyan glow effect */
         }
 
         a {
             display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            color: #000;
-            background-color: #00ffff;
-            text-decoration: none;
-            border-radius: 8px;
+            margin-top: 20px; /* Space above the link */
+            padding: 10px 20px; /* Padding inside the button */
+            color: #000; /* Text color black */
+            background-color: #00ffff; /* Cyan button background */
+            text-decoration: none; /* Remove underline */
+            border-radius: 8px; /* Rounded button corners */
             font-size: 16pt;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s; /* Smooth hover transition */
         }
 
         a:hover {
-            background-color: #00cccc;
+            background-color: #00cccc; /* Darker cyan on hover */
         }
-
-        
     </style>
 </head>
+
 <body> 
 
     <div class="image-container">
-        <img src="assets/ChessControls.png" alt="Chess Controls">
+        <img src="assets/ChessControls.png" alt="Chess Controls"> <!-- Controls image -->
     </div>
 
-    <a href="index.html">Return To Main Menu</a>
+    <a href="index.html">Return To Main Menu</a> <!-- Link back to main menu -->
 
 </body>
 </html>

@@ -8,11 +8,10 @@ let startBtn;
 let ovoBtn;
 let resignBtn;
 let bgMusic;
-let bgMusic2;
-let bgMusic3;
 let winMusic;
 let looseMusic;
 let isMuted = false;
+let musicPlayed = false;
 let moveMusic;
 let infoIcon;
 let controlIcon;
@@ -151,63 +150,38 @@ function setup() {
   playagainIcon.id('playagainIcon');  
   playagainIcon.parent(document.body); 
   playagainIcon.mousePressed(() => {
-    window.open('index.html', '_blank');
+    location.reload();
+    winMusic.stop();
+    looseMusic.stop();
+    bgMusic.stop();
   });
   playagainIcon.hide();
 
-  const audioIcon = document.getElementById("audioIcon");
-  bgMusic.setVolume(0);
+  audioIcon = createImg("assets/pause.png", "Audio Toggle");
+  audioIcon.id("audioIcon");
+  audioIcon.parent(document.body);
+
+  bgMusic.setVolume(1);   
   winMusic.setVolume(0);
   looseMusic.setVolume(0);
 
-  audioIcon.addEventListener("click", () => {
+  audioIcon.mousePressed(() => {
     isMuted = !isMuted;
 
     if (isMuted) {
-      if (!gameOver){
       bgMusic.setVolume(0);
-      bgMusic.stop(); 
-      }
-      if (gameOver && gameState === 'ovo'){
-        bgMusic.stop(); 
-        winMusic.stop();
-      }
-      if (gameOver && gameState === 'play' && winner === 'black'){
-        bgMusic.stop(); 
-        winMusic.stop();
-      }
-      if (gameOver && gameState === 'play' && winner === 'white'){
-        bgMusic.stop(); 
-        looseMusic.stop();
-      }
-      audioIcon.src = "assets/pause.png"; 
+      bgMusic.stop();
+      winMusic.stop();
+      looseMusic.stop();
+      audioIcon.attribute("src", "assets/pause.png");  
     }
     else {
-      if (!gameOver){
-        winMusic.stop();
-        looseMusic.stop();
-        bgMusic.setVolume(1); 
-        bgMusic.loop(); 
-        }
-        if (gameOver && gameState === 'ovo'){
-          bgMusic.stop(); 
-          winMusic.setVolume(1);
-          winMusic.loop();
-        }
-        if (gameOver && gameState === 'play' && winner === 'black'){
-          bgMusic.stop(); 
-          winMusic.setVolume(1);
-          winMusic.loop();
-        }
-        if (gameOver && gameState === 'play' && winner === 'white'){
-          bgMusic.stop(); 
-          looseMusic.setVolume(1);
-          looseMusic.loop();
-        }
-     
-      audioIcon.src = "assets/unpause.png"; 
+      bgMusic.setVolume(1);
+      bgMusic.loop();
+      audioIcon.attribute("src", "assets/unpause.png"); 
     }
   });
+
   
   resignBtn = createImg('assets/resign.png', 'RESIGN');
   resignBtn.position(width/2+110, 9);
@@ -303,7 +277,6 @@ function draw() {
       pieceTooltip.style('display', 'none');
     }
 
-
     // Calculate grid position for X and Y
 
     if (worldX >= -size * 4 && worldX <= size * 4 &&
@@ -380,6 +353,29 @@ function draw() {
     saveBtn.hide();
     pieceTooltip.hide();
 
+    if (!musicPlayed && !isMuted) {
+      audioIcon.style.display = "none";
+      bgMusic.stop();  // Stop background music
+      if (winner === 'White' && gameState === 'play') {
+        looseMusic.setVolume(1);
+        looseMusic.play();
+        looseMusic.loop();
+      }
+      else if (winner === 'Black' && gameState === 'play') {
+        winMusic.setVolume(1);
+        winMusic.play();
+        winMusic.loop();
+      }
+      else if (gameState === 'ovo') {
+        winMusic.setVolume(1);
+        winMusic.play();
+        winMusic.loop();
+      }
+
+      musicPlayed = true; 
+    }
+
+
     if (winner === 'White') {
       image(whitewinImg, 0, 0, windowWidth, windowHeight); 
     }
@@ -394,7 +390,6 @@ function draw() {
     if  (winner ==='draw'){
       image(stalemateImg, 0, 0, windowWidth/2, windowHeight*0.5+100);
     }
-
 
   }
 }
@@ -881,8 +876,8 @@ function isDraw() {
 
   // Case 2: King + Bishop or Knight vs King
   if (
-    (whiteMaterial.length === 1 && (whiteMaterial[0] === 'Bishop' || whiteMaterial[0] === 'Knight') && blackMaterial.length === 0) ||
-    (blackMaterial.length === 1 && (blackMaterial[0] === 'Bishop' || blackMaterial[0] === 'Knight') && whiteMaterial.length === 0)
+    whiteMaterial.length === 1 && (whiteMaterial[0] === 'Bishop' || whiteMaterial[0] === 'Knight') && blackMaterial.length === 0 ||
+    blackMaterial.length === 1 && (blackMaterial[0] === 'Bishop' || blackMaterial[0] === 'Knight') && whiteMaterial.length === 0
   ) {
     return true;
   }

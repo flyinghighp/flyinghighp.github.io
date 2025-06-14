@@ -219,7 +219,6 @@ function aiMoveWhite() {
     }
 
     const opponentColor = 'Black';
-
     // Check for checkmate
     if (isCheckmate(opponentColor)) {
       gameOver = true;
@@ -227,10 +226,10 @@ function aiMoveWhite() {
     }
     // Check for stalemate
     if (isStalemate(opponentColor)) {
-      
       gameOver = true;
       winner = 'draw';
     }
+    // Check for Draw by Insufficient Material
     if (isDraw(opponentColor)){
       gameOver = true;
       winner = 'byInsufficient';

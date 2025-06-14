@@ -9,6 +9,7 @@ canvas {
   display: block;
 }
 
+/* Background GIF styling */
 #gifBackground {
   position: fixed;
   top: 0;
@@ -22,6 +23,7 @@ canvas {
   pointer-events: none;
 }
 
+/* Centered game logo */
 #gameTitle {
   position: fixed;
   top: 0;
@@ -35,6 +37,7 @@ canvas {
   pointer-events: none;
 }
 
+/* Start button */
 .start-ui {
   position: absolute;       
   top: 50%;
@@ -51,10 +54,12 @@ canvas {
   z-index: 10;              
 }
 
+/* Start button hover effect */
 .start-ui:hover {
   background: #4f4;         /* lighter-green on hover */
 }
 
+/* Audio toggle icon */
 #audioIcon {
   position: fixed;
   top: 20px;
@@ -66,6 +71,7 @@ canvas {
   user-select: none;
 }
 
+/* Info icon */
 #infoIcon {
   position: fixed;
   bottom: 20px;
@@ -76,6 +82,7 @@ canvas {
   user-select: none;
 }
 
+/* Controls icon */
 #controlIcon {
   position: fixed;
   bottom: 90px;
@@ -86,6 +93,7 @@ canvas {
   user-select: none;
 }
 
+/* Play Again icon */
 #playagainIcon {
   position: fixed;
   bottom: 20px;
@@ -96,6 +104,7 @@ canvas {
   user-select: none;
 }
 
+/* Save game icon */
 #saveIcon {
   position: fixed;
   top: 0px;
@@ -106,6 +115,7 @@ canvas {
   user-select: none;
 }
 
+/* Load game icon */
 #loadIcon {
   position: fixed;
   top: 40px;
@@ -116,6 +126,7 @@ canvas {
   user-select: none;
 }
 
+/* Resign game icon */
 #resignIcon {
   position: fixed;
   width: 65px;
@@ -124,6 +135,7 @@ canvas {
   user-select: none;
 }
 
+/* Tooltip for piece names */
 #pieceTooltip {
   position: fixed;
   background: rgba(51, 51, 51, 0.95); 
