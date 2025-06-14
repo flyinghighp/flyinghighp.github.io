@@ -151,6 +151,7 @@ function setup() {
   playagainIcon.parent(document.body); 
   playagainIcon.mousePressed(() => {
     location.reload();
+    musicPlayed = false;
     winMusic.stop();
     looseMusic.stop();
     bgMusic.stop();
@@ -352,9 +353,10 @@ function draw() {
     loadBtn.hide();
     saveBtn.hide();
     pieceTooltip.hide();
+    audioIcon.hide();
 
     if (!musicPlayed && !isMuted) {
-      audioIcon.style.display = "none";
+      
       bgMusic.stop();  // Stop background music
       if (winner === 'White' && gameState === 'play') {
         looseMusic.setVolume(1);
