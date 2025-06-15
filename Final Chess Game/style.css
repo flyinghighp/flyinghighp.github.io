@@ -75,9 +75,20 @@ canvas {
 #infoIcon {
   position: fixed;
   bottom: 20px;
-  right: 20px;
+  right: 19px;
   width: 50px;
   height: 50px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Rate icon */
+#rateIcon {
+  position: fixed;
+  bottom: 70px;
+  right: 19px;
+  width: 45px;
+  height: 45px;
   cursor: pointer;
   user-select: none;
 }
@@ -85,8 +96,8 @@ canvas {
 /* Controls icon */
 #controlIcon {
   position: fixed;
-  bottom: 90px;
-  right: 25px;
+  bottom: 122px;
+  right: 20.5px;
   width: 40px;
   height: 40px;
   cursor: pointer;

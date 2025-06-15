@@ -20,6 +20,7 @@ let moveMusic;
 
 // --- UI ELEMENTS --- //
 let infoIcon;
+let rateIcon;
 let controlIcon;
 let playagainIcon;
 let loadBtn;
@@ -168,6 +169,13 @@ function setup() {
   infoIcon.parent(document.body); 
   infoIcon.mousePressed(() => {
     window.open('https://www.chess.com/learn-how-to-play-chess', '_blank');
+  });
+  // --- RATE BUTTON --- //
+  rateIcon = createImg('assets/rate.png', 'Rate Us');
+  rateIcon .id('rateIcon'); 
+  rateIcon .parent(document.body); 
+  rateIcon .mousePressed(() => {
+    window.open('https://docs.google.com/forms/d/e/1FAIpQLSfRJqt8zKW7OMAiGnkq3tOfjLE8AjwI1uILa4hfbckj_6QNlA/viewform?usp=header', '_blank');
   });
 
   // --- CONTROLS BUTTON --- //

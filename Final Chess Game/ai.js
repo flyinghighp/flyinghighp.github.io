@@ -238,7 +238,5 @@ function aiMoveWhite() {
     else {
       currentTurn = opponentColor;
     }
-
   }
-  
 }
