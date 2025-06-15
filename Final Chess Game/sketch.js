@@ -1,11 +1,33 @@
-// Final Project - Chess 
-// Priyansh Jhanji
-// 25 April 2025
+/* 
+=====================================================================================
+  CHESS.INC - FINAL PROJECT
+  Made by: Priyansh Jhanji
+  Date: April 25, 2025 - June 15, 2025
+=====================================================================================
 
+ABOUT:
+This is a 3D chess game made with p5.js and WEBGL. 
+You can play against the computer or with a friend on the same screen.
+It uses real chess rules, drag-and-drop to move pieces, and has music and sound effects.
+
+FEATURES:
+- 3D chess pieces and board
+- Play vs AI or 1v1 mode
+- Real chess rules (including pawn promotion)
+- Win, draw, and stalemate detection
+- Music and sound for moves and game ending
+- Save and load your game
+- Hover over pieces to see what they are
+
+HOW IT WORKS:
+- Click “Play Vs AI” to play the computer
+- Click “1 V 1” to play with a friend
+- Use “Save” to save the game, and “Load” to continue it later
+*/
 
 // --- GLOBAL VARIABLES --- //
 
-// --- GAME STATE/ AI WORKING / CURRENT TURN --- //
+// --- GAME STATE / AI WORKING / CURRENT TURN --- //
 let aiThinking = false;
 let gameState = 'menu'; 
 let currentTurn = 'White'; 
@@ -170,6 +192,7 @@ function setup() {
   infoIcon.mousePressed(() => {
     window.open('https://www.chess.com/learn-how-to-play-chess', '_blank');
   });
+  
   // --- RATE BUTTON --- //
   rateIcon = createImg('assets/rate.png', 'Rate Us');
   rateIcon .id('rateIcon'); 
@@ -463,7 +486,7 @@ function draw() {
       image(drawImg, 0, 0, windowWidth, windowHeight * 0.85); 
     }
 
-    else {
+    if (winner === 'draw')  {
       image(stalemateImg, 0, 0, windowWidth / 2, windowHeight * 0.5 + 100);
     }
   }
@@ -1095,7 +1118,7 @@ function mouseReleased() {
 
         if (isDraw(opponentColor)){
           gameOver = true;
-          winner === 'byInsufficient';
+          winner = 'byInsufficient';
         }
         else {
           // Otherwise switch turn
@@ -1242,7 +1265,7 @@ function PawnPromotion() {
       }
       else if (isDraw(opponentColor)){
         gameOver = true;
-        winner === 'byInsufficient';
+        winner = 'byInsufficient';
       }
       else {
         currentTurn = opponentColor; // Continue game

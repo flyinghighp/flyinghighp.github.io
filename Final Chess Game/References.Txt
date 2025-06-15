@@ -3,6 +3,12 @@ https://www.w3schools.com/css/css3_user_interface.asp
 https://www.w3schools.com/css/css_tooltip.asp
 https://www.w3schools.com/css/css3_backgrounds.asp
 https://www.youtube.com/watch?v=Qv0fvm5B0EM&pp=0gcJCdgAo7VqN5tD
+https://rxdb.info/articles/localstorage.html
 https://www.youtube.com/watch?v=wYRRVRrK0R8
+https://www.youtube.com/watch?v=bme-pmetZlc
+https://blog.logrocket.com/localstorage-javascript-complete-guide/
 https://dev.to/zeyu2001/build-a-simple-chess-ai-in-javascript-18eg
+https://joeiddon.github.io/projects/javascript/chess
 https://www.w3schools.com/jsref/met_loc_reload.asp
+https://www.youtube.com/watch?v=J-5A0tQ5GaM
+https://www.hipporello.com/blog/how-can-i-fix-the-local-storage-issue-in-my-browser
