@@ -29,10 +29,9 @@ HOW IT WORKS:
 //comment: brilliant game, intuitive menu and responsive game, it could use
 // an overlay for where the chess piece can go so we know what moves are possible
 // for new players of chess
-//Cool design, but some images look wierd
-// I like the game mechanics, very complete
-
-//works very well, ai was a little to easy to beat imo, but game functions very well, would have liked to test if en passant works.
+//comment: cool design, but some images look wierd
+//comment: I like the game mechanics, very complete
+//comment:works very well, ai was a little to easy to beat imo, but game functions very well, would have liked to test if en passant works.
 
 // --- GLOBAL VARIABLES --- //
 
