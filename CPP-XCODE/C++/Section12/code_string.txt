@@ -1,0 +1,26 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+int main()
+{
+	string firstname,lastname, address;
+
+
+	cout << endl << "Enter address ";
+	getline(cin, address);
+	
+	cout << endl<< "Enter Firstname ";
+	cin >> firstname;
+
+	cout << endl << "Enter Lastname ";
+	cin >> lastname;
+
+	string fullname = firstname + lastname;
+
+	cout << endl << "Your Details :" << endl << fullname << endl << address;
+
+
+
+	return 0;
+}

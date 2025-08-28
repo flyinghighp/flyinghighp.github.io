@@ -1,0 +1,23 @@
+#include<iostream>
+#include<fstream>
+using namespace std;
+
+int main()
+{
+	ofstream fout;
+	fout.open("my.txt", ios::app);
+
+	int pos = 0;
+	pos = fout.tellp();
+
+	cout << "Put pointer :" << pos << endl;
+
+	fout << "Academy";
+
+	pos = fout.tellp();
+
+	cout << "Put pointer :" << pos;
+
+	fout.close();
+
+}

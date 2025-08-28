@@ -1,0 +1,25 @@
+/*Factorial*/
+#include <iostream>
+using namespace std;
+int myrecursion(int);
+
+int main() {
+    int num = 0;
+    int result = 0;
+
+    cout << "Enter a number ";
+    cin >> num;
+
+    result = myrecursion(num);//4
+    cout << result;
+    
+    return 0;
+}
+
+int myrecursion(int num)
+{
+    if (num > 0) {
+        // function calling itself
+        return (num * myrecursion(num - 1));
+    }
+}

@@ -1,0 +1,44 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+struct camera
+{
+	int front;
+	int rear;
+};
+
+struct phone
+{
+	string Name;
+	int RAM;
+	int ROM;
+	string processor;
+	camera camera;
+	double price;
+};
+
+int main()
+{
+	phone moto;
+
+	moto.Name = "moto123";
+	moto.processor = "Snapdragon";
+	moto.price = 4500;
+	moto.camera.front = 13;
+	moto.camera.rear = 16;
+	moto.RAM = 4;
+	moto.ROM = 32;
+
+
+	cout << "Name " << moto.Name;
+	cout << endl << "Processor " << moto.processor;
+	cout << endl << "Price " << moto.price;
+	cout << endl << "Camera front" << moto.camera.front;
+	cout << endl << "camera rear " << moto.camera.rear;
+	cout << endl << "RAM " << moto.RAM;
+	cout << endl << "ROM " << moto.ROM;
+
+	return 0;
+
+}

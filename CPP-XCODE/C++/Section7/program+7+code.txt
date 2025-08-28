@@ -1,0 +1,30 @@
+/*7.Write a program in C++ to compute the total and average of 4 no's*/
+#include <iostream>
+using namespace std;
+
+int main()
+{ 
+    int a = 0, b = 0, c = 0, d = 0;
+    int total = 0, average = 0;
+
+    cout << "Enter 1st no:" << endl;
+    cin >> a;
+    cout << "Enter 2st no:" << endl;
+    cin >> b;
+    cout << "Enter 3st no:" << endl;
+    cin >> c;
+    cout << "Enter 4st no:" << endl;
+    cin >> d;
+
+    //cal
+    total = a + b + c + d;
+    average = (a + b + c + d) / 4;
+
+    //print
+    cout << "Total " << total << endl;
+    cout << "Average " << average;
+
+
+    
+    return 0;
+}

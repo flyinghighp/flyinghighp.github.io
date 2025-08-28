@@ -1,0 +1,19 @@
+#include<iostream>
+using namespace std;
+
+				//function declaration
+// returntype name ( input );
+void fun(void);
+
+int main()
+{
+				// call function
+	fun();
+	return 0;
+}
+
+				// function body
+void fun()
+{
+	cout << "Hello Students";
+}

@@ -1,0 +1,25 @@
+#include<iostream>
+#include<fstream>
+using namespace std;
+
+int main()
+{
+	ifstream fin;
+	char ch;
+
+	fin.open("my.txt");
+
+	int pos = 0;
+	pos = fin.tellg();
+	
+	cout << "Pos : " << pos << endl;
+
+	fin >> ch;
+
+	pos = fin.tellg();
+
+	cout << "Pos : " << pos << endl;
+
+	fin.close();
+
+}

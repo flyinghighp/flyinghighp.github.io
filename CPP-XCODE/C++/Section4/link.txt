@@ -1,0 +1,5 @@
+1. Mingw
+https://sourceforge.net/projects/mingw/
+
+2. VS Code
+https://code.visualstudio.com/download

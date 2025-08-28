@@ -1,0 +1,20 @@
+/*2. Write a C++ program to check if a given number is a multiple of 3 */
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int num = 0;
+
+    //input 
+    cout << "Enter a num: " << endl;
+    cin >> num;
+
+    //condition
+    if (num % 3 == 0)
+        cout << "mutiple of 3";
+    else
+        cout << "not a multiple of 3";
+
+    return 0;
+}

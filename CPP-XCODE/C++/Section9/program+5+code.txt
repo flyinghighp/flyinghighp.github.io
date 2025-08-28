@@ -1,0 +1,19 @@
+/*4. Write a C++ program to check the character entered is vowel or not 
+a,e,i,o,u*/
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    char mychar;
+
+    cout << "Enter a charater" << endl;
+    cin >> mychar;
+
+    if (mychar == 'a' || mychar == 'e' || mychar == 'i' || mychar == 'o' || mychar == 'u')
+        cout << "It is vowel" << endl;
+    else
+        cout << "its not vowel";
+
+    return 0;
+}

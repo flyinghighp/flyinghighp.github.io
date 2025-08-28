@@ -1,0 +1,24 @@
+/*1. Write a C++ program to compare two strings. */
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main()
+{
+    string var1 = "", var2 = "";
+
+    cout << endl << "enter a string ";
+    getline(cin, var1);
+
+    cout << endl << "enter a another string ";
+    getline(cin, var2);
+
+    if (var1.compare(var2) == 0)
+    {
+        cout << endl << "Both the strings are same";
+    }
+    else
+        cout << "Not same";
+
+    return 0;
+}

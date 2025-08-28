@@ -1,0 +1,27 @@
+/*4. Write a C++ program to check the largest number among 
+three given integers */
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int num1 = 0, num2=0, num3=0;
+
+    //input 
+    cout << "Enter 1st num: " << endl;
+    cin >> num1;
+    cout << "Enter 2nd num: " << endl;
+    cin >> num2;
+    cout << "Enter 3rd num: " << endl;
+    cin >> num3;
+
+    //condition
+    if (num1 > num2 && num1 > num3)
+        cout << "num1 is largest";
+    else if (num2 > num1 && num2 > num3)
+        cout << "num2 is largest";
+    else
+        cout << "num3 is largest";
+
+    return 0;
+}

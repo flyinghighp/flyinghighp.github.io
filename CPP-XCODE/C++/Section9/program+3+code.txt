@@ -1,0 +1,20 @@
+/*3. Write a C++ program to check a number is in the range 100 to 200. */
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int num = 0;
+
+    //input 
+    cout << "Enter a num: " << endl;
+    cin >> num;
+
+    //condition
+    if (num >= 100 && num <= 200)
+        cout << "number is in b/w 100:200";
+    else
+        cout << "number is not in b/w 100:200";
+ 
+    return 0;
+}

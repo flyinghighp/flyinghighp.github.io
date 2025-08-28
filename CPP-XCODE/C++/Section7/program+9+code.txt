@@ -1,0 +1,32 @@
+/*9. Write a program in C++ to print first and last no.
+in a three digit no.*/
+// 143
+// 1
+// 3
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int num = 0, first = 0, last = 0;
+    int mid = 0;
+    int mid2 = 0;
+
+    //input 
+    cout << "Enter a num: " << endl;
+    cin >> num;
+
+    // logic
+    first = num / 100;
+    last = num % 10;
+    mid = (num / 10) % 10;
+    mid2 = (num % 100) / 10;
+
+    cout << "First : " << first << endl;
+    cout << "last :" << last << endl;
+    cout << "mid :" << mid << endl;
+    cout << "mid2 :" << mid2 << endl;
+
+
+    return 0;
+}

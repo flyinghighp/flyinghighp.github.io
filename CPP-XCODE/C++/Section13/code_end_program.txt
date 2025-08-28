@@ -1,0 +1,42 @@
+#include<iostream>
+#include<string>
+using namespace std;
+
+void area(int);
+void area(int, int);
+
+int main()
+{
+	int choice=0, radius = 0 , length, breadth;
+	cout << "Enter choice:-" << endl << "1. Area of circle " << endl << "2. Area of rect ";
+	cin >> choice;
+
+	switch (choice)
+	{
+	case 1:
+		cout << endl << "Enter radius ";
+		cin >> radius;
+		area(radius);			// function overloading
+		break;
+
+	case 2:
+		cout << endl << "Enter length ";
+		cin >> length;
+		cout << endl << "ENter breadth";
+		cin >> breadth;
+		area(length, breadth);		// function overloading
+		break;
+
+	}
+	return 0;
+}
+
+void area(int r)
+{
+	cout << "Area of circle " << 3.14 * r *r;
+}
+
+void area(int l, int b)
+{
+	cout << "Area of rect " << l * b;
+}

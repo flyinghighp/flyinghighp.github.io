@@ -1,0 +1,27 @@
+/*Sum of no's :  5 = 5+4+3+2+1 */
+#include <iostream>
+using namespace std;
+int sum(int);
+
+int main() {
+    int num = 0;
+    int result = 0;
+
+    cout << "Enter a number :";
+    cin >> num;
+
+    result = sum(num);
+    cout << endl << result;
+
+    return 0;
+}
+int sum(int num)// 4 //3 //2 //1 //0
+{
+    if (num > 0)
+    {
+        cout << endl << num;
+        return (num + sum(num - 1));// 4+3+2+1+0 ==10
+    }
+    else
+        return 0;
+}
