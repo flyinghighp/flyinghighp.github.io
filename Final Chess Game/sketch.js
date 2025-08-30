@@ -4,7 +4,7 @@
   Made by: Priyansh Jhanji
   Date: April 25, 2025 - June 15, 2025
 =====================================================================================
-
+⚠️ Copyright © — Tag me if you’d like to use it!
 ABOUT:
 This is a 3D chess game made with p5.js and WEBGL. 
 You can play against the computer or with a friend on the same screen.
@@ -1353,4 +1353,5 @@ function loadGameState() {
       }
     }, 200);
   }
+
 }
