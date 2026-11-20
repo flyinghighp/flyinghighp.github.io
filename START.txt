@@ -1,0 +1,15 @@
+Machina CAD De-ID starter
+
+Run with Python 3.11 or newer. No third-party packages are required.
+
+1. Extract this ZIP.
+2. Create a private mapping.json outside the raw input folder.
+   Example using fictional names:
+   {"Acme Engineering": "Northstar Engineering", "ACME-42": "PART-0042"}
+3. Run:
+   python code/deid.py /path/to/input /path/to/mapping.json attempt-1
+4. Review attempt-1/README.txt for omissions and validate the corpus before submitting.
+
+This starter applies a reviewed dictionary. It does not discover identities,
+process PDF or native CAD, or validate assembly links. ZIPs with unsupported
+members are omitted as a whole. The archive contains source code only.
